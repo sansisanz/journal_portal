@@ -21,6 +21,8 @@
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-admin-2.css'%}" rel="stylesheet">
 
+    
+
 </head>
 
 <body id="page-top">
@@ -58,7 +60,7 @@
 
             <li class="nav-item">
                 <a class="nav-link" href="/editor/">
-                    <i class="fas fa-fw fa-download"></i>
+                    <i class="fas fa-fw fa-pen"></i>
                     <span>Editors</span></a>
             </li>
 
@@ -280,31 +282,136 @@
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid">
+                <div class="container-fluid">        
 
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">HOME</h1>
-                    </div>
-
-                    <!-- Content Row -->
+                    <style>
+                        /* Login v4 */
+                                       
                     
-                    <!-- Content Row -->
+                    .signup_v4 .nav-tabs .nav-link.active {
+                        background: #64f8c2;
+                    }
+                    
+                    .signup_v4 .nav-tabs .nav-link {
+                        background: #8dccb5;
+                    }
+                    
+                    .signup_v4 .nav-tabs .nav-link {
+                        border: 0;
+                        margin: 0;
+                        padding: 10px 0;
+                        text-align: center;
+                        border-radius: 0;
+                        color: #fff;
+                    }
+                    
+                    .signup_v4 .nav-tabs li.nav-item {
+                        width: 50%;
+                    }
+                    
+                    .signup_v4 .card-body {
+                        padding: 0px;
+                    }
+                    
+                    .signup_v4 .card-body .tab-content {
+                        padding: 0 1.25rem 1.75em;
+                    }
+                    </style>
+                    
+                    
+                    
+                    <div class="card signup_v4 mb-30">
+                        <div class="card-body">
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" id="add-editor-tab" data-toggle="tab" href="#addEditor" role="tab" aria-controls="addEditor" aria-selected="true">Add Editor</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="remove-editor-tab" data-toggle="tab" href="#removeEditor" role="tab" aria-controls="removeEditor" aria-selected="false">Remove Editor</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade show active" id="addEditor" role="tabpanel" aria-labelledby="add-editor-tab">
+                                    <h4 class="text-center mt-4 mb-4" style="text-transform: uppercase; color: #000000;">Add a new team member to join a journal</h4>
+                                    <form>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                                <label for="inputName">Fullname</label>
+                                                <input type="text" class="form-control" id="inputEmail4"  required="">
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="inputName">Office-Address</label>
+                                                <input type="text" class="form-control" id="inputPassword4"  required="">
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="inputName">Email</label>
+                                                <input type="email" class="form-control" id="inputEmail4"  required="">
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="inputName">Phone</label>
+                                                <input type="text" class="form-control" id="inputEmail4"  required="">
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="inputName">DoB</label>
+                                                <input type="date" class="form-control" id="inputEmail4"  required="">
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="inputName">ID</label>
+                                                <input type="text" class="form-control" id="inputEmail4"  required="">
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="inputName">Journal Name</label>
+                                                <input type="text" class="form-control" id="inputEmail4"  required="">
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-wrap justify-content-between align-items-center">
+                                            <div class="custom-checkbox d-block"></div>
+                                            <button class="btn btn-primary mt-3 mt-sm-0" type="submit">Add</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="tab-pane fade" id="removeEditor" role="tabpanel" aria-labelledby="remove-editor-tab">
+                                    <h4 class="text-center mt-4 mb-4" style="text-transform: uppercase; color: #000000;">Remove an existing team member from a journal</h4>
+                                    <form>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                                <label for="inputName">Full Name</label>
+                                                <input type="text" class="form-control" id="inputEmail4" required="">
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="inputName">Journal Name</label>
+                                                <input type="select" class="form-control" id="inputPassword4"  required="">
+                                            </div>
+                                        </div>
 
-                </div>
+                                        <hr class="mt-3 mb-4">
+                                        <div class="col-12">
+                                            <div class="d-flex flex-wrap justify-content-between align-items-center">
+                                                <div class="custom-checkbox d-block"> </div>
+                                                <button class="btn btn-primary mt-3 mt-sm-0" type="submit">Remove</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                 <!-- /.container-fluid -->
 
             </div>
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <!-- <footer class="sticky-footer bg-white">
+            <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
                         <span>Copyright &copy; University of Calicut</span>
                     </div>
                 </div>
-            </footer> -->
+            </footer>
             <!-- End of Footer -->
 
         </div>
