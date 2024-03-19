@@ -25,6 +25,7 @@ urlpatterns = [
     path('editor/', views.editor,name='editor'),
     path('journal/', views.journal, name='journal'),
     path('forgotpassword/', views.forgotpassword, name='forgotpassword'),
+    path('vd/', views.vd, name='vd'),
     path('visits/', views.visits, name='visits'),
     path('downloads/', views.downloads, name='downloads'),
     path('userlist/', views.userlist, name='userlist'),

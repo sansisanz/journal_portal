@@ -10862,7 +10862,7 @@ a:focus {
 }
 
 .bg-login-image {
-  background: url("../img/oip.webp");
+  background: url("../img/admin-pic.jpg");
   background-position: center;
   background-size: cover;
 }
@@ -11282,3 +11282,20 @@ body.sidebar-toggled footer.sticky-footer {
   width: 100%;
 }
 
+.page_h{
+  color: #000;
+}
+/* visit page content */
+
+    /* Initially hide all article options */
+    .articles {
+      display: none;
+    }
+
+    /* Show articles when the corresponding journal is selected */
+    #journal1:checked ~ #journal1-articles,
+    #journal2:checked ~ #journal2-articles,
+    #journal3:checked ~ #journal3-articles {
+      display: block;
+    }
+/* end of visit page content */

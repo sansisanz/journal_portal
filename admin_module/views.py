@@ -17,6 +17,9 @@ def journal(request):
 def forgotpassword(request):
     return render(request, 'forgotpassword.html')     
 
+def vd(request):
+    return render(request, 'vd.html')     
+
 def visits(request):
     return render(request, 'visits.html')  
 
