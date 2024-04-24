@@ -105,19 +105,7 @@
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <!-- Topbar Search -->
-                    <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                    <h1 style="color: black;"><b>Userlist</b></h1>
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -175,72 +163,6 @@
                             </div>
                         </li>
 
-                        <!-- Nav Item - Messages -->
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-envelope fa-fw"></i>
-                                <!-- Counter - Messages -->
-                                <span class="badge badge-danger badge-counter">7</span>
-                            </a>
-                            <!-- Dropdown - Messages -->
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="messagesDropdown">
-                                <h6 class="dropdown-header">
-                                    Message Center
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_1.svg"
-                                            alt="...">
-                                        <div class="status-indicator bg-success"></div>
-                                    </div>
-                                    <div class="font-weight-bold">
-                                        <div class="text-truncate">Hi there! I am wondering if you can help me with a
-                                            problem I've been having.</div>
-                                        <div class="small text-gray-500">Emily Fowler · 58m</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_2.svg"
-                                            alt="...">
-                                        <div class="status-indicator"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">I have the photos that you ordered last month, how
-                                            would you like them sent to you?</div>
-                                        <div class="small text-gray-500">Jae Chun · 1d</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_3.svg"
-                                            alt="...">
-                                        <div class="status-indicator bg-warning"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">Last month's report looks great, I am very happy with
-                                            the progress so far, keep up the good work!</div>
-                                        <div class="small text-gray-500">Morgan Alvarez · 2d</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
-                                            alt="...">
-                                        <div class="status-indicator bg-success"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">Am I a good boy? The reason I ask is because someone
-                                            told me that people say this to all dogs, even if they aren't good...</div>
-                                        <div class="small text-gray-500">Chicken the Dog · 2w</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
-                            </div>
-                        </li>
-
                         <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
@@ -254,17 +176,13 @@
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="/admin_profile/">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="/admin_resetpassword/">
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Settings
-                                </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Activity Log
+                                    Reset Password
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
@@ -280,101 +198,172 @@
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid">
-
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h2 class="h2 mb-0 text-gray-800" style="margin-left: 50%;">USER LIST</h2>
-                    </div>
-
-                    <!-- Content Row -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">List of users who accessed the journals</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Mobile</th>
-                                            <th>Date</th>
-                                            <th>Journal</th>
-                                            <th>Article</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Mobile</th>
-                                            <th>Date</th>
-                                            <th>Journal</th>
-                                            <th>Article</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        <tr>
-                                            <td>Tiger</td>
-                                            <td>e1</td>
-                                            <td>m1</td>
-                                            <td>2011/06/21</td>
-                                            <td>j1</td>
-                                            <td>a1</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Garrett</td>
-                                            <td>e2</td>
-                                            <td>m2</td>
-                                            <td>2011/07/25</td>
-                                            <td>j2</td>
-                                            <td>a2</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Ashton</td>
-                                            <td>e3</td>
-                                            <td>m3</td>
-                                            <td>2009/01/12</td>
-                                            <td>j3</td>
-                                            <td>a3</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Cedric</td>
-                                            <td>e4</td>
-                                            <td>m3</td>
-                                            <td>2012/03/29</td>
-                                            <td>j4</td>
-                                            <td>a4</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Airi Satou</td>
-                                            <td>e5</td>
-                                            <td>m5</td>                                            
-                                            <td>2008/11/28</td>
-                                            <td>j5</td>
-                                            <td>a5</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Herrod</td>
-                                            <td>e6</td>
-                                            <td>m6</td>
-                                            <td>2012/08/06</td>
-                                            <td>j6</td>
-                                            <td>a6</td>
-                                        </tr>
-     
-                                    </tbody>
-                                </table>
+                <!DOCTYPE html>
+                <html lang="en">
+                
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>User List</title>
+                    <!-- Bootstrap CSS -->
+                    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+                    <!-- Custom CSS -->
+                    <style>
+                        /* Custom styles for user list */
+                        .user-list-container {
+                            padding: 30px;
+                        }
+                
+                        .card-header {
+                            background-color: #4e73df;
+                            color: #fff;
+                            font-weight: bold;
+                        }
+                
+                        .form-group {
+                            margin-bottom: 15px;
+                        }
+                    </style>
+                </head>
+                
+                <body>
+                    <div class="container-fluid user-list-container">
+                
+                        <!-- Dropdowns for Journal, Volume, and Article -->
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="journalSelect">Select Journal:</label>
+                                    <select class="form-control" id="journalSelect">
+                                        <option value="">Select Journal</option>
+                                        <option value="Journal A">Journal A</option>
+                                        <option value="Journal B">Journal B</option>
+                                        <option value="Journal C">Journal C</option>
+                                        <!-- Add more journal options as needed -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4" id="volumeDropdown" style="display: none;">
+                                <div class="form-group">
+                                    <label for="volumeSelect">Select Volume:</label>
+                                    <select class="form-control" id="volumeSelect">
+                                        <option value="">Select Volume</option>
+                                        <!-- Volume options will be populated dynamically -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4" id="articleDropdown" style="display: none;">
+                                <div class="form-group">
+                                    <label for="articleSelect">Select Article:</label>
+                                    <select class="form-control" id="articleSelect">
+                                        <option value="">Select Article</option>
+                                        <!-- Article options will be populated dynamically -->
+                                    </select>
+                                </div>
                             </div>
                         </div>
+                
+                        <!-- User List Table -->
+                        <div class="card shadow mb-4" id="userListTable" style="display: none;">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold">User List</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Mobile</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="userListBody">
+                                            <!-- User list rows will be populated dynamically -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                
                     </div>
+                
+                    <!-- Bootstrap JS and jQuery -->
+                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+                    <script>
+                        $(document).ready(function() {
+                            // Populate Volume dropdown based on selected Journal
+                            $('#journalSelect').change(function() {
+                                var selectedJournal = $(this).val();
+                                if (selectedJournal) {
+                                    $('#volumeDropdown').show();
+                                    $('#volumeSelect').empty().append('<option value="">Select Volume</option>');
+                                    // Example: Populate volumes dynamically based on selected journal
+                                    // This can be replaced with actual data fetching logic
+                                    if (selectedJournal === 'Journal A') {
+                                        $('#volumeSelect').append('<option value="Volume 1">Volume 1</option>');
+                                    } else if (selectedJournal === 'Journal B') {
+                                        $('#volumeSelect').append('<option value="Volume 2">Volume 2</option>');
+                                    } else if (selectedJournal === 'Journal C') {
+                                        $('#volumeSelect').append('<option value="Volume 3">Volume 3</option>');
+                                    }
+                                } else {
+                                    $('#volumeDropdown').hide();
+                                    $('#articleDropdown').hide();
+                                    $('#userListTable').hide();
+                                }
+                            });
+                
+                            // Populate Article dropdown based on selected Volume
+                            $('#volumeSelect').change(function() {
+                                var selectedVolume = $(this).val();
+                                if (selectedVolume) {
+                                    $('#articleDropdown').show();
+                                    $('#articleSelect').empty().append('<option value="">Select Article</option>');
+                                    // Example: Populate articles dynamically based on selected volume
+                                    // This can be replaced with actual data fetching logic
+                                    if (selectedVolume === 'Volume 1') {
+                                        $('#articleSelect').append('<option value="Article 1">Article 1</option>');
+                                    } else if (selectedVolume === 'Volume 2') {
+                                        $('#articleSelect').append('<option value="Article 2">Article 2</option>');
+                                    } else if (selectedVolume === 'Volume 3') {
+                                        $('#articleSelect').append('<option value="Article 3">Article 3</option>');
+                                    }
+                                } else {
+                                    $('#articleDropdown').hide();
+                                    $('#userListTable').hide();
+                                }
+                            });
+                
+                            // Show User List table based on selected Article
+                            $('#articleSelect').change(function() {
+                                var selectedArticle = $(this).val();
+                                if (selectedArticle) {
+                                    // Example: Display user list table based on selected article
+                                    // This can be replaced with actual data fetching and table rendering logic
+                                    $('#userListBody').empty().append(`
+                                        <tr>
+                                            <td>Tiger Nixon</td>
+                                            <td>tiger@example.com</td>
+                                            <td>1234567890</td>
+                                            <td>2011/06/21</td>
+                                        </tr>
+                                        <!-- Add more user rows dynamically based on selected article -->
+                                    `);
+                                    $('#userListTable').show();
+                                } else {
+                                    $('#userListTable').hide();
+                                }
+                            });
+                        });
+                    </script>
+                </body>
+                
+                </html>
+                
 
-                </div>
-                    <!-- Table Content -->
-
-                </div>
                 <!-- /.container-fluid -->
 
             </div>
@@ -424,6 +413,13 @@
             </div>
         </div>
     </div>
+
+     <!-- Bootstrap JS and dependencies -->
+     <script src="{% static 'https://code.jquery.com/jquery-3.6.0.min.js' %}"></script>
+     <script src="{% static 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js' %}"></script>
+     <!-- DataTables JS (for sorting and pagination) -->
+    <script src="{% static 'https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js' %}"></script>
+    
 
     <!-- Bootstrap core JavaScript-->
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>

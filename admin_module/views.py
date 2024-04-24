@@ -25,3 +25,9 @@ def downloads(request):
 
 def userlist(request):
     return render(request, 'userlist.html')
+
+def admin_profile(request):
+    return render(request, 'admin_profile.html')
+
+def admin_resetpassword(request):
+    return render(request, 'admin_resetpassword.html')

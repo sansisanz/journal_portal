@@ -20,6 +20,60 @@
 
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-admin-2.css'%}" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fc;
+            color: #333;
+        }
+
+        .container-box {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .section-header {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+        }
+
+        .visit-card {
+            display: none;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .visit-card .card-header {
+            background-color: #007bff;
+            color: #fff;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .visit-card .card-body {
+            padding: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-control {
+            border-radius: 4px;
+        }
+    </style>
+
+    <!-- Load jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 </head>
 
@@ -58,7 +112,7 @@
 
             <li class="nav-item">
                 <a class="nav-link" href="/editor/">
-                    <i class="fas fa-fw fa-download"></i>
+                    <i class="fas fa-fw fa-pen"></i>
                     <span>Editors</span></a>
             </li>
 
@@ -105,19 +159,7 @@
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <!-- Topbar Search -->
-                    <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                    <h1 style="color: black;"><b>Visits</b></h1>
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -173,73 +215,7 @@
                                 
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
                             </div>
-                        </li>
-
-                        <!-- Nav Item - Messages -->
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-envelope fa-fw"></i>
-                                <!-- Counter - Messages -->
-                                <span class="badge badge-danger badge-counter">7</span>
-                            </a>
-                            <!-- Dropdown - Messages -->
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="messagesDropdown">
-                                <h6 class="dropdown-header">
-                                    Message Center
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_1.svg"
-                                            alt="...">
-                                        <div class="status-indicator bg-success"></div>
-                                    </div>
-                                    <div class="font-weight-bold">
-                                        <div class="text-truncate">Hi there! I am wondering if you can help me with a
-                                            problem I've been having.</div>
-                                        <div class="small text-gray-500">Emily Fowler · 58m</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_2.svg"
-                                            alt="...">
-                                        <div class="status-indicator"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">I have the photos that you ordered last month, how
-                                            would you like them sent to you?</div>
-                                        <div class="small text-gray-500">Jae Chun · 1d</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_3.svg"
-                                            alt="...">
-                                        <div class="status-indicator bg-warning"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">Last month's report looks great, I am very happy with
-                                            the progress so far, keep up the good work!</div>
-                                        <div class="small text-gray-500">Morgan Alvarez · 2d</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
-                                            alt="...">
-                                        <div class="status-indicator bg-success"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">Am I a good boy? The reason I ask is because someone
-                                            told me that people say this to all dogs, even if they aren't good...</div>
-                                        <div class="small text-gray-500">Chicken the Dog · 2w</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
-                            </div>
-                        </li>
+                        </li>                        
 
                         <div class="topbar-divider d-none d-sm-block"></div>
 
@@ -254,17 +230,13 @@
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="/admin_profile/">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="/admin_resetpassword/">
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Settings
-                                </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Activity Log
+                                    Reset Password
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
@@ -280,77 +252,165 @@
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid">
 
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                   <!-- Boxed container -->
+                   <div class="container-box">
+                    <div class="journal-list">
+                        <h1>Journal Visits</h1>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="list-group">
+                                    <a href="#" class="list-group-item list-group-item-action journal-item" data-journal="Journal A">Journal A</a>
+                                    <a href="#" class="list-group-item list-group-item-action journal-item" data-journal="Journal B">Journal B</a>
+                                    <a href="#" class="list-group-item list-group-item-action journal-item" data-journal="Journal C">Journal C</a>
+                                    <a href="#" class="list-group-item list-group-item-action journal-item" data-journal="Journal D">Journal D</a>
+                                    <!-- Add more journals as needed -->
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card shadow visit-card" id="visitCard">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">Journal Visits</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text"><strong>Journal Name:</strong> <span id="journalName"></span></p>
+                                        <p class="card-text"><strong>Total Visits:</strong> <span id="visitCount">0</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <br><br>
+            
+                        <!-- Dropdowns for Journal, Volume, and Article -->
+                        <h1>Article Visits</h1>
+                        <div class="row mt-4">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="journalSelect">Select Journal:</label>
+                                    <select class="form-control" id="journalSelect">
+                                        <option value="">Select Journal</option>
+                                        <option value="Journal A">Journal A</option>
+                                        <option value="Journal B">Journal B</option>
+                                        <option value="Journal C">Journal C</option>
+                                        <!-- Add more journal options as needed -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4" id="volumeDropdown" style="display: none;">
+                                <div class="form-group">
+                                    <label for="volumeSelect">Select Volume:</label>
+                                    <select class="form-control" id="volumeSelect">
+                                        <option value="">Select Volume</option>
+                                        <!-- Volume options will be populated dynamically -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4" id="articleDropdown" style="display: none;">
+                                <div class="form-group">
+                                    <label for="articleSelect">Select Article:</label>
+                                    <select class="form-control" id="articleSelect">
+                                        <option value="">Select Article</option>
+                                        <!-- Article options will be populated dynamically -->
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+            
+                        <!-- Visit Card for Article -->
+                        <div class="card shadow visit-card" id="articleVisitCard">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Article Visits</h5>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title" id="selectedArticleTitle"></h5>
+                                <p class="card-text"><strong>Total Visits:</strong> <span id="articleVisitCount">0</span></p>
+                            </div>
+                        </div>
                     </div>
-
-                    <!-- Content Row -->
-                    <div class="row">
-                        <!-- visits (day)  -->
-                        <div class="col-xl-12 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Today's Visits
-                                            </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">800</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-eye fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- visits (Monthly)  -->
-                        <div class="col-xl-12 mb-4">
-                            <div class="card border-left-danger shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                This Month's Visits
-                                            </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">40,000</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-eye fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Visits (Total) -->
-                        <div class="col-xl-12 mb-4">
-                            <div class="card border-left-success shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Total Visits
-                                            </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">215,000</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-eye fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-
-                    <!-- Content Row -->
-
                 </div>
-                <!-- /.container-fluid -->
+            
+                <!-- Bootstrap JS and jQuery -->
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+                <script>
+                    $(document).ready(function() {
+                        // Populate Volume dropdown based on selected Journal
+                        $('#journalSelect').change(function() {
+                            var selectedJournal = $(this).val();
+                            if (selectedJournal) {
+                                $('#volumeDropdown').show();
+                                $('#volumeSelect').empty().append('<option value="">Select Volume</option>');
+                                // Example: Populate volumes dynamically based on selected journal
+                                // This can be replaced with actual data fetching logic
+                                if (selectedJournal === 'Journal A') {
+                                    $('#volumeSelect').append('<option value="Volume 1">Volume 1</option>');
+                                } else if (selectedJournal === 'Journal B') {
+                                    $('#volumeSelect').append('<option value="Volume 2">Volume 2</option>');
+                                } else if (selectedJournal === 'Journal C') {
+                                    $('#volumeSelect').append('<option value="Volume 3">Volume 3</option>');
+                                }
+                            } else {
+                                $('#volumeDropdown').hide();
+                                $('#articleDropdown').hide();
+                                $('#articleVisitCard').hide();
+                            }
+                        });
+            
+                        // Populate Article dropdown based on selected Volume
+                        $('#volumeSelect').change(function() {
+                            var selectedVolume = $(this).val();
+                            if (selectedVolume) {
+                                $('#articleDropdown').show();
+                                $('#articleSelect').empty().append('<option value="">Select Article</option>');
+                                // Example: Populate articles dynamically based on selected volume
+                                // This can be replaced with actual data fetching logic
+                                if (selectedVolume === 'Volume 1') {
+                                    $('#articleSelect').append('<option value="Article 1">Article 1</option>');
+                                } else if (selectedVolume === 'Volume 2') {
+                                    $('#articleSelect').append('<option value="Article 2">Article 2</option>');
+                                } else if (selectedVolume === 'Volume 3') {
+                                    $('#articleSelect').append('<option value="Article 3">Article 3</option>');
+                                }
+                            } else {
+                                $('#articleDropdown').hide();
+                                $('#articleVisitCard').hide();
+                            }
+                        });
+            
+                        // Show Article Visit Card based on selected Article
+                        $('#articleSelect').change(function() {
+                            var selectedArticle = $(this).val();
+                            if (selectedArticle) {
+                                // Example: Fetch and display total visits for selected article
+                                var totalVisits = Math.floor(Math.random() * 1000); // Replace with actual data fetching logic
+                                $('#selectedArticleTitle').text(selectedArticle);
+                                $('#articleVisitCount').text(totalVisits);
+                                $('#articleVisitCard').show();
+                            } else {
+                                $('#articleVisitCard').hide();
+                            }
+                        });
+                    });
+                </script>
+                
 
             </div>
+
+            <script>
+                // JavaScript to handle click events on journal items
+                $(document).ready(function() {
+                    $('.journal-item').click(function(e) {
+                        e.preventDefault();
+                        var journalName = $(this).data('journal');
+                        // Simulate fetching total visits (replace with actual data)
+                        var totalVisits = Math.floor(Math.random() * 1000); // Example random visits
+                        $('#journalName').text(journalName);
+                        $('#visitCount').text(totalVisits);
+                        $('#visitCard').show();
+                    });
+                });
+            </script>
             <!-- End of Main Content -->
 
             <!-- Footer -->

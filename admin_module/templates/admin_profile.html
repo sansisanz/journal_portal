@@ -22,67 +22,37 @@
     <link href="{% static 'css/sb-admin-2.css'%}" rel="stylesheet">
 
     <style>
-        /* Journals Content */
-                       
-    /* Styling for form elements */
-.form-group {
-margin-bottom: 20px;
-}
-
-label {
-font-weight: bold;
-color: #333;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="date"] {
-width: 100%;
-padding: 10px;
-border: 1px solid #ccc;
-border-radius: 5px;
-}
-
-button[type="submit"] {
-padding: 10px 20px;
-background-color: #f3be11;
-color: #fff;
-border: none;
-border-radius: 5px;
-cursor: pointer;
-}
-
-button[type="submit"]:hover {
-background-color: #c77203;
-}
-
-/* Responsive layout adjustments */
-@media (max-width: 768px) {
-.form-group {
-margin-bottom: 15px;
-}
-
-button[type="submit"] {
-width: 100%;
-}
-}
-
-#add-journal-tab.nav-link, #remove-journal-tab.nav-link , #remove-article-tab.nav-link {
-color: #000000;
-}
-
-#add-journal-tab.nav-link.active, #remove-journal-tab.nav-link.active , #remove-article-tab.nav-link.active {
-color: #7e7a6d;
-}
-
-.container-box {
-            border: 1px solid #ddd; /* Border color */
-            padding: 20px; /* Padding inside the container */
-            border-radius: 8px; /* Rounded corners */
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow effect */
-            margin-top: 20px; /* Margin top for spacing */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fc;
+            color: #333;
         }
 
+        .profile-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .form-label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-control {
+            border-radius: 4px;
+        }
     </style>
 
 </head>
@@ -122,7 +92,7 @@ color: #7e7a6d;
 
             <li class="nav-item">
                 <a class="nav-link" href="/editor/">
-                    <i class="fas fa-fw fa-pen"></i>
+                    <i class="fas fa-fw fa-download"></i>
                     <span>Editors</span></a>
             </li>
 
@@ -169,7 +139,7 @@ color: #7e7a6d;
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <h1 style="color: #000000;">Journals</h1>
+                    <h1 style="color: black;"><b>PROFILE</b></h1>
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -227,7 +197,6 @@ color: #7e7a6d;
                             </div>
                         </li>
 
-
                         <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
@@ -263,129 +232,56 @@ color: #7e7a6d;
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid">        
-                    
-                    <div class="card signup_v4 mb-30">
-                        <div class="card-body">
-                            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link active" id="add-journal-tab" data-toggle="tab" href="#addJournal" role="tab" aria-controls="addJournal" aria-selected="true">Add Journal</a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link" id="remove-journal-tab" data-toggle="tab" href="#removeJournal" role="tab" aria-controls="removeJournal" aria-selected="false">Remove Journal</a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link" id="remove-article-tab" data-toggle="tab" href="#removeArticle" role="tab" aria-controls="removeArticle" aria-selected="false">Remove Article</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content" id="myTabContent">
-                                <div class="tab-pane fade show active" id="addJournal" role="tabpanel" aria-labelledby="add-journal-tab">
-                                    <h4 class="text-center mt-4 mb-4" style="text-transform: uppercase; color: #000000;">Add a new journal</h4>
-                                    <form>
-                                        <div class="form-row">
-                                            <div class="form-group col-md-12">
-                                                <label for="inputJournalName">Journal Name</label>
-                                                <select class="form-control" id="inputJournalName" required>
-                                                    <option value="">Select Journal Name</option>
-                                                    <option value="journal1">Journal 1</option>
-                                                    <option value="journal2">Journal 2</option>
-                                                    <option value="journal3">Journal 3</option>
-                                                </select>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-3"></div>
+                            <div class="col-lg-6">
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold text-primary">Admin Profile</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="adminProfileForm">
+                                            <div class="form-group">
+                                                <label for="adminName" class="form-label">Name:</label>
+                                                <input type="text" class="form-control" id="adminName" value="Admin Name" readonly>
                                             </div>
-                                            <div class="form-group col-md-12">
-                                                <label for="inputVolumeNumber">Volume Number</label>
-                                                <select class="form-control" id="inputVolumeNumber" required>
-                                                    <option value="">Select Volume Number</option>
-                                                    <option value="vol1">Volume 1</option>
-                                                    <option value="vol2">Volume 2</option>
-                                                    <option value="vol3">Volume 3</option>
-                                                </select>
+                                            <div class="form-group">
+                                                <label for="adminEmail" class="form-label">Email:</label>
+                                                <input type="email" class="form-control" id="adminEmail" value="admin@example.com"
+                                                    readonly>
                                             </div>
-                                            <div class="form-group col-md-12">
-                                                <label for="inputIssueNumber">Issue Number</label>
-                                                <select class="form-control" id="inputIssueNumber" required>
-                                                    <option value="">Select Issue Number</option>
-                                                    <option value="issue1">Issue 1</option>
-                                                    <option value="issue2">Issue 2</option>
-                                                    <option value="issue3">Issue 3</option>
-                                                </select>
+                                            <div class="form-group">
+                                                <label for="adminMobile" class="form-label">Mobile:</label>
+                                                <input type="tel" class="form-control" id="adminMobile" value="123 456 7890" readonly>
                                             </div>
-                                        </div>
-                                        <div class="d-flex flex-wrap justify-content-between align-items-center">
-                                            <button class="btn btn-primary mt-3 mt-sm-0" type="submit">Add Journal</button>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="tab-pane fade" id="removeJournal" role="tabpanel" aria-labelledby="remove-journal-tab">
-                                    <h4 class="text-center mt-4 mb-4" style="text-transform: uppercase; color: #000000;">Remove an existing journal</h4>
-                                    <form>
-                                        <div class="form-row">
-                                            <div class="form-group col-md-12">
-                                                <label for="inputRemoveJournalName">Journal Name</label>
-                                                <select class="form-control" id="inputRemoveJournalName" required>
-                                                    <option value="">Select Journal Name to Remove</option>
-                                                    <option value="journal1">Journal 1</option>
-                                                    <option value="journal2">Journal 2</option>
-                                                    <option value="journal3">Journal 3</option>
-                                                </select>
+                                            <div class="form-group">
+                                                <label for="adminAddress" class="form-label">Address:</label>
+                                                <textarea class="form-control" id="adminAddress" rows="3"
+                                                    readonly>123 Street, City, Country</textarea>
                                             </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="d-flex flex-wrap justify-content-between align-items-center">
-                                                <button class="btn btn-primary mt-3 mt-sm-0" type="submit">Remove Journal</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="tab-pane fade" id="removeArticle" role="tabpanel" aria-labelledby="remove-article-tab">
-                                    <h4 class="text-center mt-4 mb-4" style="text-transform: uppercase; color: #000000;">Remove an article</h4>
-                                    <form>
-                                        <div class="form-row">
-                                            <div class="form-group col-md-12">
-                                                <label for="inputRemoveArticleJournalName">Journal Name</label>
-                                                <select class="form-control" id="inputRemoveArticleJournalName" required>
-                                                    <option value="">Select Journal Name</option>
-                                                    <option value="journal1">Journal 1</option>
-                                                    <option value="journal2">Journal 2</option>
-                                                    <option value="journal3">Journal 3</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <label for="inputRemoveArticleName">Article Name</label>
-                                                <select class="form-control" id="inputRemoveArticleName" required>
-                                                    <option value="">Select Article Name</option>
-                                                    <option value="article1">Article 1</option>
-                                                    <option value="article2">Article 2</option>
-                                                    <option value="article3">Article 3</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="d-flex flex-wrap justify-content-between align-items-center">
-                                                <button class="btn btn-primary mt-3 mt-sm-0" type="submit">Remove Article</button>
-                                            </div>
-                                        </div>
-                                    </form>
+                                            <button type="button" class="btn btn-primary btn-block" onclick="editProfile()">Edit Profile</button>
+                                            <button type="submit" class="btn btn-success btn-block mt-2 d-none" id="saveProfileBtn">Save
+                                                Changes</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    
-                    
-                <!-- /.container-fluid -->
+                 <!-- /.container-fluid -->
 
             </div>
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
+            <!-- <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
                         <span>Copyright &copy; University of Calicut</span>
                     </div>
                 </div>
-            </footer>
+            </footer> -->
             <!-- End of Footer -->
 
         </div>
@@ -418,6 +314,28 @@ color: #7e7a6d;
             </div>
         </div>
     </div>
+        <!-- Bootstrap JS -->
+        <script src="{% static 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js' %}"></script>
+        <script>
+            function editProfile() {
+                // Enable all input fields for editing
+                $('input, textarea').prop('readonly', false);
+                $('#saveProfileBtn').removeClass('d-none'); // Show the Save Changes button
+            }
+    
+            // Submit profile changes
+            $('#adminProfileForm').submit(function (event) {
+                event.preventDefault(); // Prevent form submission
+    
+                // Here you can implement the logic to save the updated profile details
+                // For demonstration purposes, this alerts the user that changes are saved
+                alert('Profile changes saved successfully!');
+                
+                // Disable input fields and hide Save Changes button after saving
+                $('input, textarea').prop('readonly', true);
+                $('#saveProfileBtn').addClass('d-none'); // Hide the Save Changes button
+            });
+        </script>
 
     <!-- Bootstrap core JavaScript-->
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
@@ -435,6 +353,11 @@ color: #7e7a6d;
     <!-- Page level custom scripts -->
     <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
     <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+
+     <!-- Bootstrap JS and jQuery -->
+     <script src="{% static 'https://code.jquery.com/jquery-3.6.0.min.js' %}"></script>
+     <script src="{% static 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js' %}"></script>
+ </body>
 
 </body>
 
