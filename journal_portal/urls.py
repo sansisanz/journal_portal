@@ -28,4 +28,6 @@ urlpatterns = [
     path('visits/', views.visits, name='visits'),
     path('downloads/', views.downloads, name='downloads'),
     path('userlist/', views.userlist, name='userlist'),
+    path('admin_profile/', views.admin_profile, name='admin_profile'),
+    path('admin_resetpassword/', views.admin_resetpassword, name='admin_resetpassword'),
 ]
