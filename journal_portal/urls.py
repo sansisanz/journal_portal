@@ -21,15 +21,9 @@ import editor_module
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', views.login,name='login'),
-    path('index/', views.index,name='index'),
-    path('editor/', views.editor,name='editor'),
-    path('journal/', views.journal, name='journal'),
-    path('forgotpassword/', views.forgotpassword, name='forgotpassword'),
-    path('visits/', views.visits, name='visits'),
-    path('downloads/', views.downloads, name='downloads'),
-    path('userlist/', views.userlist, name='userlist'),
-    path('admin_profile/', views.admin_profile, name='admin_profile'),
-    path('admin_resetpassword/', views.admin_resetpassword, name='admin_resetpassword'),
-    path("",include('editor_module.urls'))
-]
+    path("",include('editor_module.urls')),
+    path('',include('admin_module.urls')),
+    path('',include('author_module.urls')),
+    path('',include('public_module.urls'))
+]     
+

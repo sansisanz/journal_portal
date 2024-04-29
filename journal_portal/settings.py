@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'admin_module',
     'editor_module',
+    'author_module',
+    'public_module',
 ]
 
 MIDDLEWARE = [

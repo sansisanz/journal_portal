@@ -21,6 +21,10 @@
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-admin-2.css'%}" rel="stylesheet">
 
+    <!-- Add jQuery library if not already included -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <style>
         /* Journals Content */
                        
@@ -45,7 +49,8 @@ border-radius: 5px;
 
 button[type="submit"] {
 padding: 10px 20px;
-background-color: #f3be11;
+background-color:#4e73df;
+border-color:#4e73df;
 color: #fff;
 border: none;
 border-radius: 5px;
@@ -53,7 +58,7 @@ cursor: pointer;
 }
 
 button[type="submit"]:hover {
-background-color: #c77203;
+background-color: #06beec;
 }
 
 /* Responsive layout adjustments */
@@ -67,11 +72,11 @@ width: 100%;
 }
 }
 
-#add-journal-tab.nav-link, #remove-journal-tab.nav-link , #remove-article-tab.nav-link {
+#add-journal-tab.nav-link, #remove-journal-tab.nav-link , #remove-article-tab.nav-link, #remove-volume-tab.nav-link {
 color: #000000;
 }
 
-#add-journal-tab.nav-link.active, #remove-journal-tab.nav-link.active , #remove-article-tab.nav-link.active {
+#add-journal-tab.nav-link.active, #remove-journal-tab.nav-link.active , #remove-article-tab.nav-link.active, #remove-volume-tab.nav-link.active {
 color: #7e7a6d;
 }
 
@@ -263,8 +268,7 @@ color: #7e7a6d;
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid">        
-                    
+                <div class="container-fluid">
                     <div class="card signup_v4 mb-30">
                         <div class="card-body">
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -273,6 +277,9 @@ color: #7e7a6d;
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link" id="remove-journal-tab" data-toggle="tab" href="#removeJournal" role="tab" aria-controls="removeJournal" aria-selected="false">Remove Journal</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="remove-volume-tab" data-toggle="tab" href="#removeVolume" role="tab" aria-controls="removeVolume" aria-selected="false">Remove Volume</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link" id="remove-article-tab" data-toggle="tab" href="#removeArticle" role="tab" aria-controls="removeArticle" aria-selected="false">Remove Article</a>
@@ -285,34 +292,15 @@ color: #7e7a6d;
                                         <div class="form-row">
                                             <div class="form-group col-md-12">
                                                 <label for="inputJournalName">Journal Name</label>
-                                                <select class="form-control" id="inputJournalName" required>
-                                                    <option value="">Select Journal Name</option>
-                                                    <option value="journal1">Journal 1</option>
-                                                    <option value="journal2">Journal 2</option>
-                                                    <option value="journal3">Journal 3</option>
-                                                </select>
+                                                <input type="text" class="form-control" id="inputJournalName" required>
                                             </div>
                                             <div class="form-group col-md-12">
-                                                <label for="inputVolumeNumber">Volume Number</label>
-                                                <select class="form-control" id="inputVolumeNumber" required>
-                                                    <option value="">Select Volume Number</option>
-                                                    <option value="vol1">Volume 1</option>
-                                                    <option value="vol2">Volume 2</option>
-                                                    <option value="vol3">Volume 3</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <label for="inputIssueNumber">Issue Number</label>
-                                                <select class="form-control" id="inputIssueNumber" required>
-                                                    <option value="">Select Issue Number</option>
-                                                    <option value="issue1">Issue 1</option>
-                                                    <option value="issue2">Issue 2</option>
-                                                    <option value="issue3">Issue 3</option>
-                                                </select>
+                                                <label for="inputCoverImage">Cover Image (png, jpg, jpeg)</label>
+                                                <input type="file" class="form-control-file" id="inputCoverImage" accept=".png, .jpg, .jpeg" required>
                                             </div>
                                         </div>
                                         <div class="d-flex flex-wrap justify-content-between align-items-center">
-                                            <button class="btn btn-primary mt-3 mt-sm-0" type="submit">Add Journal</button>
+                                            <button class="btn btn-primary mt-3 mt-sm-0" type="submit" data-toggle="modal" data-target="#addJournalModal">Add Journal</button>
                                         </div>
                                     </form>
                                 </div>
@@ -332,7 +320,34 @@ color: #7e7a6d;
                                         </div>
                                         <div class="col-12">
                                             <div class="d-flex flex-wrap justify-content-between align-items-center">
-                                                <button class="btn btn-primary mt-3 mt-sm-0" type="submit">Remove Journal</button>
+                                                <button class="btn btn-primary mt-3 mt-sm-0" type="submit" data-toggle="modal" data-target="#removeJournalModal">Remove Journal</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="tab-pane fade" id="removeVolume" role="tabpanel" aria-labelledby="remove-volume-tab">
+                                    <h4 class="text-center mt-4 mb-4" style="text-transform: uppercase; color: #000000;">Remove a volume</h4>
+                                    <form>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                                <label for="inputRemoveVolumeJournalName">Journal Name</label>
+                                                <select class="form-control" id="inputRemoveVolumeJournalName" required>
+                                                    <option value="">Select Journal Name</option>
+                                                    <option value="Journal 1">Journal 1</option>
+                                                    <option value="Journal 2">Journal 2</option>
+                                                    <option value="Journal 3">Journal 3</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="inputRemoveVolumeNumber">Volume Number</label>
+                                                <select class="form-control" id="inputRemoveVolumeNumber" required>
+                                                    <option value="">Select Volume Number</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="d-flex flex-wrap justify-content-between align-items-center">
+                                                <button class="btn btn-primary mt-3 mt-sm-0" type="submit" data-toggle="modal" data-target="#removeVolumeModal">Remove Volume</button>
                                             </div>
                                         </div>
                                     </form>
@@ -345,24 +360,27 @@ color: #7e7a6d;
                                                 <label for="inputRemoveArticleJournalName">Journal Name</label>
                                                 <select class="form-control" id="inputRemoveArticleJournalName" required>
                                                     <option value="">Select Journal Name</option>
-                                                    <option value="journal1">Journal 1</option>
-                                                    <option value="journal2">Journal 2</option>
-                                                    <option value="journal3">Journal 3</option>
+                                                    <option value="Journal 1">Journal 1</option>
+                                                    <option value="Journal 2">Journal 2</option>
+                                                    <option value="Journal 3">Journal 3</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="inputVolumeNumber">Volume Number</label>
+                                                <select class="form-control" id="inputVolumeNumber" required>
+                                                    <option value="">Select Volume Number</option>
                                                 </select>
                                             </div>
                                             <div class="form-group col-md-12">
                                                 <label for="inputRemoveArticleName">Article Name</label>
                                                 <select class="form-control" id="inputRemoveArticleName" required>
                                                     <option value="">Select Article Name</option>
-                                                    <option value="article1">Article 1</option>
-                                                    <option value="article2">Article 2</option>
-                                                    <option value="article3">Article 3</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-12">
                                             <div class="d-flex flex-wrap justify-content-between align-items-center">
-                                                <button class="btn btn-primary mt-3 mt-sm-0" type="submit">Remove Article</button>
+                                                <button class="btn btn-primary mt-3 mt-sm-0" type="submit" data-toggle="modal" data-target="#removeArticleModal">Remove Article</button>
                                             </div>
                                         </div>
                                     </form>
@@ -370,12 +388,111 @@ color: #7e7a6d;
                             </div>
                         </div>
                     </div>
+                </div>
+                
+                <!-- Include jQuery library -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-                    
-                    
+<script>
+    $(document).ready(function() {
+        // Populate Volume dropdown based on selected Journal
+        $('#inputRemoveVolumeJournalName').change(function() {
+            var selectedJournal = $(this).val();
+            if (selectedJournal) {
+                $('#inputRemoveVolumeNumber').empty().append('<option value="">Select Volume Number</option>');
+                // Example: Populate volumes dynamically based on selected journal
+                // This can be replaced with actual data fetching logic
+                var volumes = getVolumes(selectedJournal);
+                volumes.forEach(function(volume) {
+                    $('#inputRemoveVolumeNumber').append('<option value="' + volume + '">' + volume + '</option>');
+                });
+            } else {
+                $('#inputRemoveVolumeNumber').empty();
+            }
+        });
+    });
+
+    // Function to fetch volume numbers based on selected journal name
+    function getVolumes(journalName) {
+        // Replace this with your own logic to fetch volume numbers for the selected journal
+        // For demonstration, returning some sample volume numbers
+        switch (journalName) {
+            case 'Journal 1':
+                return ['Volume 1', 'Volume 2', 'Volume 3'];
+            case 'Journal 2':
+                return ['Volume 4', 'Volume 5', 'Volume 6'];
+            case 'Journal 3':
+                return ['Volume 7', 'Volume 8', 'Volume 9'];
+            default:
+                return [];
+        }
+    }
+</script>
+
+<!-- Include jQuery library -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Populate Volume dropdown based on selected Journal
+        $('#inputRemoveArticleJournalName').change(function() {
+            var selectedJournal = $(this).val();
+            if (selectedJournal) {
+                $('#inputVolumeNumber').empty().append('<option value="">Select Volume Number</option>');
+                // Example: Populate volumes dynamically based on selected journal
+                // This can be replaced with actual data fetching logic
+                var volumes = getVolumes(selectedJournal);
+                volumes.forEach(function(volume) {
+                    $('#inputVolumeNumber').append('<option value="' + volume + '">' + volume + '</option>');
+                });
+            } else {
+                $('#inputVolumeNumber').empty();
+                $('#inputRemoveArticleName').empty();
+            }
+        });
+
+        // Populate Article dropdown based on selected Volume
+        $('#inputVolumeNumber').change(function() {
+            var selectedVolume = $(this).val();
+            var selectedJournal = $('#inputRemoveArticleJournalName').val();
+            if (selectedVolume && selectedJournal) {
+                $('#inputRemoveArticleName').empty().append('<option value="">Select Article Name</option>');
+                // Example: Populate articles dynamically based on selected volume and journal
+                // This can be replaced with actual data fetching logic
+                var articles = getArticles(selectedJournal, selectedVolume);
+                articles.forEach(function(article) {
+                    $('#inputRemoveArticleName').append('<option value="' + article + '">' + article + '</option>');
+                });
+            } else {
+                $('#inputRemoveArticleName').empty();
+            }
+        });
+    });
+
+    // Function to fetch articles based on selected journal and volume
+    function getArticles(journalName, volumeNumber) {
+        // Replace this with your own logic to fetch articles for the selected journal and volume
+        // For demonstration, returning some sample articles
+        switch (journalName + '-' + volumeNumber) {
+            case 'Journal 1-Volume 1':
+                return ['Article 1', 'Article 2', 'Article 3'];
+            case 'Journal 1-Volume 2':
+                return ['Article 11', 'Article 12', 'Article 13'];    
+            case 'Journal 1-Volume 3':
+                return ['Article 113', 'Article 122', 'Article 135']; 
+            case 'Journal 2-Volume 4':
+                return ['Article 4', 'Article 5', 'Article 6'];
+            case 'Journal 3-Volume 7':
+                return ['Article 7', 'Article 8', 'Article 9'];
+            default:
+                return [];
+        }
+    }
+</script>
+
+
                 <!-- /.container-fluid -->
 
-            </div>
             <!-- End of Main Content -->
 
             <!-- Footer -->
