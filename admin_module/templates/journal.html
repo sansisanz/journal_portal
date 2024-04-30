@@ -72,11 +72,11 @@ width: 100%;
 }
 }
 
-#add-journal-tab.nav-link, #remove-journal-tab.nav-link , #remove-article-tab.nav-link, #remove-volume-tab.nav-link {
+#add-journal-tab.nav-link, #remove-journal-tab.nav-link , #remove-article-tab.nav-link, #remove-volume-tab.nav-link, #remove-issues-tab.nav-link {
 color: #000000;
 }
 
-#add-journal-tab.nav-link.active, #remove-journal-tab.nav-link.active , #remove-article-tab.nav-link.active, #remove-volume-tab.nav-link.active {
+#add-journal-tab.nav-link.active, #remove-journal-tab.nav-link.active , #remove-article-tab.nav-link.active, #remove-volume-tab.nav-link.active, #remove-issues-tab.nav-link.active {
 color: #7e7a6d;
 }
 
@@ -174,7 +174,7 @@ color: #7e7a6d;
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <h1 style="color: #000000;">Journals</h1>
+                    <h2 style="color: #4e3e3e; font-family: 'Times New Roman', Times, serif;"><b>Journals</b></h2>
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -282,8 +282,13 @@ color: #7e7a6d;
                                     <a class="nav-link" id="remove-volume-tab" data-toggle="tab" href="#removeVolume" role="tab" aria-controls="removeVolume" aria-selected="false">Remove Volume</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="remove-issues-tab" data-toggle="tab" href="#removeIssues" role="tab" aria-controls="removeIssues" aria-selected="false">Remove Issues</a>
+                                </li>
+
+                                <li class="nav-item" role="presentation">
                                     <a class="nav-link" id="remove-article-tab" data-toggle="tab" href="#removeArticle" role="tab" aria-controls="removeArticle" aria-selected="false">Remove Article</a>
                                 </li>
+
                             </ul>
                             <div class="tab-content" id="myTabContent">
                                 <div class="tab-pane fade show active" id="addJournal" role="tabpanel" aria-labelledby="add-journal-tab">
@@ -352,6 +357,39 @@ color: #7e7a6d;
                                         </div>
                                     </form>
                                 </div>
+                                <div class="tab-pane fade" id="removeIssues" role="tabpanel" aria-labelledby="remove-issues-tab">
+                                    <h4 class="text-center mt-4 mb-4" style="text-transform: uppercase; color: #000000;">Remove Issues</h4>
+                                    <form>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                                <label for="inputRemoveIssuesJournalName">Journal Name</label>
+                                                <select class="form-control" id="inputRemoveIssuesJournalName" required>
+                                                    <option value="">Select Journal Name</option>
+                                                    <option value="Journal 1">Journal 1</option>
+                                                    <option value="Journal 2">Journal 2</option>
+                                                    <option value="Journal 3">Journal 3</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="inputRemoveIssuesVolumeNumber">Volume Number</label>
+                                                <select class="form-control" id="inputRemoveIssuesVolumeNumber" required>
+                                                    <option value="">Select Volume Number</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="inputRemoveIssuesNumber">Issue Number</label>
+                                                <select class="form-control" id="inputRemoveIssuesNumber" required>
+                                                    <option value="">Select Issue Number</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="d-flex flex-wrap justify-content-between align-items-center">
+                                                <button class="btn btn-primary mt-3 mt-sm-0" type="submit" data-toggle="modal" data-target="#removeIssuesModal">Remove Issues</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                                 <div class="tab-pane fade" id="removeArticle" role="tabpanel" aria-labelledby="remove-article-tab">
                                     <h4 class="text-center mt-4 mb-4" style="text-transform: uppercase; color: #000000;">Remove an article</h4>
                                     <form>
@@ -366,9 +404,15 @@ color: #7e7a6d;
                                                 </select>
                                             </div>
                                             <div class="form-group col-md-12">
-                                                <label for="inputVolumeNumber">Volume Number</label>
-                                                <select class="form-control" id="inputVolumeNumber" required>
+                                                <label for="inputRemoveArticleVolumeNumber">Volume Number</label>
+                                                <select class="form-control" id="inputRemoveArticleVolumeNumber" required>
                                                     <option value="">Select Volume Number</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="inputRemoveArticleIssueNumber">Issue Number</label>
+                                                <select class="form-control" id="inputRemoveArticleIssueNumber" required>
+                                                    <option value="">Select Issue Number</option>
                                                 </select>
                                             </div>
                                             <div class="form-group col-md-12">
@@ -385,13 +429,84 @@ color: #7e7a6d;
                                         </div>
                                     </form>
                                 </div>
+                                
                             </div>
                         </div>
                     </div>
                 </div>
+            
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+                <script>
+                    $(document).ready(function() {
+                        // Populate Volume dropdown based on selected Journal
+                        $('#inputRemoveIssuesJournalName').change(function() {
+                            var selectedJournal = $(this).val();
+                            if (selectedJournal) {
+                                $('#inputRemoveIssuesVolumeNumber').empty().append('<option value="">Select Volume Number</option>');
+                                // Example: Populate volumes dynamically based on selected journal
+                                // This can be replaced with actual data fetching logic
+                                var volumes = getVolumes(selectedJournal);
+                                volumes.forEach(function(volume) {
+                                    $('#inputRemoveIssuesVolumeNumber').append('<option value="' + volume + '">' + volume + '</option>');
+                                });
+                            } else {
+                                $('#inputRemoveIssuesVolumeNumber').empty();
+                                $('#inputRemoveIssuesNumber').empty();
+                            }
+                        });
                 
-                <!-- Include jQuery library -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                        // Populate Issue dropdown based on selected Volume
+                        $('#inputRemoveIssuesVolumeNumber').change(function() {
+                            var selectedVolume = $(this).val();
+                            var selectedJournal = $('#inputRemoveIssuesJournalName').val();
+                            if (selectedVolume && selectedJournal) {
+                                $('#inputRemoveIssuesNumber').empty().append('<option value="">Select Issue Number</option>');
+                                // Example: Populate issues dynamically based on selected volume and journal
+                                // This can be replaced with actual data fetching logic
+                                var issues = getIssues(selectedJournal, selectedVolume);
+                                issues.forEach(function(issue) {
+                                    $('#inputRemoveIssuesNumber').append('<option value="' + issue + '">' + issue + '</option>');
+                                });
+                            } else {
+                                $('#inputRemoveIssuesNumber').empty();
+                            }
+                        });
+                    });
+                
+                    // Function to fetch volume numbers based on selected journal name
+                    function getVolumes(journalName) {
+                        // Replace this with your own logic to fetch volume numbers for the selected journal
+                        // For demonstration, returning some sample volume numbers
+                        switch (journalName) {
+                            case 'Journal 1':
+                                return ['Volume 1', 'Volume 2', 'Volume 3'];
+                            case 'Journal 2':
+                                return ['Volume 4', 'Volume 5', 'Volume 6'];
+                            case 'Journal 3':
+                                return ['Volume 7', 'Volume 8', 'Volume 9'];
+                            default:
+                                return [];
+                        }
+                    }
+                
+                    // Function to fetch issue numbers based on selected journal and volume
+                    function getIssues(journalName, volumeNumber) {
+                        // Replace this with your own logic to fetch issues for the selected journal and volume
+                        // For demonstration, returning some sample issue numbers
+                        switch (journalName + '-' + volumeNumber) {
+                            case 'Journal 1-Volume 1':
+                                return ['Issue 1', 'Issue 2', 'Issue 3'];
+                            case 'Journal 1-Volume 2':
+                                return ['Issue 4', 'Issue 5', 'Issue 6'];
+                            case 'Journal 2-Volume 1':
+                                return ['Issue 7', 'Issue 8', 'Issue 9'];
+                            default:
+                                return [];
+                        }
+                    }
+                </script>
+                
 
 <script>
     $(document).ready(function() {
@@ -428,38 +543,54 @@ color: #7e7a6d;
         }
     }
 </script>
-
-<!-- Include jQuery library -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
     $(document).ready(function() {
         // Populate Volume dropdown based on selected Journal
         $('#inputRemoveArticleJournalName').change(function() {
             var selectedJournal = $(this).val();
             if (selectedJournal) {
-                $('#inputVolumeNumber').empty().append('<option value="">Select Volume Number</option>');
+                $('#inputRemoveArticleVolumeNumber').empty().append('<option value="">Select Volume Number</option>');
                 // Example: Populate volumes dynamically based on selected journal
                 // This can be replaced with actual data fetching logic
                 var volumes = getVolumes(selectedJournal);
                 volumes.forEach(function(volume) {
-                    $('#inputVolumeNumber').append('<option value="' + volume + '">' + volume + '</option>');
+                    $('#inputRemoveArticleVolumeNumber').append('<option value="' + volume + '">' + volume + '</option>');
                 });
             } else {
-                $('#inputVolumeNumber').empty();
+                $('#inputRemoveArticleVolumeNumber').empty();
+                $('#inputRemoveArticleIssueNumber').empty();
                 $('#inputRemoveArticleName').empty();
             }
         });
 
-        // Populate Article dropdown based on selected Volume
-        $('#inputVolumeNumber').change(function() {
+        // Populate Issue dropdown based on selected Volume
+        $('#inputRemoveArticleVolumeNumber').change(function() {
             var selectedVolume = $(this).val();
             var selectedJournal = $('#inputRemoveArticleJournalName').val();
             if (selectedVolume && selectedJournal) {
-                $('#inputRemoveArticleName').empty().append('<option value="">Select Article Name</option>');
-                // Example: Populate articles dynamically based on selected volume and journal
+                $('#inputRemoveArticleIssueNumber').empty().append('<option value="">Select Issue Number</option>');
+                // Example: Populate issues dynamically based on selected volume and journal
                 // This can be replaced with actual data fetching logic
-                var articles = getArticles(selectedJournal, selectedVolume);
+                var issues = getIssues(selectedJournal, selectedVolume);
+                issues.forEach(function(issue) {
+                    $('#inputRemoveArticleIssueNumber').append('<option value="' + issue + '">' + issue + '</option>');
+                });
+            } else {
+                $('#inputRemoveArticleIssueNumber').empty();
+                $('#inputRemoveArticleName').empty();
+            }
+        });
+
+        // Populate Article dropdown based on selected Issue
+        $('#inputRemoveArticleIssueNumber').change(function() {
+            var selectedIssue = $(this).val();
+            var selectedJournal = $('#inputRemoveArticleJournalName').val();
+            var selectedVolume = $('#inputRemoveArticleVolumeNumber').val();
+            if (selectedIssue && selectedJournal && selectedVolume) {
+                $('#inputRemoveArticleName').empty().append('<option value="">Select Article Name</option>');
+                // Example: Populate articles dynamically based on selected issue, volume, and journal
+                // This can be replaced with actual data fetching logic
+                var articles = getArticles(selectedJournal, selectedVolume, selectedIssue);
                 articles.forEach(function(article) {
                     $('#inputRemoveArticleName').append('<option value="' + article + '">' + article + '</option>');
                 });
@@ -469,26 +600,55 @@ color: #7e7a6d;
         });
     });
 
-    // Function to fetch articles based on selected journal and volume
-    function getArticles(journalName, volumeNumber) {
-        // Replace this with your own logic to fetch articles for the selected journal and volume
-        // For demonstration, returning some sample articles
+    // Function to fetch volume numbers based on selected journal name
+    function getVolumes(journalName) {
+        // Replace this with your own logic to fetch volume numbers for the selected journal
+        // For demonstration, returning some sample volume numbers
+        switch (journalName) {
+            case 'Journal 1':
+                return ['Volume 1', 'Volume 2', 'Volume 3'];
+            case 'Journal 2':
+                return ['Volume 4', 'Volume 5', 'Volume 6'];
+            case 'Journal 3':
+                return ['Volume 7', 'Volume 8', 'Volume 9'];
+            default:
+                return [];
+        }
+    }
+
+    // Function to fetch issue numbers based on selected journal and volume
+    function getIssues(journalName, volumeNumber) {
+        // Replace this with your own logic to fetch issues for the selected journal and volume
+        // For demonstration, returning some sample issue numbers
         switch (journalName + '-' + volumeNumber) {
             case 'Journal 1-Volume 1':
-                return ['Article 1', 'Article 2', 'Article 3'];
+                return ['Issue 1', 'Issue 2', 'Issue 3'];
             case 'Journal 1-Volume 2':
-                return ['Article 11', 'Article 12', 'Article 13'];    
-            case 'Journal 1-Volume 3':
-                return ['Article 113', 'Article 122', 'Article 135']; 
-            case 'Journal 2-Volume 4':
+                return ['Issue 4', 'Issue 5', 'Issue 6'];
+            case 'Journal 2-Volume 1':
+                return ['Issue 7', 'Issue 8', 'Issue 9'];
+            default:
+                return [];
+        }
+    }
+
+    // Function to fetch articles based on selected journal, volume, and issue
+    function getArticles(journalName, volumeNumber, issueNumber) {
+        // Replace this with your own logic to fetch articles for the selected journal, volume, and issue
+        // For demonstration, returning some sample articles
+        switch (journalName + '-' + volumeNumber + '-' + issueNumber) {
+            case 'Journal 1-Volume 1-Issue 1':
+                return ['Article 1', 'Article 2', 'Article 3'];
+            case 'Journal 1-Volume 2-Issue 1':
                 return ['Article 4', 'Article 5', 'Article 6'];
-            case 'Journal 3-Volume 7':
+            case 'Journal 2-Volume 1-Issue 1':
                 return ['Article 7', 'Article 8', 'Article 9'];
             default:
                 return [];
         }
     }
 </script>
+
 
 
                 <!-- /.container-fluid -->

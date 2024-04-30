@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Tables</title>
+    <title>Add Ethics</title>
 
     <!-- Custom fonts for this template -->
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css'%}" rel="stylesheet" type="text/css">
@@ -69,6 +69,16 @@
                         <a class="collapse-item" href="/editor_article/">Article</a>
                     </div>
                 </div>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Nav Item - editorial board -->
+            <li class="nav-item">
+                <a class="nav-link" href="/editor_aims/">
+                    <i class="fas fa-fw fa-eye"></i>
+                    <span>Aims & Scopes</span></a>
             </li>
 
               <!-- Divider -->
@@ -333,12 +343,14 @@
 
                 
                 <div class="container">
-                    <h2>Write Ethics and Disclosures</h2>
+                    <h2 class="mt-5 mb-4">Ethics and Disclosures</h2>
                     <form action="#" method="post">
-                        <textarea class="textbox" name="ethics" id="ethics" placeholder="Write your ethics and disclosures here..."></textarea>
-                        <button type="submit" class="submit-btn">Submit</button>
+                      <div class="mb-3">
+                        <textarea class="form-control textbox" name="ethics" id="ethics" placeholder="Write your ethics and disclosures here..."></textarea>
+                      </div>
+                      <button type="submit" class="btn btn-primary" style="background-color: #007bff; border-color: aliceblue;">Submit</button>
                     </form>
-                </div>
+                  </div>
                
 
     <!-- Scroll to Top Button-->
