@@ -36,3 +36,6 @@ def editor_resetpassword(request):
 
 def editor_updates(request):
     return render(request, 'updates.html')
+
+def editor_aims(request):
+    return render(request, 'aims.html')

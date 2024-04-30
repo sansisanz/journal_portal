@@ -31,3 +31,7 @@ def admin_profile(request):
 
 def admin_resetpassword(request):
     return render(request, 'admin_resetpassword.html')
+
+def set_password(request):
+    return render(request, 'set_password.html')
+ 

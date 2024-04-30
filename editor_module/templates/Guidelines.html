@@ -24,6 +24,16 @@
     <link href="{% static 'css/guidelines.js' %}" rel="stylesheet">
     <script src="{% static 'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js' %}"></script>
 
+    <style>
+        /* Additional custom styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .content-group {
+            margin-bottom: 40px; /* Add space between heading and content */
+        }
+    </style>
+
 </head>
 
 <body id="page-top">
@@ -68,6 +78,16 @@
                         <a class="collapse-item" href="/editor_article/">Article</a>
                     </div>
                 </div>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Nav Item - editorial board -->
+            <li class="nav-item">
+                <a class="nav-link" href="/editor_aims/">
+                    <i class="fas fa-fw fa-eye"></i>
+                    <span>Aims & Scopes</span></a>
             </li>
             
               <!-- Divider -->
@@ -353,23 +373,53 @@
                             </div>
                         </div>   -->
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-lg-4"></div>
-        <div class="col-lg-4">
-            
-    <h1> Guidelines</h1>
-    <form id="contentForm">
-        <label for="totalContents">Total Number of Contents:</label>
-        <input type="number" id="totalContents" name="totalContents">
-        <button type="button" id="generateTextboxes" class="btn submit-btn">Generate Textboxes</button>
-    </form>
-    <div id="textBoxesContainer"></div>
-        </div>
-    </div>
-</div>
+                       
 
-
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-lg-4"></div>
+                                <div class="col-lg-4">
+                                    <h1>Guidelines</h1>
+                                    <form id="contentForm">
+                                        <div class="form-group">
+                                            <label for="totalContents">Total Number of Contents:</label>
+                                            <input type="number" id="totalContents" name="totalContents" class="form-control">
+                                        </div>
+                                        <button type="button" id="generateTextboxes" class="btn btn-primary">Generate Textboxes</button>
+                                    </form>
+                                    <div id="textBoxesContainer"></div>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+                        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                        <script>
+                            $(document).ready(function() {
+                                $('#generateTextboxes').on('click', function(event) {
+                                    event.preventDefault();
+                                    const totalContents = parseInt($('#totalContents').val());
+                                    if (!isNaN(totalContents) && totalContents > 0) {
+                                        $('#textBoxesContainer').empty();
+                                        for (let i = 0; i < totalContents; i++) {
+                                            $('#textBoxesContainer').append(`
+                                                <div class="content-group">
+                                                    <div class="form-group">
+                                                        <input type="text" name="heading" placeholder="Heading ${i + 1}" class="form-control">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="text" name="content" placeholder="Content ${i + 1}" class="form-control">
+                                                    </div>
+                                                </div>
+                                            `);
+                                        }
+                                    } else {
+                                        console.error('Please enter a valid number for total contents.');
+                                    }
+                                });
+                            });
+                            </script>
 
 
 

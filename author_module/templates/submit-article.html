@@ -41,6 +41,9 @@
             }   
     </style>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery library -->
+
+
 </head>
 
 <body id="page-top">
@@ -143,36 +146,6 @@
                                 </form>
                             </div>
                         </li>
-
-                        <!-- Nav Item - Alerts -->
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-bell fa-fw"></i>
-                                <!-- Counter - Alerts -->
-                                <span class="badge badge-danger badge-counter">0</span>
-                            </a>
-                            <!-- Dropdown - Alerts -->
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="alertsDropdown">
-                                <h6 class="dropdown-header">
-                                    Notifications
-                                </h6>
-                                <!-- <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-primary">
-                                            <i class="fas fa-file-alt text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <span class="font-weight-bold">No  new notifications</span>
-                                    </div>
-                                </a>
-                                 -->
-                                <a class="dropdown-item text-center small text-gray-500" href="#">No New Notifications</a>
-                            </div>
-                        </li>
-
                         
 
                         <div class="topbar-divider d-none d-sm-block"></div>
@@ -210,80 +183,171 @@
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid">
+<!-- Begin Page Content -->
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    </div>
 
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        
+    <!-- Content Row -->
+    <div class="form-sa">
+        <form action="submit-article.php" method="POST" enctype="multipart/form-data">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="journalName">Journal Name:</label>
+                            <select id="journalName" name="journalName" class="form-control">
+                                <option disabled selected>Select a journal</option>
+                                <option value="j1">Journal 1</option>
+                                <option value="j2">Journal 2</option>
+                                <option value="j3">Journal 3</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="volume">Volume:</label>
+                            <select id="volume" name="volume" class="form-control">
+                                <option disabled selected>Select a volume</option>
+                            </select>
+                        </div>
                     </div>
-
-                    <!-- Content Row -->
-                    <div class="form-sa">
-                        <form action="submit-article.php" method="POST" enctype="multipart/form-data">
-                            <div class="container">
-                              <div class="row">
-                                <div class="col-md-6">
-                                  <div class="form-group">
-                                    <label for="journalName">Journal Name:</label>
-                                    <select id="journalName" name="journalName" class="form-control">
-                                      <option disabled selected>Select a journal</option>
-                                      <option>j1</option>
-                                      <option>j2</option>
-                                    </select>
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="volume">Volume:</label>
-                                    <select id="volume" name="volume" class="form-control">
-                                        <option disabled selected>Select a volume</option>
-                                      <option>v1</option>
-                                      <option>v2</option>
-                                    </select>
-                                  </div>
-                                </div>
-                                <div class="col-md-6">
-                                  <div class="form-group">
-                                    <label for="issueNumber">Issue Number:</label>
-                                    <select id="issueNumber" name="issueNumber" class="form-control">
-                                        <option disabled selected>Select an issue</option>
-                                      <option>i1</option>
-                                      <option>i2</option>
-                                    </select>
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="dateOfSubmission">Date of Submission:</label>
-                                    <input type="date" id="dateOfSubmission" name="dateOfSubmission" class="form-control">
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="row">
-                                <div class="col-md-12">
-                                  <div class="form-group">
-                                    <label for="authorName">Author Name:</label>
-                                    <input type="text" id="authorName" name="authorName" class="form-control" placeholder="Enter Author Name">
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="articleName">Article Title:</label>
-                                    <input type="text" id="articleTitle" name="articleTitle" class="form-control" placeholder="Enter Article Name">
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="form-group">
-                                <label for="articleFile">Choose Article:</label>
-                                <input type="file" id="articleFile" name="articleFile" class="form-control-file">
-                              </div>
-                              <button type="submit" class="btn btn-primary">Submit Article</button>
-                            </div>
-                          </form>
-                          
-                          
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="issueNumber">Issue Number:</label>
+                            <select id="issueNumber" name="issueNumber" class="form-control">
+                                <option disabled selected>Select an issue</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dateOfSubmission">Date of Submission:</label>
+                            <input type="date" id="dateOfSubmission" name="dateOfSubmission" class="form-control">
+                        </div>
                     </div>
-                      
-                    <!-- Content Row -->
-
                 </div>
-                <!-- /.container-fluid -->
-
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="authorCount">Number of Authors:</label>
+                            <select id="authorCount" name="authorCount" class="form-control">
+                                <option value="1" selected>1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <!-- Add more options as needed -->
+                            </select>
+                        </div>
+                        <div id="authorInputs">
+                            <!-- JavaScript will add input fields here -->
+                        </div>
+                        <div class="form-group">
+                            <label for="articleName">Article Title:</label>
+                            <input type="text" id="articleTitle" name="articleTitle" class="form-control" placeholder="Enter Article Name">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="articleFile">Choose Article:</label>
+                    <input type="file" id="articleFile" name="articleFile" class="form-control-file">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Article</button>
             </div>
+        </form>
+    </div>
+    <!-- Content Row -->
+</div>
+<!-- /.container-fluid -->
+
+<!-- /.container-fluid -->
+<script>
+     // Function to dynamically add input fields for authors
+     function addAuthorInputs() {
+        var authorCount = parseInt(document.getElementById("authorCount").value);
+        var authorInputsContainer = document.getElementById("authorInputs");
+        authorInputsContainer.innerHTML = ''; // Clear existing inputs
+
+        // Add input fields based on selected author count
+        for (var i = 1; i <= authorCount; i++) {
+            var inputField = document.createElement("input");
+            inputField.type = "text";
+            inputField.id = "authorName" + i;
+            inputField.name = "authorName" + i;
+            inputField.className = "form-control";
+            inputField.placeholder = "Enter Author " + i + " Name";
+            authorInputsContainer.appendChild(inputField);
+        }
+    }
+
+    // Add event listener to author count select element
+    document.getElementById("authorCount").addEventListener("change", addAuthorInputs);
+
+    // Call addAuthorInputs initially to populate author inputs based on default author count
+    addAuthorInputs();
+
+    // Define the volumes and issues for each journal
+    var journals = {
+        "j1": {
+            "v1": ["i1", "i2"],
+            "v2": ["i3", "i4", "i5"],
+            "v3": ["i6", "i7", "i8", "i9"]
+        },
+        "j2": {
+            "v1": ["i1", "i2", "i3"],
+            "v2": ["i4", "i5"],
+            "v3": ["i6"]
+        },
+        "j3": {
+            "v1": ["i1", "i2", "i3", "i4"],
+            "v2": ["i5", "i6"],
+            "v3": ["i7"]
+        }
+    };
+
+    // Function to update volume options based on selected journal
+    function updateVolumes() {
+        var journalSelect = document.getElementById("journalName");
+        var volumeSelect = document.getElementById("volume");
+        var selectedJournal = journalSelect.value;
+
+        // Clear existing options
+        volumeSelect.innerHTML = '<option disabled selected>Select a volume</option>';
+
+        // Add new options based on the selected journal
+        var volumes = journals[selectedJournal];
+        Object.keys(volumes).forEach(function(volume) {
+            volumeSelect.innerHTML += '<option>' + volume + '</option>';
+        });
+
+        // Call updateIssues to update issues based on the newly selected journal
+        updateIssues();
+    }
+
+    // Function to update issue options based on selected volume
+    function updateIssues() {
+        var journalSelect = document.getElementById("journalName");
+        var volumeSelect = document.getElementById("volume");
+        var issueSelect = document.getElementById("issueNumber");
+        var selectedJournal = journalSelect.value;
+        var selectedVolume = volumeSelect.value;
+
+        // Clear existing options
+        issueSelect.innerHTML = '<option disabled selected>Select an issue</option>';
+
+        // Add new options based on the selected volume
+        var issues = journals[selectedJournal][selectedVolume];
+        issues.forEach(function(issue) {
+            issueSelect.innerHTML += '<option>' + issue + '</option>';
+        });
+    }
+
+    // Add event listeners to journal and volume select elements
+    document.getElementById("journalName").addEventListener("change", updateVolumes);
+    document.getElementById("volume").addEventListener("change", updateIssues);
+
+    // Call updateVolumes initially to populate volumes based on default selected journal
+    updateVolumes();
+</script>
+
+
+
             <!-- End of Main Content -->
 
             <!-- Footer -->

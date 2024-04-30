@@ -1,0 +1,36 @@
+body {
+    font-family: Arial, sans-serif;
+}
+.container {
+    width: 80%;
+    margin: auto;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+label {
+    display: block;
+    font-weight: bold;
+}
+label.required:after{
+    content: " *" ;
+    color: red;
+}
+input[type="text"], select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.submit-btn:hover {
+    background-color: #0056b3;
+}
+.hidden {
+    display: none;
+}
+
+.btn-primary{
+    background-color: #007bff;
+    border-color: aliceblue;
+}

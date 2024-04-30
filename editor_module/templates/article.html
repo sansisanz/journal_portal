@@ -69,6 +69,16 @@
                 </div>
             </li>
 
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Nav Item - editorial board -->
+            <li class="nav-item">
+                <a class="nav-link" href="/editor_aims/">
+                    <i class="fas fa-fw fa-eye"></i>
+                    <span>Aims & Scopes</span></a>
+            </li>
+
 
                 <!-- Divider -->
              <hr class="sidebar-divider">
@@ -304,38 +314,121 @@
 
         
           <div class="container">
-              <h2>Add Article</h2><br><br>
-              <form action="#" method="post" id="articleForm">
-                  <div class="form-group">
-                      <label class="required" for="volume_number">Volume Number:</label>
-                      <input type="text" name="volume_number" id="volume_number" placeholder="Enter volume number" required>
-                  </div>
-                  <div class="form-group">
-                      <label class="required" for="issue_number">Issue Number:</label>
-                      <input type="text" name="issue_number" id="issue_number" placeholder="Enter issue number" required>
-                  </div>
-                  <div class="form-group">
-                      <label class="required" for="article_title">Article Title:</label>
-                      <input type="text" name="article_title" id="article_title" placeholder="Enter article title" required>
-                  </div>
-                  <div class="form-group">
-                      <label class="required" for="num_authors">Number of Authors:</label>
-                      <select name="num_authors" id="num_authors" required>
-                          <option value="1">1</option>
-                          <option value="2">2</option>
-                          <option value="3">3</option>
-                          <!-- Add more options as needed -->
-                      </select>
-                  </div>
-                  <div class="form-group" id="multiple_authors" class="hidden">
-                      <label class="required" for="author_names">Authors' Names:</label>
-                      <input type="text" name="author1" id="author1" placeholder="Enter author's name" required>
-                      <input type="text" name="author2" id="author2" placeholder="Enter author's name">
-                      <!-- You can add more input fields for additional authors as needed -->
-                  </div>
-                  <button type="submit" class="submit-btn">Submit</button>
-              </form>
-          </div>
+            <h2>Upload an Article</h2><br><br>
+            <form action="#" method="post" id="articleForm">
+                <div class="form-group">
+                    <label class="required" for="journal_select">Journal Name:</label>
+                    <select name="journal_select" id="journal_select" required>
+                        <option value="">Select Journal</option>
+                        <!-- Options will be populated dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="required" for="volume_select">Volume Number:</label>
+                    <select name="volume_select" id="volume_select" required>
+                        <option value="">Select Volume</option>
+                        <!-- Options will be populated dynamically based on selected journal -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="required" for="issue_select">Issue Number:</label>
+                    <select name="issue_select" id="issue_select" required>
+                        <option value="">Select Issue Number</option>
+                        <!-- Options will be populated dynamically based on selected volume -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="required" for="article_title">Article Title:</label>
+                    <input type="text" name="article_title" id="article_title" placeholder="Enter article title" required>
+                </div>
+                <div class="form-group">
+                    <label class="required" for="num_authors">Number of Authors:</label>
+                    <select name="num_authors" id="num_authors" required>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+                <div class="form-group" id="multiple_authors">
+                    <!-- Author name inputs will be dynamically added here -->
+                </div>
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+        </div>
+        
+        <script>
+            // Example data for journals, volumes, and issues (you can replace this with your data)
+            const journals = [
+                { name: "Journal A", volumes: ["Volume 1", "Volume 2", "Volume 3", "Volume 4", "Volume 5"] },
+                { name: "Journal B", volumes: ["Volume 1", "Volume 2", "Volume 3", "Volume 4", "Volume 5"] }
+            ];
+        
+            const journalSelect = document.getElementById("journal_select");
+            const volumeSelect = document.getElementById("volume_select");
+            const issueSelect = document.getElementById("issue_select");
+            const numAuthorsSelect = document.getElementById("num_authors");
+            const multipleAuthorsDiv = document.getElementById("multiple_authors");
+        
+            // Function to populate journal dropdown
+            function populateJournals() {
+                journals.forEach(journal => {
+                    const option = document.createElement("option");
+                    option.value = journal.name;
+                    option.textContent = journal.name;
+                    journalSelect.appendChild(option);
+                });
+            }
+        
+            // Function to populate volume dropdown based on selected journal
+            function populateVolumes() {
+                const selectedJournal = journalSelect.value;
+                const journal = journals.find(journal => journal.name === selectedJournal);
+                volumeSelect.innerHTML = "<option value=''>Select Volume</option>";
+                journal.volumes.forEach(volume => {
+                    const option = document.createElement("option");
+                    option.value = volume;
+                    option.textContent = volume;
+                    volumeSelect.appendChild(option);
+                });
+            }
+        
+            // Function to populate issue dropdown based on selected volume
+            function populateIssues() {
+                // Replace this with your logic to fetch issues based on the selected volume
+                // For now, we'll just populate some dummy issues
+                const selectedVolume = volumeSelect.value;
+                issueSelect.innerHTML = "<option value=''>Select Issue Number</option>";
+                for (let i = 1; i <= 4; i++) {
+                    const option = document.createElement("option");
+                    option.value = i;
+                    option.textContent = i;
+                    issueSelect.appendChild(option);
+                }
+            }
+        
+            // Function to add author name inputs based on the selected number of authors
+            function addAuthorInputs() {
+                const numAuthors = parseInt(numAuthorsSelect.value);
+                multipleAuthorsDiv.innerHTML = ""; // Clear previous inputs
+                for (let i = 1; i <= numAuthors; i++) {
+                    const input = document.createElement("input");
+                    input.type = "text";
+                    input.name = "author" + i;
+                    input.id = "author" + i;
+                    input.placeholder = "Enter author's name";
+                    multipleAuthorsDiv.appendChild(input);
+                }
+            }
+        
+            // Event listeners for dropdown change events
+            journalSelect.addEventListener("change", populateVolumes);
+            volumeSelect.addEventListener("change", populateIssues);
+            numAuthorsSelect.addEventListener("change", addAuthorInputs);
+        
+            // Initial population of journal dropdown
+            populateJournals();
+        </script>
+        
          
           
           

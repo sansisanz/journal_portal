@@ -15,4 +15,5 @@ urlpatterns = [
     path("editor_register/", views.editor_register),
     path("editor_resetpassword/", views.editor_resetpassword),
     path("editor_updates/", views.editor_updates),
+    path("editor_aims/", views.editor_aims),
 ]

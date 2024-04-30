@@ -19,7 +19,7 @@
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="{% static 'css/sb-admin-2.css'%}" rel="stylesheet">
+    <link href="{% static 'css/sb-admin-2.css'%}" rel="stylesheet">  
 
 </head>
 
@@ -104,21 +104,9 @@
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
                     </button>
-
+                     
                     <!-- Topbar Search -->
-                    <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-
+                    <h2 style="color: #4e3e3e; font-family: 'Times New Roman', Times, serif;"><b>Downloads</b></h2>
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
 
@@ -143,101 +131,6 @@
                                         </div>
                                     </div>
                                 </form>
-                            </div>
-                        </li>
-
-                        <!-- Nav Item - Alerts -->
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-bell fa-fw"></i>
-                                <!-- Counter - Alerts -->
-                                <span class="badge badge-danger badge-counter">3+</span>
-                            </a>
-                            <!-- Dropdown - Alerts -->
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="alertsDropdown">
-                                <h6 class="dropdown-header">
-                                    Alerts Center
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-primary">
-                                            <i class="fas fa-file-alt text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <span class="font-weight-bold">No  new notifications</span>
-                                    </div>
-                                </a>
-                                
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
-                            </div>
-                        </li>
-
-                        <!-- Nav Item - Messages -->
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-envelope fa-fw"></i>
-                                <!-- Counter - Messages -->
-                                <span class="badge badge-danger badge-counter">7</span>
-                            </a>
-                            <!-- Dropdown - Messages -->
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="messagesDropdown">
-                                <h6 class="dropdown-header">
-                                    Message Center
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_1.svg"
-                                            alt="...">
-                                        <div class="status-indicator bg-success"></div>
-                                    </div>
-                                    <div class="font-weight-bold">
-                                        <div class="text-truncate">Hi there! I am wondering if you can help me with a
-                                            problem I've been having.</div>
-                                        <div class="small text-gray-500">Emily Fowler · 58m</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_2.svg"
-                                            alt="...">
-                                        <div class="status-indicator"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">I have the photos that you ordered last month, how
-                                            would you like them sent to you?</div>
-                                        <div class="small text-gray-500">Jae Chun · 1d</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_3.svg"
-                                            alt="...">
-                                        <div class="status-indicator bg-warning"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">Last month's report looks great, I am very happy with
-                                            the progress so far, keep up the good work!</div>
-                                        <div class="small text-gray-500">Morgan Alvarez · 2d</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
-                                            alt="...">
-                                        <div class="status-indicator bg-success"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">Am I a good boy? The reason I ask is because someone
-                                            told me that people say this to all dogs, even if they aren't good...</div>
-                                        <div class="small text-gray-500">Chicken the Dog · 2w</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
                             </div>
                         </li>
 
@@ -281,77 +174,236 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                    <div class="card signup_v4 mb-30">
+                        <div class="card-body">
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" id="article-downloads-tab" data-toggle="tab" href="#articleDownloads" role="tab" aria-controls="articleDownloads" aria-selected="true">Article Downloads</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="volume-downloads-tab" data-toggle="tab" href="#volumeDownloads" role="tab" aria-controls="volumeDownloads" aria-selected="false">Volume Downloads</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="myTabContent">
+                                <!-- Article Downloads Section -->
+                                <div class="tab-pane fade show active" id="articleDownloads" role="tabpanel" aria-labelledby="article-downloads-tab">
+                                    <div class="boxed-container">
+                                        <h4 class="text-center mt-4 mb-4" style="text-transform: uppercase; color: #000000;">Article Downloads</h4>
+                                        <form>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-12">
+                                                    <label for="inputArticleJournalName">Journal Name</label>
+                                                    <select class="form-control" id="inputArticleJournalName" required>
+                                                        <option value="">Select Journal Name</option>
+                                                        <option value="Journal 1">Journal 1</option>
+                                                        <option value="Journal 2">Journal 2</option>
+                                                        <option value="Journal 3">Journal 3</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <label for="inputArticleVolumeNumber">Volume Number</label>
+                                                    <select class="form-control" id="inputArticleVolumeNumber" required>
+                                                        <option value="">Select Volume Number</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <label for="inputArticleName">Article Name</label>
+                                                    <select class="form-control" id="inputArticleName" required>
+                                                        <option value="">Select Article Name</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <div id="articleDownloadsCard" style="display: none;">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Article Downloads Summary</h5>
+                                                    <p class="card-text">Total Downloads: <span id="articleTotalDownloads"></span></p>
+                                                    <p class="card-text">Article Name: <span id="articleName"></span></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <!-- Volume Downloads Section -->
+                                <div class="tab-pane fade" id="volumeDownloads" role="tabpanel" aria-labelledby="volume-downloads-tab">
+                                    <div class="boxed-container">
+                                        <h4 class="text-center mt-4 mb-4" style="text-transform: uppercase; color: #000000;">Volume Downloads</h4>
+                                        <form>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-12">
+                                                    <label for="inputVolumeJournalName">Journal Name</label>
+                                                    <select class="form-control" id="inputVolumeJournalName" required>
+                                                        <option value="">Select Journal Name</option>
+                                                        <option value="Journal 1">Journal 1</option>
+                                                        <option value="Journal 2">Journal 2</option>
+                                                        <option value="Journal 3">Journal 3</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <label for="inputVolumeNumberForDownloads">Volume Number</label>
+                                                    <select class="form-control" id="inputVolumeNumberForDownloads" required>
+                                                        <option value="">Select Volume Number</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <div id="volumeDownloadsCard" style="display: none;">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Volume Downloads Summary</h5>
+                                                    <p class="card-text">Total Downloads: <span id="volumeTotalDownloads"></span></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <style>
+                    .boxed-container {
+                        border: 1px solid #ccc;
+                        padding: 20px;
+                        margin-bottom: 20px;
+                        border-radius: 5px;
+                    }
 
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4"> </div>
+                    #article-downloads-tab.nav-link, #volume-downloads-tab.nav-link {
+                        color: #000000;
+                        }
 
-                    <!-- Content Row -->
-                    <div class="row">
-                        <!-- Downloads (Today) Card Example -->
-                        <div class="col-xl-6 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Downloads (Today)
-                                            </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">40,000</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-download fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <!-- Downloads (This Month) Card Example -->
-                        <div class="col-xl-6 col-md-6 mb-4">
-                            <div class="card border-left-success shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Downloads (This Month)
-                                            </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">215,000</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-download fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <!-- Downloads (Total) Card Example -->
-                        <div class="col-xl-6 col-md-6 mb-4">
-                            <div class="card border-left-info shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                                Downloads (Total)
-                                            </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">215,000</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-download fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
+                        #article-downloads-tab.nav-link.active, #volume-downloads-tab.nav-link.active {
+                        color: #7e7a6d;
+                        }
+                </style>
+                
+                <!-- Include jQuery library -->
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                
+                <script>
+
+
+
+                    // Dummy data for volumes and articles
+                    var journalVolumes = {
+                        "Journal 1": ["Volume 1", "Volume 2", "Volume 3"],
+                        "Journal 2": ["Volume 4", "Volume 5", "Volume 6"],
+                        "Journal 3": ["Volume 7", "Volume 8", "Volume 9"]
+                    };
+                
+                    var volumeArticles = {
+                        "Journal 1-Volume 1": ["Article 1", "Article 2", "Article 3"],
+                        "Journal 1-Volume 2": ["Article 4", "Article 5", "Article 6"],
+                        "Journal 1-Volume 3": ["Article 7", "Article 8", "Article 9"],
+                        "Journal 2-Volume 4": ["Article 10", "Article 11", "Article 12"],
+                        "Journal 2-Volume 5": ["Article 13", "Article 14", "Article 15"],
+                        "Journal 2-Volume 6": ["Article 16", "Article 17", "Article 18"],
+                        "Journal 3-Volume 7": ["Article 19", "Article 20", "Article 21"],
+                        "Journal 3-Volume 8": ["Article 22", "Article 23", "Article 24"],
+                        "Journal 3-Volume 9": ["Article 25", "Article 26", "Article 27"]
+                    };
+                
+                    // Function to get volumes based on selected journal
+                    function getVolumes(journalName) {
+                        return journalVolumes[journalName] || [];
+                    }
+                
+                    // Function to get articles based on selected journal and volume
+                    function getArticles(journalName, volumeNumber) {
+                        return volumeArticles[journalName + '-' + volumeNumber] || [];
+                    }
+                
+                    // Function to fetch total downloads for the selected journal and volume
+                    function getTotalDownloads(journalName, volumeNumber) {
+                        // Replace this with your own logic to fetch total downloads for the selected journal and volume
+                        // For demonstration, returning a random number
+                        return Math.floor(Math.random() * 1000) + 1; // Random number between 1 and 1000
+                    }
+                
+                    // Dummy data demonstration
+                    $(document).ready(function() {
+                        // Populate Volume dropdown based on selected Journal for Article Downloads
+                        $('#inputArticleJournalName').change(function() {
+                            var selectedJournalForArticles = $(this).val();
+                            if (selectedJournalForArticles) {
+                                $('#inputArticleVolumeNumber').empty().append('<option value="">Select Volume Number</option>');
+                                var volumesForArticles = getVolumes(selectedJournalForArticles);
+                                volumesForArticles.forEach(function(volume) {
+                                    $('#inputArticleVolumeNumber').append('<option value="' + volume + '">' + volume + '</option>');
+                                });
+                            } else {
+                                $('#inputArticleVolumeNumber').empty();
+                            }
+                        });
+                
+                        // Populate Article dropdown based on selected Volume for Article Downloads
+                        $('#inputArticleVolumeNumber').change(function() {
+                            var selectedVolumeForArticles = $(this).val();
+                            var selectedJournalForArticles = $('#inputArticleJournalName').val();
+                            if (selectedVolumeForArticles && selectedJournalForArticles) {
+                                $('#inputArticleName').empty().append('<option value="">Select Article Name</option>');
+                                var articlesForDownloads = getArticles(selectedJournalForArticles, selectedVolumeForArticles);
+                                articlesForDownloads.forEach(function(article) {
+                                    $('#inputArticleName').append('<option value="' + article + '">' + article + '</option>');
+                                });
+                            } else {
+                                $('#inputArticleName').empty();
+                            }
+                        });
+                
+                        // Populate Volume dropdown based on selected Journal for Volume Downloads
+                        $('#inputVolumeJournalName').change(function() {
+                            var selectedJournalForDownloads = $(this).val();
+                            if (selectedJournalForDownloads) {
+                                $('#inputVolumeNumberForDownloads').empty().append('<option value="">Select Volume Number</option>');
+                                var volumesForDownloads = getVolumes(selectedJournalForDownloads);
+                                volumesForDownloads.forEach(function(volume) {
+                                    $('#inputVolumeNumberForDownloads').append('<option value="' + volume + '">' + volume + '</option>');
+                                });
+                            } else {
+                                $('#inputVolumeNumberForDownloads').empty();
+                            }
+                        });
+                
+                        // Show Volume Downloads Card when Volume Number is selected
+                        $('#inputVolumeNumberForDownloads').change(function() {
+                            var selectedVolumeForDownloads = $(this).val();
+                            var selectedJournalForDownloads = $('#inputVolumeJournalName').val();
+                            if (selectedVolumeForDownloads && selectedJournalForDownloads) {
+                                var totalDownloads = getTotalDownloads(selectedJournalForDownloads, selectedVolumeForDownloads);
+                                $('#volumeTotalDownloads').text(totalDownloads);
+                                $('#volumeDownloadsCard').show();
+                            } else {
+                                $('#volumeDownloadsCard').hide();
+                            }
+                        });
+                
+                        // Show Article Downloads Card when Article Name is selected
+                        $('#inputArticleName').change(function() {
+                            var selectedArticleForDownloads = $(this).val();
+                            var selectedVolumeForDownloads = $('#inputArticleVolumeNumber').val();
+                            var selectedJournalForDownloads = $('#inputArticleJournalName').val();
+                            if (selectedArticleForDownloads && selectedVolumeForDownloads && selectedJournalForDownloads) {
+                                var totalDownloads = getTotalDownloads(selectedJournalForDownloads, selectedVolumeForDownloads);
+                                var articleName = $('#inputArticleName option:selected').text();
+                                $('#articleTotalDownloads').text(totalDownloads);
+                                $('#articleName').text(articleName);
+                                $('#articleDownloadsCard').show();
+                            } else {
+                                $('#articleDownloadsCard').hide();
+                            }
+                        });
+                    });
+                
+                </script>
+                
+                
                 <!-- /.container-fluid -->
 
-            </div>
             <!-- End of Main Content -->
 
             <!-- Footer -->
