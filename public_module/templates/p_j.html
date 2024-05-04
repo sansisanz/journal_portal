@@ -59,6 +59,21 @@
   }
 }
 
+/* Define fixed dimensions for editor photos */
+.member-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center; /* For fallback */
+}
+
+.editor-photo {
+  width: 100%; /* Adjust this value as needed */
+  height: auto; /* Maintains aspect ratio */
+  max-width: 200px; /* Maximum width for consistency */
+  max-height: 200px; /* Maximum height for consistency */
+}
+
 
 </style>
 
@@ -207,6 +222,7 @@
     
           <div class="col-lg-4 col-md-6 mb-4">
             <div class="member-item border rounded shadow p-4">
+              <img src="{% static 'img/ed1.png' %}" class="editor-photo"><br>
               <h4>[Full Name]</h4>
               <p>[Position in Editorial Board]</p>
               <ul class="list-unstyled mb-0">
@@ -219,6 +235,7 @@
     
           <div class="col-lg-4 col-md-6 mb-4">
             <div class="member-item border rounded shadow p-4">
+              <img src="{% static 'img/ed2.png' %}" class="editor-photo"><br>
               <h4>[Full Name]</h4>
               <p>[Position in Editorial Board]</p>
               <ul class="list-unstyled mb-0">
@@ -231,6 +248,7 @@
     
           <div class="col-lg-4 col-md-6 mb-4">
             <div class="member-item border rounded shadow p-4">
+              <img src="{% static 'img/ed3.png' %}" class="editor-photo"><br>
               <h4>[Full Name]</h4>
               <p>[Position in Editorial Board]</p>
               <ul class="list-unstyled mb-0">
@@ -243,6 +261,7 @@
     
           <div class="col-lg-4 col-md-6 mb-4">
             <div class="member-item border rounded shadow p-4">
+              <img src="{% static 'img/ed4.png' %}" class="editor-photo"><br>
               <h4>[Full Name]</h4>
               <p>[Position in Editorial Board]</p>
               <ul class="list-unstyled mb-0">
@@ -255,6 +274,7 @@
     
           <div class="col-lg-4 col-md-6 mb-4">
             <div class="member-item border rounded shadow p-4">
+              <img src="{% static 'img/ed5.png' %}" class="editor-photo"><br>
               <h4>[Full Name]</h4>
               <p>[Position in Editorial Board]</p>
               <ul class="list-unstyled mb-0">

@@ -11,6 +11,7 @@ urlpatterns = [
     path("p_journals/", views.p_journals),
     path("p_authorreg/", views.p_authorreg),
     path("p_userreg/", views.p_userreg),
-    path("p_userprofile/", views.p_userprofile)
-    
+    path("p_userprofile/", views.p_userprofile),
+    path("flip/", views.flip),
+    path("side_bar/", views.side_bar)
 ]

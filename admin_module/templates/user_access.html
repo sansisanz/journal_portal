@@ -1,0 +1,283 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>JP Admin Panel</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="{% static 'css/sb-admin-2.css'%}" rel="stylesheet">
+
+    <!-- Add jQuery library if not already included -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <style>
+        /* Table styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        
+        th {
+            background-color: #616a6d;
+            color: #dddddd;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        /* Button styles */
+        .btn {
+            margin-top: 10px;
+        }
+    </style>
+    </style>
+
+</head>
+
+<body id="page-top">
+
+    {% include 'admin_navbar.html' %} 
+
+
+
+    <div class="container-fluid user-list-container">
+        <h2>USER ACCESS LIST</h2><br>
+        <!-- Dropdowns for Journal, Volume, Issue, and Article -->
+        <div class="row">
+            <div class="col-md-3">
+                <select class="form-control" id="journalSelect">
+                    <option value="">Select Journal</option>
+                    <!-- Populate options dynamically -->
+                    <option value="Journal A">Journal A</option>
+                    <option value="Journal B">Journal B</option>
+                    <option value="Journal C">Journal C</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select class="form-control" id="volumeSelect" disabled>
+                    <option value="">Select Volume</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select class="form-control" id="issueSelect" disabled>
+                    <option value="">Select Issue</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select class="form-control" id="articleSelect" disabled>
+                    <option value="">Select Article</option>
+                </select>
+            </div>
+        </div>
+        <!-- Buttons for showing user access -->
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <button class="btn btn-primary" id="showIssueButton" disabled>Show Issue Access</button>
+            </div>
+            <div class="col-md-6">
+                <button class="btn btn-primary" id="showArticleButton" disabled>Show Article Access</button>
+            </div>
+        </div>
+        <!-- User Access Table -->
+        <div class="row mt-3" id="userAccessTable" style="display: none;">
+            <div class="col-md-12">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Si No</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Mobile</th>
+                        <th>Journal</th>
+                        <th>Volume</th>
+                        <th>Issue</th>
+                        <th>Article</th>
+                        <th>Date Accessed</th>
+                    </tr>
+                    </thead>
+                    <tbody id="userAccessTableBody">
+                    <!-- User access data will be populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        $(document).ready(function () {
+            // Dummy data for demonstration
+            var articles = {
+                "Issue 1": ["Article A", "Article B", "Article C"],
+                "Issue 2": ["Article X", "Article Y", "Article Z"]
+            };
+    
+            // Function to populate dropdown options
+            function populateDropdown(dropdownId, options) {
+                var dropdown = $("#" + dropdownId);
+                dropdown.empty();
+                dropdown.append('<option value="">Select</option>');
+                $.each(options, function (index, value) {
+                    dropdown.append('<option value="' + value + '">' + value + '</option>');
+                });
+            }
+    
+            // Event listener for journal selection change
+            $("#journalSelect").change(function () {
+                var selectedJournal = $(this).val();
+                if (selectedJournal) {
+                    // Populate volumes based on selected journal
+                    // This can be replaced with actual data fetching logic
+                    populateDropdown("volumeSelect", ["Volume 1", "Volume 2", "Volume 3"]);
+                    $("#volumeSelect").prop("disabled", false);
+                } else {
+                    $("#volumeSelect").prop("disabled", true).val("");
+                    $("#issueSelect").prop("disabled", true).val("");
+                    $("#articleSelect").prop("disabled", true).val("");
+                    $("#showIssueButton").prop("disabled", true);
+                    $("#showArticleButton").prop("disabled", true);
+                }
+                $("#userAccessTable").hide();
+            });
+    
+            // Event listener for volume selection change
+            $("#volumeSelect").change(function () {
+                var selectedVolume = $(this).val();
+                if (selectedVolume) {
+                    // Populate issues based on selected volume
+                    // This can be replaced with actual data fetching logic
+                    populateDropdown("issueSelect", Object.keys(articles));
+                    $("#issueSelect").prop("disabled", false);
+                } else {
+                    $("#issueSelect").prop("disabled", true).val("");
+                    $("#articleSelect").prop("disabled", true).val("");
+                    $("#showIssueButton").prop("disabled", true);
+                    $("#showArticleButton").prop("disabled", true);
+                }
+                $("#userAccessTable").hide();
+            });
+    
+            // Event listener for issue selection change
+            $("#issueSelect").change(function () {
+                var selectedIssue = $(this).val();
+                if (selectedIssue) {
+                    // Populate articles based on selected issue
+                    populateDropdown("articleSelect", articles[selectedIssue]);
+                    $("#articleSelect").prop("disabled", false);
+                    $("#showIssueButton").prop("disabled", false);
+                } else {
+                    $("#articleSelect").prop("disabled", true).val("");
+                    $("#showIssueButton").prop("disabled", true);
+                    $("#showArticleButton").prop("disabled", true);
+                }
+                $("#userAccessTable").hide();
+            });
+    
+            // Event listener for article selection change
+            $("#articleSelect").change(function () {
+                $("#showArticleButton").prop("disabled", !$(this).val()); // Enable/disable the button based on selection
+            });
+    
+            // Event listener for showing issue access
+            $("#showIssueButton").click(function () {
+                var selectedJournal = $("#journalSelect").val();
+                var selectedVolume = $("#volumeSelect").val();
+                var selectedIssue = $("#issueSelect").val();
+                if (selectedJournal && selectedVolume && selectedIssue) {
+                    // Dummy data for demonstration
+                    var userAccessData = [
+                        { name: "John Doe", email: "john@example.com", mobile: "1234567890", journal: selectedJournal, volume: selectedVolume, issue: selectedIssue, article: "", dateAccessed: "2022-05-01" },
+                        { name: "Jane Smith", email: "jane@example.com", mobile: "9876543210", journal: selectedJournal, volume: selectedVolume, issue: selectedIssue, article: "", dateAccessed: "2022-05-02" }
+                        // Add more user access data as needed
+                    ];
+                    displayUserAccessData(userAccessData);
+                }
+            });
+    
+            // Event listener for showing article access
+            $("#showArticleButton").click(function () {
+                var selectedJournal = $("#journalSelect").val();
+                var selectedVolume = $("#volumeSelect").val();
+                var selectedIssue = $("#issueSelect").val();
+                var selectedArticle = $("#articleSelect").val();
+                if (selectedJournal && selectedVolume && selectedIssue && selectedArticle) {
+                    // Dummy data for demonstration
+                    var userAccessData = [
+                        { name: "John Doe", email: "john@example.com", mobile: "1234567890", journal: selectedJournal, volume: selectedVolume, issue: selectedIssue, article: selectedArticle, dateAccessed: "2022-05-01" },
+                        { name: "Jane Smith", email: "jane@example.com", mobile: "9876543210", journal: selectedJournal, volume: selectedVolume, issue: selectedIssue, article: selectedArticle, dateAccessed: "2022-05-02" }
+                        // Add more user access data as needed
+                    ];
+                    displayUserAccessData(userAccessData);
+                }
+            });
+    
+            // Function to display user access data in table
+            function displayUserAccessData(userAccessData) {
+                var tableBody = $("#userAccessTableBody");
+                tableBody.empty();
+                var siNo = 1; // Initialize serial number counter
+                $.each(userAccessData, function (index, userData) {
+                    var row = "<tr>" +
+                        "<td>" + siNo++ + "</td>" + // Increment serial number for each row
+                        "<td>" + userData.name + "</td>" +
+                        "<td>" + userData.email + "</td>" +
+                        "<td>" + userData.mobile + "</td>" +
+                        "<td>" + userData.journal + "</td>" +
+                        "<td>" + userData.volume + "</td>" +
+                        "<td>" + userData.issue + "</td>" +
+                        "<td>" + userData.article + "</td>" +
+                        "<td>" + userData.dateAccessed + "</td>" +
+                        "</tr>";
+                    tableBody.append(row);
+                });
+                $("#userAccessTable").show();
+            }
+        });
+    </script>
+    
+    
+
+    <!-- -----------------------------------------------------===============================--------------------------------------------------------------------- -->
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+
+    <!-- Page level plugins -->
+    <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
+    <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+
+
+</body>
+</html>

@@ -34,4 +34,18 @@ def admin_resetpassword(request):
 
 def set_password(request):
     return render(request, 'set_password.html')
- 
+
+def admin_navbar(request):
+    return render(request, 'admin_navbar.html')
+
+def create_journal(request):
+    return render(request, 'create_journal.html') 
+
+def view_journals(request):
+    return render(request, 'view_journals.html')
+
+def visit_counts(request):
+    return render(request, 'visit_counts.html')
+    
+def user_access(request):
+    return render(request, 'user_access.html')    

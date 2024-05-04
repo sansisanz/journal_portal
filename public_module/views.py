@@ -28,4 +28,8 @@ def p_userreg(request):
 def p_userprofile(request):
     return render(request, 'p_userprofile.html')
 
+def flip(request):
+    return render(request, 'flip.html')
 
+def side_bar(request):
+    return render(request, 'side_bar.html')
