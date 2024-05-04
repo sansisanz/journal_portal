@@ -1,0 +1,258 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>JP Editor</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="{% static 'css/sb-editor.css' %}" rel="stylesheet">
+    
+    <style>
+        .container-fluid {
+            padding: 20px;
+        }
+
+        .container-fluid h2 {
+            color: #4e3e3e;
+            font-family: 'Times New Roman', Times, serif;
+            margin-bottom: 20px;
+        }
+
+        .container-fluid form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .container-fluid form label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .container-fluid form input[type="text"],
+        .container-fluid form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .container-fluid form button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .container-fluid form button:hover {
+            background-color: #0056b3;
+        }
+
+        .nav-item .nav-link.active {
+            background-color: #6c6f7e; /* Set the background color of the active tab */
+            color: white; /* Set the text color of the active tab */
+            border-color: #6c6f7e; /* Set the border color of the active tab */
+        }
+
+        .nav-item .nav-link {
+            color: #444242; /* Set the text color of the inactive tabs */
+        }
+
+        .form-control {
+            background-color: #f8f9fa; /* Set the background color of form controls */
+            color: #495057; /* Set the text color of form controls */
+            border-color: #ced4da; /* Set the border color of form controls */
+        }
+    </style>
+
+</head>
+
+<body id="page-top">
+
+    {% include 'editor_sidebar.html' %}
+
+    <div class="2h2" style="margin-left: 5%;">
+        <h2>GIVE PAGE HEADING</h2><br>
+    </div>
+    
+    <div class="container">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#remove-volume">Remove Volume</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#remove-issue">Remove Issue</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#remove-article">Remove Article</a>
+            </li>
+        </ul>
+        <br>
+      
+        <div class="tab-content">
+            <div id="remove-volume" class="tab-pane fade show active">
+                <form>
+                    <div class="form-group">
+                        <label for="journal-volume">Journal:</label>
+                        <select id="journal-volume" class="form-control">
+                            <option value="">Select a Journal</option>
+                            <option value="journal-a">Journal A</option>
+                            <option value="journal-b">Journal B</option>
+                            <option value="journal-c">Journal C</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="volume-number">Volume:</label>
+                        <select id="volume-number" class="form-control">
+                            <option value="">Select a Volume</option>
+                            <option value="volume-1">Volume 1</option>
+                            <option value="volume-2">Volume 2</option>
+                            <option value="volume-3">Volume 3</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Remove Volume</button>
+                </form>
+            </div>
+            <div id="remove-issue" class="tab-pane fade">
+                <form>
+                    <div class="form-group">
+                        <label for="journal-issue">Journal:</label>
+                        <select id="journal-issue" class="form-control">
+                            <option value="">Select a Journal</option>
+                            <option value="journal-x">Journal X</option>
+                            <option value="journal-y">Journal Y</option>
+                            <option value="journal-z">Journal Z</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="volume-number-issue">Volume:</label>
+                        <select id="volume-number-issue" class="form-control">
+                            <option value="">Select a Volume</option>
+                            <option value="volume-a">Volume A</option>
+                            <option value="volume-b">Volume B</option>
+                            <option value="volume-c">Volume C</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="issue-number">Issue Number:</label>
+                        <select id="issue-number" class="form-control">
+                            <option value="">Select an Issue</option>
+                            <option value="volume-a">Issue 1</option>
+                            <option value="volume-b">Issue 2</option>
+                            <option value="volume-c">Issue 3</option>
+                        </select>
+    
+                    </div>
+                    <button type="submit" class="btn btn-primary">Remove Issue</button>
+                </form>
+            </div>
+            <div id="remove-article" class="tab-pane fade">
+                <form>
+                    <div class="form-group">
+                        <label for="journal-article">Journal:</label>
+                        <select id="journal-article" class="form-control">
+                            <option value="">Select a Journal</option>
+                            <option value="journal-p">Journal P</option>
+                            <option value="journal-q">Journal Q</option>
+                            <option value="journal-r">Journal R</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="volume-number-article">Volume:</label>
+                        <select id="volume-number-article" class="form-control">
+                            <option value="">Select a Volume</option>
+                            <option value="volume-x">Volume X</option>
+                            <option value="volume-y">Volume Y</option>
+                            <option value="volume-z">Volume Z</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="issue-number-article">Issue Number:</label>
+                        <select id="issue-number-article" class="form-control">
+                            <option value="">Select an Issue</option>
+                            <option value="issue-5">5</option>
+                            <option value="issue-6">6</option>
+                            <option value="issue-7">7</option>
+                            <option value="issue-8">8</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="article">Article:</label>
+                        <select id="article" class="form-control">
+                            <option value="">Select an Article</option>
+                            <option value="article-1">Article 1</option>
+                            <option value="article-2">Article 2</option>
+                            <option value="article-3">Article 3</option>
+                            <option value="article-4">Article 4</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Remove Article</button>
+                </form>
+            </div>
+        </div>
+    </div>
+ 
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="/editor_login/">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}]"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{% static 'js/sb-editor.min.js' %}"></script>
+
+    <!-- Page level plugins -->
+    <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
+    <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+
+</body>
+
+</html>

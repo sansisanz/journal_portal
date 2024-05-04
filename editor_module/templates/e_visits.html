@@ -1,0 +1,165 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>SB Admin 2 - Charts</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="{% static 'css/sb-editor.css' %}" rel="stylesheet">
+    <link href="{% static 'css/guidelines.css' %}" rel="stylesheet">
+    <link href="{% static 'css/guidelines.js' %}" rel="stylesheet">
+    <script src="{% static 'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js' %}"></script>
+
+  
+
+<style>
+    .container-fluid {
+        padding: 20px;
+    }
+
+    .container-fluid h2 {
+        color: #4e3e3e;
+        font-family: 'Times New Roman', Times, serif;
+        margin-bottom: 20px;
+    }
+    </style>
+
+</head>
+
+<body id="page-top">
+
+{% include 'editor_sidebar.html' %}
+
+<div class="2h2" style="margin-left: 5%;">
+    <h2>VISIT COUNTS</h2><br><br>
+</div> 
+
+<div class="container">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="journalPage-tab" data-toggle="tab" href="#journalPage" role="tab" aria-controls="journalPage" aria-selected="true">Journal Page</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="article-tab" data-toggle="tab" href="#article" role="tab" aria-controls="article" aria-selected="false">Article</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="journalPage" role="tabpanel" aria-labelledby="journalPage-tab">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Select Journal</h5><br>
+                    <!-- Dropdown for selecting journal -->
+                    <select class="custom-select mb-3" id="journalSelectJournalPage">
+                        <option selected>Select Journal</option>
+                        <option value="journal1">Journal 1</option>
+                        <option value="journal2">Journal 2</option>
+                        <option value="journal3">Journal 3</option>
+                        <option value="journal4">Journal 4</option>
+                    </select>                        
+                    <h5 class="card-title">Total Visit Count</h5>
+                    <p class="card-text">Total visits for selected journal will be displayed here.</p>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="article" role="tabpanel" aria-labelledby="article-tab">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Select Journal, Volume, Issue, and Article</h5>
+                    <!-- Dropdowns for selecting journal, volume, issue, and article -->
+                    <select class="custom-select mb-3" id="journalSelectArticle">
+                        <option selected>Select Journal</option>
+                        <option value="journal1">Journal 1</option>
+                        <option value="journal2">Journal 2</option>
+                        <option value="journal3">Journal 3</option>
+                        <option value="journal4">Journal 4</option>
+                    </select>
+                    <select class="custom-select mb-3" id="volumeSelectArticle">
+                        <option selected>Select Volume</option>
+                        <option value="volume1">Volume 1</option>
+                        <option value="volume2">Volume 2</option>
+                        <option value="volume3">Volume 3</option>
+                        <option value="volume4">Volume 4</option>
+                    </select>
+                    <select class="custom-select mb-3" id="issueSelectArticle">
+                        <option selected>Select Issue</option>
+                        <option value="issue1">Issue 1</option>
+                        <option value="issue2">Issue 2</option>
+                        <option value="issue3">Issue 3</option>
+                        <option value="issue4">Issue 4</option>
+                    </select>
+                    <select class="custom-select mb-3" id="articleSelectArticle">
+                        <option selected>Select Article</option>
+                        <option value="article1">Article 1</option>
+                        <option value="article2">Article 2</option>
+                        <option value="article3">Article 3</option>
+                        <option value="article4">Article 4</option>
+                    </select> <br>                       
+                    <h5 class="card-title">Total Visit Count</h5>
+                    <p class="card-text">Total visits for selected article will be displayed here.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="/editor_login/">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/demo/guidelines.js' %}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{% static 'js/sb-editor.min.js' %}"></script>
+
+    <!-- Page level plugins -->
+    <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
+    <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+    <script src="{% static 'js/demo/chart-bar-demo.js' %}"></script>
+
+</body>
+
+</html>

@@ -20,20 +20,67 @@
 
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-editor.css' %}" rel="stylesheet">
-    
+   
 
 </head>
 
 <body id="page-top">
 
     {% include 'editor_sidebar.html' %}
+    <div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Assigned Journal</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Journal name</th>
+                            <th>Department name</th>
+                            <th>Upload</th>
+                        </tr>
+                    </thead>
+                    <!-- <tfoot>
+                    <tr>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                        <th>Equipment in-charge</th>
+                        <th>Status</th>
+                    </tr>
+                </tfoot> -->
+                    <tbody>
+                        <tr>
+                            <td>rrr</td>
+                            <td>computer science</td>
+                            <td><a class="btn btn-success font-weight-bolder btn-user btn-block col-sm-6"
+                                    href="/editor_journal/"> upload </a></td>
+                        </tr>
+                        <tr>
+                            <td>sss</td>
+                            <td>nano science</td>
+                            <td><a class="btn btn-success font-weight-bolder btn-user btn-block col-sm-6"
+                                    href="/editor_journal/"> upload </a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
    
+
+
+
+    <!-- End of Page Wrapper -->
 
     <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
-
+</div>
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -70,7 +117,12 @@
     <!-- Page level custom scripts -->
     <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
     <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+<!-- Page level plugins -->
+    <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
 
+<!-- Page level custom scripts -->
+    <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
 </body>
 
 </html>

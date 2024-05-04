@@ -7,14 +7,8 @@ def editor_article(request):
 def editorialboard(request):
     return render(request, 'editorialboard.html')
 
-def editor_ethics(request):
-    return render(request, 'Ethics.html')
-
 def editor_forgotpassword(request):
     return render(request, 'forgot-password.html')
-
-def editor_guidelines(request):
-    return render(request, 'Guidelines.html')
 
 def editor_index(request):
     return render(request, 'editorindex.html')
@@ -35,7 +29,29 @@ def editor_resetpassword(request):
     return render(request, 'resetpassword.html')
 
 def editor_updates(request):
-    return render(request, 'updates.html')
+    return render(request, 'notifications.html')
 
-def editor_aims(request):
-    return render(request, 'aims.html')
+def editor_assignedjournal(request):
+    return render(request, 'assignedjournal.html')
+
+def uploadArticle(request):
+    return render(request, 'uploadarticle.html')
+
+def journaldetails(request):
+    return render(request, 'journaldetails.html')
+
+def upddetails(request):
+    return render(request, 'upddetails.html')
+
+def edit(request):
+    return render(request, 'edit.html')
+
+def e_visits(request):
+    return render(request, 'e_visits.html')
+
+def e_downloads(request):
+    return render(request, 'e_downloads.html')
+
+def remove(request):
+    return render(request, 'remove.html')
+
