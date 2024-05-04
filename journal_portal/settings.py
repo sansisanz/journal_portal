@@ -80,12 +80,8 @@ WSGI_APPLICATION = 'journal_portal.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'journal',
-        'USER': 'phpmyadminuser',
-        'PASSWORD': 'Sdas@2001',
-        'HOST': 'localhost',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.sqlite3',
+        
 
     }
 }
