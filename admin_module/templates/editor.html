@@ -182,7 +182,7 @@
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-user"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">JP Admin</div>
+                <div class="sidebar-brand-text mx-3">Admin</div>
             </a>
 
             <!-- Divider -->
@@ -205,7 +205,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="/editor/">
                     <i class="fas fa-fw fa-pen"></i>
-                    <span>Editors</span></a>
+                    <span>Chief Editor</span></a>
             </li>
 
             <!-- Nav Item - Journals Collapse Menu -->
@@ -251,7 +251,7 @@
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <h2 style="color: #4e3e3e; font-family: 'Times New Roman', Times, serif;"><b>Editors</b></h2>
+                    <h2 style="color: #4e3e3e; font-family: 'Times New Roman', Times, serif;"><b>Chief Editor</b></h2>
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -351,45 +351,37 @@
                         <div class="card-body">
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link active" id="add-editor-tab" data-toggle="tab" href="#addEditor" role="tab" aria-controls="addEditor" aria-selected="true">Add Editor</a>
+                                    <a class="nav-link active" id="add-editor-tab" data-toggle="tab" href="#addEditor" role="tab" aria-controls="addEditor" aria-selected="true">Add Chief Editor</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link" id="remove-editor-tab" data-toggle="tab" href="#removeEditor" role="tab" aria-controls="removeEditor" aria-selected="false">Remove Editor</a>
+                                    <a class="nav-link" id="remove-editor-tab" data-toggle="tab" href="#removeEditor" role="tab" aria-controls="removeEditor" aria-selected="false">Remove Chief Editor</a>
                                 </li>
                             </ul>
                             <div class="tab-content" id="myTabContent">
                                 <div class="tab-pane fade show active" id="addEditor" role="tabpanel" aria-labelledby="add-editor-tab">
-                                    <h4 class="text-center mt-4 mb-4" style="text-transform: uppercase; color: #000000;">Add a new editor to join a journal</h4>
+                                    <h4 class="text-center mt-4 mb-4" style="text-transform: uppercase; color: #000000;">Add a new Chief Editor to join a journal</h4>
                                     <form id="addEditorForm">
                                         <div class="form-row">
                                             <div class="form-group col-md-12">
-                                                <label for="inputName">Editor Name</label>
-                                                <input type="text" class="form-control" id="inputEditorname" required="">
+                                                <label for="inputDepartment">Department</label>
+                                                <select class="form-control" id="DepartmentSelect" required="">
+                                                    <option value="">Select Department</option>
+                                                    <option value="mscComputerScience">Msc Computer Science</option>
+                                                    <option value="mscMathematics">Msc Mathematics</option>
+                                                    <option value="MAHistory">MA History</option>
+                                                    <option value="MBA">MBA</option>
+                                                </select>
                                             </div>
-                                            <div class="form-group col-md-12">
-                                                <label for="inputName">Email</label>
-                                                <input type="email" class="form-control" id="inputEmail4" required="">
+                                            <div class="form-group col-md-6">
+                                                <label for="inputTeacher">Teacher ID</label>
+                                                <select class="form-control" id="TeacherSelect" required="">
+                                                    <option value="">Select Teacher</option>
+                                                </select>
                                             </div>
-                                            <div class="form-group col-md-12">
-                                                <label for="inputName">Phone</label>
-                                                <input type="text" class="form-control" id="inputEmail4" required="">
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <label for="inputName">DoB</label>
-                                                <input type="date" class="form-control" id="inputEmail4" required="">
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <label for="inputName">ID</label>
-                                                <input type="text" class="form-control" id="inputEmail4" required="">
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <label for="inputName">Journal Name</label>
-                                                <select class="form-control" id="journalNameSelect" required="">
+                                            <div class="form-group col-md-6">
+                                                <label for="inputJournal">Journal Name</label>
+                                                <select class="form-control" id="JournalSelect" required="">
                                                     <option value="">Select Journal</option>
-                                                    <option value="Journal 1">Journal 1</option>
-                                                    <option value="Journal 2">Journal 2</option>
-                                                    <option value="Journal 3">Journal 3</option>
-                                                    <option value="Journal 4">Journal 4</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -399,27 +391,25 @@
                                         </div>
                                     </form>
                                 </div>
+
                                 <div class="tab-pane fade" id="removeEditor" role="tabpanel" aria-labelledby="remove-editor-tab">
-                                    <h4 class="text-center mt-4 mb-4" style="text-transform: uppercase; color: #000000;">Remove an existing editor from a journal</h4>
+                                    <h4 class="text-center mt-4 mb-4" style="text-transform: uppercase; color: #000000;">Remove an existing chief editor from a journal</h4>
                                     <form id="removeEditorForm">
                                         <div class="form-row">
-                                            <div class="form-group col-md-12">
-                                                <label for="inputName">Editor Name</label>
-                                                <select class="form-control" id="editorNameSelect" required="">
-                                                    <option value="">Select Editor</option>
-                                                    <option value="Das">Das</option>
-                                                    <option value="Sdas">Sdas</option>
-                                                    <option value="sd">sd</option>
-                                                </select>
-                                            </div>
                                             <div class="form-group col-md-12">
                                                 <label for="inputName">Journal Name</label>
                                                 <select class="form-control" id="journalNameSelect" required="">
                                                     <option value="">Select Journal</option>
-                                                    <option value="Journal 1">Journal 1</option>
-                                                    <option value="Journal 2">Journal 2</option>
-                                                    <option value="Journal 3">Journal 3</option>
-                                                    <option value="Journal 4">Journal 4</option>
+                                                    <option value="Journal1">Msc Botany</option>
+                                                    <option value="Journal2">MA Hindi</option>
+                                                    <option value="Journal3">MPEd</option>
+                                                    <option value="Journal4">MCOM</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="inputName">Editor ID</label>
+                                                <select class="form-control" id="editorNameSelect" required="">
+                                                    <option value="">Select Editor</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -437,67 +427,69 @@
                     </div>
                 </div>
 
-                <div class="modal" id="successModal">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <!-- Modal body -->
-                            <div class="modal-body text-center">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <p id="successMessage" class="font-weight-bold" style="font-size: 18px;"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                
-  
                 <script>
-                    // For adding editor
-                    $('#addEditorBtn').click(function() {
-                        // Check if all inputs are filled
-                        var inputsFilled = true;
-                        $('#addEditorForm input').each(function() {
-                            if ($(this).val() === '') {
-                                inputsFilled = false;
-                                return false; // exit the loop early
-                            }
-                        });
-                        
-                        // If all inputs are filled, show success message and modal
-                        if (inputsFilled) {
-                            var editorName = $('#inputEditorname').val();
-                            $('#successMessage').text("Successfully added '" + editorName + "'");
-                            $('#successModal').modal('show');
-                            setTimeout(function() {
-                                $('#successModal').modal('hide');
-                                $('#addEditorForm')[0].reset(); // Clear the form fields
-                            }, 3000); // 3000 milliseconds = 3 seconds
+                    document.getElementById('DepartmentSelect').addEventListener('change', function() {
+                        var department = this.value;
+                        var teacherSelect = document.getElementById('TeacherSelect');
+                        var journalSelect = document.getElementById('JournalSelect');
+                        // Clear previous options
+                        teacherSelect.innerHTML = '';
+                        journalSelect.innerHTML = '';
+                        // Add new options based on department
+                        if (department === 'mscComputerScience') {
+                            addOptions(teacherSelect, ['cs12', 'cs11']);
+                            addOptions(journalSelect, ['AI and NLP', 'Quantum Computing']);
+                        } else if (department === 'mscMathematics') {
+                            addOptions(teacherSelect, ['mm111', 'mm14']);
+                            addOptions(journalSelect, ['Mathematical Modeling', 'Number Theory']);
+                        } else if (department === 'MAHistory') {
+                            addOptions(teacherSelect, ['his13', 'his34']);
+                            addOptions(journalSelect, ['World History', 'European History']);
+                        } else if (department === 'MBA') {
+                            addOptions(teacherSelect, ['mba12', 'mba17']);
+                            addOptions(journalSelect, ['Business Strategy', 'Marketing Management']);
                         }
                     });
-                    
-                    // For removing editor
-                    $('#removeEditorBtn').click(function() {
-                        // Check if all inputs are filled
-                        var inputsFilled = true;
-                        $('#removeEditorForm select').each(function() {
-                            if ($(this).val() === '') {
-                                inputsFilled = false;
-                                return false; // exit the loop early
-                            }
+
+                    function addOptions(selectElement, options) {
+                        options.forEach(function(option) {
+                            var optionElement = document.createElement('option');
+                            optionElement.text = option;
+                            optionElement.value = option;
+                            selectElement.add(optionElement);
                         });
-                        
-                        // If all inputs are filled, show success message and modal
-                        if (inputsFilled) {
-                            var editorName = $('#editorNameSelect option:selected').text();
-                            $('#successMessage').text("Successfully removed '" + editorName + "'");
-                            $('#successModal').modal('show');
-                            setTimeout(function() {
-                                $('#successModal').modal('hide');
-                                $('#removeEditorForm')[0].reset(); // Clear the form fields
-                            }, 3000); // 3000 milliseconds = 3 seconds
-                        }
-                    });
+                    }
                 </script>
+
+                <script>
+                    // JavaScript
+                    document.getElementById('journalNameSelect').addEventListener('change', function() {
+                        var journalName = this.value;
+                        var editorSelect = document.getElementById('editorNameSelect');
+                        // Clear previous options
+                        editorSelect.innerHTML = '';
+                        // Add new options based on journal name 
+                        if (journalName === 'Journal1') {
+                            addOptions(editorSelect, ['bo11', 'bo17', 'bo18']);
+                        } else if (journalName === 'Journal2') { 
+                            addOptions(editorSelect, ['hin5', 'hin9', 'hin4']);
+                        } else if (journalName === 'Journal3') {
+                            addOptions(editorSelect, ['mpe3', 'mpe4', 'mpe7']);
+                        } else if (journalName === 'Journal4') {
+                            addOptions(editorSelect, ['mcom9', 'mcom12', 'mcom7']);
+                        }
+                    });
+
+                    function addOptions(selectElement, options) {
+                        options.forEach(function(option) {
+                            var optionElement = document.createElement('option');
+                            optionElement.text = option;
+                            optionElement.value = option;
+                            selectElement.add(optionElement);
+                        });
+                    }
+                </script>
+
                 
                 
                 

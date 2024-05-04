@@ -21,253 +21,139 @@
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-admin-2.css'%}" rel="stylesheet">
 
+    <!-- Add jQuery library if not already included -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
 </head>
 
 <body id="page-top">
 
-    <!-- Page Wrapper -->
-    <div id="wrapper">
+    {% include 'admin_navbar.html' %} 
 
-        <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/index/">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="sidebar-brand-text mx-3">JP Admin</div>
-            </a>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-
-            <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
-                <a class="nav-link" href="/index/">
-                    <i class="fas fa-fw fa-home"></i>
-                    <span>HOME</span></a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-            </div>
-
+    <div class="2h2" style="margin-left: 5%;">
+        <h2>GIVE PAGE HEADING</h2><br>
+    </div>
+    
+    <div class="container">
+        <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link" href="/editor/">
-                    <i class="fas fa-fw fa-download"></i>
-                    <span>Editors</span></a>
+                <a class="nav-link active" data-toggle="tab" href="#remove-volume">Remove Volume</a>
             </li>
-
-            <!-- Nav Item - Journals Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link" href="/journal/">
-                    <i class="fas fa-fw fa-book"></i>
-                    <span>Journals</span></a>
+                <a class="nav-link" data-toggle="tab" href="#remove-issue">Remove Issue</a>
             </li>
-
             <li class="nav-item">
-                <a class="nav-link" href="/visits/">
-                    <i class="fas fa-fw fa-eye"></i>
-                    <span>Visits</span></a>
+                <a class="nav-link" data-toggle="tab" href="#remove-article">Remove Article</a>
             </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="/downloads/">
-                    <i class="fas fa-fw fa-download"></i>
-                    <span>Downloads</span></a>
-            </li>
-
-            <!-- Nav Item - Tables -->
-                <li class="nav-item">
-                    <a class="nav-link" href="/userlist/">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>User List</span></a>
-                </li>
-
         </ul>
-        <!-- End of Sidebar -->
-
-        <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
-
-            <!-- Main Content -->
-            <div id="content">
-
-                <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
-
-                    <!-- Topbar Search -->
-                    <!-- <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form> -->
-
-                    <h1 style="color: black;"><b>Home</b></h1>
-
-                    <!-- Topbar Navbar -->
-                    <ul class="navbar-nav ml-auto">
-
-                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                        <li class="nav-item dropdown no-arrow d-sm-none">
-                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-search fa-fw"></i>
-                            </a>
-                            <!-- Dropdown - Messages -->
-                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                                aria-labelledby="searchDropdown">
-                                <form class="form-inline mr-auto w-100 navbar-search">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control bg-light border-0 small"
-                                            placeholder="Search for..." aria-label="Search"
-                                            aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button">
-                                                <i class="fas fa-search fa-sm"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </li>
-
-                        <!-- Nav Item - Alerts -->
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-bell fa-fw"></i>
-                                <!-- Counter - Alerts -->
-                                <span class="badge badge-danger badge-counter">0+</span>
-                            </a>
-                            <!-- Dropdown - Alerts -->
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="alertsDropdown">
-                                <h6 class="dropdown-header">
-                                    Alerts Center
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-primary">
-                                            <i class="fas fa-file-alt text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <span class="font-weight-bold">No  new notifications</span>
-                                    </div>
-                                </a>
-                                
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
-                            </div>
-                        </li>
-
-                        
-                        <div class="topbar-divider d-none d-sm-block"></div>
-
-                        <!-- Nav Item - User Information -->
-                        <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">ADMIN</span>
-                                <img class="img-profile rounded-circle"
-                                    src="{% static 'img/undraw_profile.svg' %}">
-                            </a>
-                            <!-- Dropdown - User Information -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="/admin_profile/">
-                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Profile
-                                </a>
-                                <a class="dropdown-item" href="/admin_resetpassword/">
-                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Reset Password
-                                </a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
-                                </a>
-                            </div>
-                        </li>
-
-                    </ul>
-
-                </nav>
-                <!-- End of Topbar -->
-
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
-
-                    <!-- Page Heading -->
-
-
-                    <!-- Content Row -->
-                    
-                    <!-- Content Row -->
-
-                </div>
-                <!-- /.container-fluid -->
-
-            </div>
-            <!-- End of Main Content -->
-
-            <!-- Footer -->
-            <!-- <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; University of Calicut</span>
+        <br>
+      
+        <div class="tab-content">
+            <div id="remove-volume" class="tab-pane fade show active">
+                <form>
+                    <div class="form-group">
+                        <label for="journal-volume">Journal:</label>
+                        <select id="journal-volume" class="form-control">
+                            <option value="">Select a Journal</option>
+                            <option value="journal-a">Journal A</option>
+                            <option value="journal-b">Journal B</option>
+                            <option value="journal-c">Journal C</option>
+                        </select>
                     </div>
-                </div>
-            </footer> -->
-            <!-- End of Footer -->
-
-        </div>
-        <!-- End of Content Wrapper -->
-
-    </div>
-    <!-- End of Page Wrapper -->
-
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="/login/">Logout</a>
-                </div>
+                    <div class="form-group">
+                        <label for="volume-number">Volume:</label>
+                        <select id="volume-number" class="form-control">
+                            <option value="">Select a Volume</option>
+                            <option value="volume-1">Volume 1</option>
+                            <option value="volume-2">Volume 2</option>
+                            <option value="volume-3">Volume 3</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Remove Volume</button>
+                </form>
+            </div>
+            <div id="remove-issue" class="tab-pane fade">
+                <form>
+                    <div class="form-group">
+                        <label for="journal-issue">Journal:</label>
+                        <select id="journal-issue" class="form-control">
+                            <option value="">Select a Journal</option>
+                            <option value="journal-x">Journal X</option>
+                            <option value="journal-y">Journal Y</option>
+                            <option value="journal-z">Journal Z</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="volume-number-issue">Volume:</label>
+                        <select id="volume-number-issue" class="form-control">
+                            <option value="">Select a Volume</option>
+                            <option value="volume-a">Volume A</option>
+                            <option value="volume-b">Volume B</option>
+                            <option value="volume-c">Volume C</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="issue-number">Issue Number:</label>
+                        <select id="issue-number" class="form-control">
+                            <option value="">Select an Issue</option>
+                            <option value="volume-a">Issue 1</option>
+                            <option value="volume-b">Issue 2</option>
+                            <option value="volume-c">Issue 3</option>
+                        </select>
+    
+                    </div>
+                    <button type="submit" class="btn btn-primary">Remove Issue</button>
+                </form>
+            </div>
+            <div id="remove-article" class="tab-pane fade">
+                <form>
+                    <div class="form-group">
+                        <label for="journal-article">Journal:</label>
+                        <select id="journal-article" class="form-control">
+                            <option value="">Select a Journal</option>
+                            <option value="journal-p">Journal P</option>
+                            <option value="journal-q">Journal Q</option>
+                            <option value="journal-r">Journal R</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="volume-number-article">Volume:</label>
+                        <select id="volume-number-article" class="form-control">
+                            <option value="">Select a Volume</option>
+                            <option value="volume-x">Volume X</option>
+                            <option value="volume-y">Volume Y</option>
+                            <option value="volume-z">Volume Z</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="issue-number-article">Issue Number:</label>
+                        <select id="issue-number-article" class="form-control">
+                            <option value="">Select an Issue</option>
+                            <option value="issue-5">5</option>
+                            <option value="issue-6">6</option>
+                            <option value="issue-7">7</option>
+                            <option value="issue-8">8</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="article">Article:</label>
+                        <select id="article" class="form-control">
+                            <option value="">Select an Article</option>
+                            <option value="article-1">Article 1</option>
+                            <option value="article-2">Article 2</option>
+                            <option value="article-3">Article 3</option>
+                            <option value="article-4">Article 4</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Remove Article</button>
+                </form>
             </div>
         </div>
     </div>
+
+    <!-- -----------------------------------------------------===============================--------------------------------------------------------------------- -->
 
     <!-- Bootstrap core JavaScript-->
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
@@ -286,6 +172,6 @@
     <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
     <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
 
-</body>
 
+</body>
 </html>

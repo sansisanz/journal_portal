@@ -128,7 +128,7 @@ color: #7e7a6d;
             <li class="nav-item">
                 <a class="nav-link" href="/editor/">
                     <i class="fas fa-fw fa-pen"></i>
-                    <span>Editors</span></a>
+                    <span>Chief Editor</span></a>
             </li>
 
             <!-- Nav Item - Journals Collapse Menu -->
@@ -179,60 +179,6 @@ color: #7e7a6d;
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
 
-                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                        <li class="nav-item dropdown no-arrow d-sm-none">
-                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-search fa-fw"></i>
-                            </a>
-                            <!-- Dropdown - Messages -->
-                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                                aria-labelledby="searchDropdown">
-                                <form class="form-inline mr-auto w-100 navbar-search">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control bg-light border-0 small"
-                                            placeholder="Search for..." aria-label="Search"
-                                            aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button">
-                                                <i class="fas fa-search fa-sm"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </li>
-
-                        <!-- Nav Item - Alerts -->
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-bell fa-fw"></i>
-                                <!-- Counter - Alerts -->
-                                <span class="badge badge-danger badge-counter">3+</span>
-                            </a>
-                            <!-- Dropdown - Alerts -->
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="alertsDropdown">
-                                <h6 class="dropdown-header">
-                                    Alerts Center
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-primary">
-                                            <i class="fas fa-file-alt text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <span class="font-weight-bold">No  new notifications</span>
-                                    </div>
-                                </a>
-                                
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
-                            </div>
-                        </li>
-
-
                         <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
@@ -276,6 +222,9 @@ color: #7e7a6d;
                                     <a class="nav-link active" id="add-journal-tab" data-toggle="tab" href="#addJournal" role="tab" aria-controls="addJournal" aria-selected="true">Add Journal</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" id="add-volume-tab" data-toggle="tab" href="#addVolume" role="tab" aria-controls="addVolume" aria-selected="true">Add Journal</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
                                     <a class="nav-link" id="remove-journal-tab" data-toggle="tab" href="#removeJournal" role="tab" aria-controls="removeJournal" aria-selected="false">Remove Journal</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
@@ -297,7 +246,17 @@ color: #7e7a6d;
                                         <div class="form-row">
                                             <div class="form-group col-md-12">
                                                 <label for="inputJournalName">Journal Name</label>
-                                                <input type="text" class="form-control" id="inputJournalName" required>
+                                                <input type="text" class="form-control" id="inputJournalName" placeholder="Enter Journal Name" required>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="inputDepartment">Department</label>
+                                                <select class="form-control" id="DepartmentSelect" required="">
+                                                    <option value="">Select Department</option>
+                                                    <option value="mscComputerScience">Msc Computer Science</option>
+                                                    <option value="mscMathematics">Msc Mathematics</option>
+                                                    <option value="MAHistory">MA History</option>
+                                                    <option value="MBA">MBA</option>
+                                                </select>
                                             </div>
                                             <div class="form-group col-md-12">
                                                 <label for="inputCoverImage">Cover Image (png, jpg, jpeg)</label>
@@ -309,6 +268,34 @@ color: #7e7a6d;
                                         </div>
                                     </form>
                                 </div>
+
+                                <div class="tab-pane fade" id="addVolume" role="tabpanel" aria-labelledby="add-volume-tab">
+                                    <h4 class="text-center mt-4 mb-4" style="text-transform: uppercase; color: #000000;">Add a volume</h4>
+                                    <form>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                                <label for="inputAddVolumeJournalName">Journal Name</label>
+                                                <select class="form-control" id="inputAddVolumeJournalName" required>
+                                                    <option value="">Select Journal Name</option>
+                                                    <option value="Journal 1">Journal 1</option>
+                                                    <option value="Journal 2">Journal 2</option>
+                                                    <option value="Journal 3">Journal 3</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="inputAddVolumeNumber">Volume Number</label>
+                                                <input type="text" class="form-control" id="inputAddVolumeNumber" placeholder="Enter Volume Number" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="d-flex flex-wrap justify-content-between align-items-center">
+                                                <button class="btn btn-primary mt-3 mt-sm-0" type="submit" data-toggle="modal" data-target="#addVolumeModal">Add Volume</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                
+
                                 <div class="tab-pane fade" id="removeJournal" role="tabpanel" aria-labelledby="remove-journal-tab">
                                     <h4 class="text-center mt-4 mb-4" style="text-transform: uppercase; color: #000000;">Remove an existing journal</h4>
                                     <form>
