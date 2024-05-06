@@ -33,53 +33,57 @@
   <!-- Template Main CSS File -->
   <link href="{% static 'css/public-style.css' %}" rel="stylesheet">
 
-<style>
-
-</style>
 </head>
 
 <body>
-    {% include 'public_navbar.html' %}
-
-    <!-- ========= Submisiion Guidelines ========= -->
-   <section id="ethics&disclosure" class="ethics&disclosure">
-    <div class="container">
-      <div class="section-title" data-aos="zoom-out">
-        <h2>Ethics & Disclosure</h2>
-        <p>Publication Ethics, Journal Policies and Author Responsibilities</p>
-      </div>
-  
-      <div class="row justify-content-center">
-
-          <p>Content1 for Guidelines</p>  <p>...</p>  <p>.....</p>    
-                     
-      </div>
-    </div>
-  </section>
-  <!-- ========= Submisiion Guidelines ========= -->
-
-      <!-- ======= Footer ======= -->
-    <footer id="footer">
-        <div class="container">
-          <h3>CU JOURNAL HUB</h3>
-          <p>"Empowering discovery and shaping tomorrow through cutting-edge research."</p>
-          <div class="social-links">
-            <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-            <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-            <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-            <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-            <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
-          </div>
-          <div class="copyright">
-            &copy; Copyright <strong><span>CU JOURNAL HUB</span></strong>. All Rights Reserved
-          </div>
-          <!-- <div class="credits"></div> -->
+  <div class="wrapper">
+    <!-- ======= Header ======= -->
+    <header id="header" class="fixed-top d-flex align-items-center">
+      <div class="container d-flex align-items-center justify-content-between">
+        <div class="logo">
+          <h1><a href="/p_index/">CU JOURNAL HUB</a></h1>
+          <!-- Uncomment below if you prefer to use an image logo -->
+          <a href="#home"><img src="{% static 'img/logo.png' %}" alt="" class="img-fluid"></a>
         </div>
-      </footer>
-    <!-- End Footer -->
+      </div>
+    </header>
+    <!-- End Header -->
 
-<!-- ---------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
-      <!-- Vendor JS Files -->
+    <!-- ======= Main Content ======= -->
+    <main id="main">
+      <section class="inner-page">
+        <div class="container"></div>   
+        <!-- header for journal -->
+  
+          <section id="cta" class="cta">
+            <div class="container">  <div class="row">
+              <div class="col-sm-4">  <img src="{% static 'img/book_cover.jpeg' %}" alt="Journal Cover Image" style="width: 100%; height: auto;">  </div>
+                <div class="col-sm-8">
+                  <h1 class="j_menu_h1">**Journal Name**</h1>  <h4 class="j_menu_h4">Department</h4>
+                  <br><br>
+                  <nav class="journal-menu">
+                    <ul>                
+                      <li><a href="/p_home/#aim&scope">Aim & Scopes</a></li>
+                      <li><a href="/p_home/#editorialboard">Editorial Board</a></li>
+                      <li><a href="/p_home/#submitarticle">Submit Article</a></li>
+                      <li><a href="/p_home/#journalupdates">Journal Updates</a></li>
+                      <li><a href="/p_guidelines/">Submission Guidelines</a></li>
+                      <li><a href="/p_ethics/">Ethics & Disclosure</a></li>
+                      <li><a href="/p_alljournals/">All Journals</a></li>
+                      <li><a href="/p_home/#contact">Contact Us</a></li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </section>
+          <!-- Your content here -->
+      </section>
+    <!-- End Main Content -->
+
+  </div>
+
+  <!-- Vendor JS Files -->
   <script src="{% static 'vendor/aos/aos.js' %}"></script>
   <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
   <script src="{% static 'vendor/glightbox/js/glightbox.min.js' %}"></script>

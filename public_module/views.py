@@ -28,8 +28,13 @@ def p_userreg(request):
 def p_userprofile(request):
     return render(request, 'p_userprofile.html')
 
-def flip(request):
-    return render(request, 'flip.html')
+def public_navbar(request):
+    return render(request, 'public_navbar.html')
 
-def side_bar(request):
-    return render(request, 'side_bar.html')
+def p_home(request):
+    return render(request, 'p_home.html')
+
+def read(request):
+    return render(request, 'read.html')
+
+

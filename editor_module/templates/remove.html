@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>JP Editor</title>
+    <title>JP Admin Panel</title>
 
     <!-- Custom fonts for this template-->
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
@@ -19,78 +19,21 @@
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="{% static 'css/sb-editor.css' %}" rel="stylesheet">
-    
-    <style>
-        .container-fluid {
-            padding: 20px;
-        }
+    <link href="{% static 'css/sb-editor.css'%}" rel="stylesheet">
 
-        .container-fluid h2 {
-            color: #4e3e3e;
-            font-family: 'Times New Roman', Times, serif;
-            margin-bottom: 20px;
-        }
+    <!-- Add jQuery library if not already included -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-        .container-fluid form {
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        .container-fluid form label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        .container-fluid form input[type="text"],
-        .container-fluid form select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-
-        .container-fluid form button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .container-fluid form button:hover {
-            background-color: #0056b3;
-        }
-
-        .nav-item .nav-link.active {
-            background-color: #6c6f7e; /* Set the background color of the active tab */
-            color: white; /* Set the text color of the active tab */
-            border-color: #6c6f7e; /* Set the border color of the active tab */
-        }
-
-        .nav-item .nav-link {
-            color: #444242; /* Set the text color of the inactive tabs */
-        }
-
-        .form-control {
-            background-color: #f8f9fa; /* Set the background color of form controls */
-            color: #495057; /* Set the text color of form controls */
-            border-color: #ced4da; /* Set the border color of form controls */
-        }
-    </style>
 
 </head>
 
 <body id="page-top">
 
-    {% include 'editor_sidebar.html' %}
+    {% include 'editor_sidebar.html' %} 
 
     <div class="2h2" style="margin-left: 5%;">
-        <h2>GIVE PAGE HEADING</h2><br>
+        <h2 style="color: #4E73DF;"><b>REMOVE JOURNAL INFO</b></h2><br><br>
     </div>
     
     <div class="container">
@@ -128,7 +71,7 @@
                             <option value="volume-3">Volume 3</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Remove Volume</button>
+                    <button type="submit" class="btn btn-primary" style="color: white;">Remove Volume</button>
                 </form>
             </div>
             <div id="remove-issue" class="tab-pane fade">
@@ -161,7 +104,7 @@
                         </select>
     
                     </div>
-                    <button type="submit" class="btn btn-primary">Remove Issue</button>
+                    <button type="submit" class="btn btn-primary" style="color: white;">Remove Issue</button>
                 </form>
             </div>
             <div id="remove-article" class="tab-pane fade">
@@ -204,47 +147,23 @@
                             <option value="article-4">Article 4</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Remove Article</button>
+                    <button type="submit" class="btn btn-primary" style="color: white;">Remove Article</button>
                 </form>
             </div>
         </div>
     </div>
- 
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="/editor_login/">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- -----------------------------------------------------===============================--------------------------------------------------------------------- -->
 
     <!-- Bootstrap core JavaScript-->
-    <script src="{% static 'vendor/jquery/jquery.min.js' %}]"></script>
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
     <!-- Core plugin JavaScript-->
     <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="{% static 'js/sb-editor.min.js' %}"></script>
+    <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
 
     <!-- Page level plugins -->
     <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
@@ -253,6 +172,6 @@
     <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
     <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
 
-</body>
 
+</body>
 </html>

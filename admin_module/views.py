@@ -17,35 +17,32 @@ def journal(request):
 def forgotpassword(request):
     return render(request, 'forgotpassword.html')     
 
-def visits(request):
-    return render(request, 'visits.html')  
+def visit_c(request):
+    return render(request, 'visit_c.html')  
 
-def downloads(request):
-    return render(request, 'downloads.html')  
+def download_c(request):
+    return render(request, 'download_c.html')  
 
 def userlist(request):
     return render(request, 'userlist.html')
 
-def admin_profile(request):
-    return render(request, 'admin_profile.html')
+def adminprofile(request):
+    return render(request, 'adminprofile.html')
 
-def admin_resetpassword(request):
-    return render(request, 'admin_resetpassword.html')
+def adminresetpassword(request):
+    return render(request, 'adminresetpassword.html')
+
+def admin_sidebar(request):
+    return render(request, 'admin_sidebar.html')
+
+def create_j(request):
+    return render(request, 'create_j.html')
 
 def set_password(request):
     return render(request, 'set_password.html')
 
-def admin_navbar(request):
-    return render(request, 'admin_navbar.html')
-
-def create_journal(request):
-    return render(request, 'create_journal.html') 
-
-def view_journals(request):
-    return render(request, 'view_journals.html')
-
-def visit_counts(request):
-    return render(request, 'visit_counts.html')
-    
-def user_access(request):
-    return render(request, 'user_access.html')    
+def view_j(request):
+    return render(request, 'view_j.html')
+ 
+def edit_j(request):
+    return render(request, 'edit_j.html')

@@ -1,0 +1,125 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>JP Admin Panel</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="{% static 'css/sb-admin-2.css'%}" rel="stylesheet">
+
+    <style>
+        .form-box {
+          background-color: #f8f9fa;
+          border: 1px solid #ced4da;
+          border-radius: 10px;
+          padding: 20px;
+          margin-bottom: 70%;
+        }
+    </style>
+
+</head>
+
+<body id="page-top">
+
+    {% include 'admin_sidebar.html' %}
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-3"></div>
+      <div class="col-lg-6">
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">EDIT JOURNAL</h6>
+          </div>
+          <div class="card-body">
+            <form id="editJournalForm">
+              <div class="form-group">
+                <label for="journalName" class="form-label">Journal Name:</label>
+                <input type="text" class="form-control" id="journalName" value="CIDA">
+              </div>
+              <div class="form-group">
+                <label for="department" class="form-label">Department:</label>
+                <select class="form-control" id="department">
+                  <option value="">Select Department</option>
+                  <option value="msc_computer_science" selected>MSC Computer Science</option>
+                  <option value="electrical_engineering">Electrical Engineering</option>
+                  <option value="civil_engineering">Civil Engineering</option>
+                  <option value="biotechnology">Biotechnology</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="editor" class="form-label">Editor:</label>
+                <select class="form-control" id="editor">
+                  <option value="">Select Editor</option>
+                  <option value="ed_1">Editor 1</option>
+                  <option value="ed_2" selected>Editor 2</option>
+                  <option value="ed_3">Editor 3</option>
+                  <option value="ed_4">Editor 4</option>
+                </select>
+              </div>
+              <button type="button" class="btn btn-primary btn-block" onclick="editJournal()">Edit Journal</button>
+              <button type="submit" class="btn btn-success btn-block mt-2 d-none" id="saveJournalBtn">Save Changes</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script>
+    function editJournal() {
+      // Enable all input fields for editing
+      $('input, select').prop('disabled', false);
+      $('#saveJournalBtn').removeClass('d-none'); // Show the Save Changes button
+    }
+
+    // Submit journal changes
+    $('#editJournalForm').submit(function (event) {
+      event.preventDefault(); // Prevent form submission
+
+      // Here you can implement the logic to save the updated journal details
+      // For demonstration purposes, this alerts the user that changes are saved
+      alert('Journal changes saved successfully!');
+      
+      // Disable input fields and hide Save Changes button after saving
+      $('input, select').prop('disabled', true);
+      $('#saveJournalBtn').addClass('d-none'); // Hide the Save Changes button
+    });
+  </script>
+
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+
+    <!-- Page level plugins -->
+    <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
+    <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+
+</body>
+
+</html>    

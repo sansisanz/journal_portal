@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>JP Admin Panel</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="{% static 'css/sb-admin-2.css'%}" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+    {% include 'admin_sidebar.html' %}
+
+                <!-- Begin Page Content -->
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-3"></div>
+                            <div class="col-lg-6">
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3">
+                                        <h4 class="m-0 font-weight-bold text-primary">ADMIN PROFILE</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="adminProfileForm">
+                                            <div class="form-group">
+                                                <label for="adminName" class="form-label">Name:</label>
+                                                <input type="text" class="form-control" id="adminName" value="Admin Name" readonly>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="adminEmail" class="form-label">Email:</label>
+                                                <input type="email" class="form-control" id="adminEmail" value="admin@example.com"
+                                                    readonly>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="adminMobile" class="form-label">Mobile:</label>
+                                                <input type="tel" class="form-control" id="adminMobile" value="123 456 7890" readonly>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="adminAddress" class="form-label">Address:</label>
+                                                <textarea class="form-control" id="adminAddress" rows="3"
+                                                    readonly>123 Street, City, Country</textarea>
+                                            </div>
+                                            <button type="button" class="btn btn-primary btn-block" onclick="editProfile()">Edit Profile</button>
+                                            <button type="submit" class="btn btn-success btn-block mt-2 d-none" id="saveProfileBtn">Save
+                                                Changes</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                 <!-- /.container-fluid -->
+
+        <!-- Bootstrap JS -->
+        <script src="{% static 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js' %}"></script>
+        <script>
+            function editProfile() {
+                // Enable all input fields for editing
+                $('input, textarea').prop('readonly', false);
+                $('#saveProfileBtn').removeClass('d-none'); // Show the Save Changes button
+            }
+    
+            // Submit profile changes
+            $('#adminProfileForm').submit(function (event) {
+                event.preventDefault(); // Prevent form submission
+    
+                // Here you can implement the logic to save the updated profile details
+                // For demonstration purposes, this alerts the user that changes are saved
+                alert('Profile changes saved successfully!');
+                
+                // Disable input fields and hide Save Changes button after saving
+                $('input, textarea').prop('readonly', true);
+                $('#saveProfileBtn').addClass('d-none'); // Hide the Save Changes button
+            });
+        </script>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+
+    <!-- Page level plugins -->
+    <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
+    <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+
+     <!-- Bootstrap JS and jQuery -->
+     <script src="{% static 'https://code.jquery.com/jquery-3.6.0.min.js' %}"></script>
+     <script src="{% static 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js' %}"></script>
+ </body>
+
+</body>
+
+</html>
