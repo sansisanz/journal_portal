@@ -26,10 +26,22 @@
 <body id="page-top">
 
     {% include 'editor_sidebar.html' %}
-                 
-                    <div class="container">
-                        <h2>Add notification</h2><br><br>
-                        <form action="#" method="post">
+           
+    <div class="container">
+        <h2>Add notification</h2><br><br>
+        <form action="#" method="post" enctype="multipart/form-data" id="articleForm">
+            <div class="form-group">
+                <label class="required" for="journalSelect">Journal Name:</label>
+                <select id="journalSelect" name="journalname" class="form-control" required>
+                    <option value="">Select Journal</option>
+                    <option value="1">J1</option>
+                    <option value="2">J2</option>
+                    <option value="3">J3</option>
+                    <option value="4">J4</option>
+                    <!-- Options will be populated dynamically -->
+                </select>
+            </div>
+            
                             <label for="volume">New Notification Details:</label>
                             <input type="text" id="volume" name="volume">
                 
