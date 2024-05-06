@@ -11,6 +11,9 @@ urlpatterns = [
     path("p_journals/", views.p_journals),
     path("p_authorreg/", views.p_authorreg),
     path("p_userreg/", views.p_userreg),
-    path("p_userprofile/", views.p_userprofile)
+    path("p_userprofile/", views.p_userprofile),
+    path("public_navbar/", views.public_navbar),
+    path("p_home/", views.p_home),
+    path("read/", views.read),
     
 ]

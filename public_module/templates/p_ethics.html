@@ -33,175 +33,53 @@
   <!-- Template Main CSS File -->
   <link href="{% static 'css/public-style.css' %}" rel="stylesheet">
 
+<style>
 
+</style>
 </head>
 
 <body>
+    {% include 'public_navbar.html' %}
 
-  <!-- ======= Header ======= -->
-  <header id="header" class="fixed-top d-flex align-items-center ">
-    <div class="container d-flex align-items-center justify-content-between">
-
-      <div class="logo">
-        <h1><a href="/p_index/">CU JOURNAL HUB</a></h1>
-        <!-- Uncomment below if you prefer to use an image logo -->
-        <a href="#home"><img src="{% static 'img/logo.png' %}" alt="" class="img-fluid"></a>
-      </div>
-
-      <nav id="navbar" class="navbar">
-        <ul>  
-          <li>
-            <form action="" class="search-bar">
-              <input type="search" name="search" pattern=".*\S.*" required>
-              <button class="search-btn" type="submit">
-                <span>Search</span>
-              </button>
-            </form>
-          </li>
-          <li><a class="nav-link scrollto " href="/p_j/">Home</a></li>
-          <li class="dropdown"><a href="#"><span>Sign In</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-              <li><a href="#">Author</a></li>
-              <!-- <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
-                <ul>
-                  <li><a href="#">Deep Drop Down 1</a></li>
-                  <li><a href="#">Deep Drop Down 2</a></li>
-                  <li><a href="#">Deep Drop Down 3</a></li>
-                  <li><a href="#">Deep Drop Down 4</a></li>
-                  <li><a href="#">Deep Drop Down 5</a></li>
-                </ul>
-              </li> -->
-              <li><a href="/p_index/#pricing">User</a></li>
-              <!-- <li><a href="#">Drop Down 3</a></li>
-              <li><a href="#">Drop Down 4</a></li> -->
-            </ul>
-          </li>
-          <!-- <li><a class="nav-link scrollto" href="index.html#pricing">Subscription</a></li> -->
-          <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
-        </ul>
-        <i class="bi bi-list mobile-nav-toggle"></i>
-      </nav><!-- .navbar -->
-
-    </div>
-  </header><!-- End Header -->
-
-  <main id="main">
-
-    <!-- ======= Breadcrumbs ======= -->
-    <!-- <section class="breadcrumbs">
-      <div class="container">
-
-        <div class="d-flex justify-content-between align-items-center">
-          <h2>Journals</h2>
-          <ol>
-            <li><a href="index.html">Home</a></li>
-            <li>Journals</li>
-          </ol>
-        </div>
-
-      </div> -->
-      
-    <!-- </section>   End Breadcrumbs -->
-
-    <section class="inner-page">
-      <div class="container">    
-         
-        <!-- home section start  -->
-
-                <!-- search bar -->
-                <!-- <section id="search_bar">
-                <div class="col-md-8">
-
-                  <div class="search">
-                    <i class="fa fa-search"></i>
-                    <input type="text" class="form-control" placeholder="SEARCH JOURNALS, ARTICLES, AUTHORS,...">
-                    <button class="btn btn-primary">Search</button>
-                  </div>
-                  
-                </div> <br>
-              </section> -->
-            <!-- searh bar end -->
-      
-    </div>
-      <!-- header for journal -->
-
-      <section id="cta" class="cta">
-        <div class="container">  <div class="row">
-          <div class="col-sm-4">  <img src="{% static 'img/book_cover.jpeg' %}" alt="Journal Cover Image" style="width: 100%; height: auto;">  </div>
-          <div class="col-sm-8">
-            <h1 class="j_menu_h1">**Journal Name**</h1>  <h4 class="j_menu_h4">Department</h4>
-            <br><br>
-            <nav class="journal-menu">
-              <ul>                
-                <li><a href="/p_j/#aim&scope">Aim & Scopes</a></li>
-                <li><a href="/p_j/#editorialboard">Editorial Board</a></li>
-                <li><a href="/p_j/#submitarticle">Submit Article</a></li>
-                <li><a href="/p_j/#journalupdates">Journal Updates</a></li>
-                 <li><a href="/p_guidelines/">Submission Guidelines</a></li>
-                <li><a href="/p_ethics/">Ethics & Disclosure</a></li>
-                <li><a href="/p_alljournals/">All Journals</a></li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </div>
-      </section>
-      
-      <!-- end of journal header -->
-
-      <!-- ========= Submisiion Guidelines ========= -->
-      <section id="ethics&disclosure" class="ethics&disclosure">
-        <div class="container">
-          <div class="section-title" data-aos="zoom-out">
-            <h2>Ethics & Disclosure</h2>
-            <p>Publication Ethics, Journal Policies and Author Responsibilities</p>
-          </div>
-      
-          <div class="row justify-content-center">
-
-              <p>Content1 for Guidelines</p>  <p>...</p>  <p>.....</p>    
-                         
-          </div>
-        </div>
-      </section>
-      <!-- ========= Submisiion Guidelines ========= -->
-
-    </section>
-    
-
-  </section>
-
-
-  </main><!-- End #main -->
-
-  <!-- ======= Footer ======= -->
-  <footer id="footer">
+    <!-- ========= Submisiion Guidelines ========= -->
+   <section id="ethics&disclosure" class="ethics&disclosure">
     <div class="container">
-      <h3>CU JOURNAL HUB</h3>
-      <p>"Empowering discovery and shaping tomorrow through cutting-edge research."</p>
-      <div class="social-links">
-        <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-        <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-        <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-        <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-        <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+      <div class="section-title" data-aos="zoom-out">
+        <h2>Ethics & Disclosure</h2>
+        <p>Publication Ethics, Journal Policies and Author Responsibilities</p>
       </div>
-      <div class="copyright">
-        &copy; Copyright <strong><span>CU JOURNAL HUB</span></strong>. All Rights Reserved
-      </div>
-      <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/selecao-bootstrap-template/ -->
-        <!-- Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> -->
+  
+      <div class="row justify-content-center">
+
+          <p>Content1 for Guidelines</p>  <p>...</p>  <p>.....</p>    
+                     
       </div>
     </div>
-  </footer><!-- End Footer -->
+  </section>
+  <!-- ========= Submisiion Guidelines ========= -->
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+      <!-- ======= Footer ======= -->
+    <footer id="footer">
+        <div class="container">
+          <h3>CU JOURNAL HUB</h3>
+          <p>"Empowering discovery and shaping tomorrow through cutting-edge research."</p>
+          <div class="social-links">
+            <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+            <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+            <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+            <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
+            <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+          </div>
+          <div class="copyright">
+            &copy; Copyright <strong><span>CU JOURNAL HUB</span></strong>. All Rights Reserved
+          </div>
+          <!-- <div class="credits"></div> -->
+        </div>
+      </footer>
+    <!-- End Footer -->
 
-  <!-- Vendor JS Files -->
+<!-- ---------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+      <!-- Vendor JS Files -->
   <script src="{% static 'vendor/aos/aos.js' %}"></script>
   <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
   <script src="{% static 'vendor/glightbox/js/glightbox.min.js' %}"></script>
@@ -211,7 +89,6 @@
 
   <!-- Template Main JS File -->
   <script src="{% static 'js/main.js' %}"></script>
-
 </body>
 
 </html>

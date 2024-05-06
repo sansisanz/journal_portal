@@ -1983,15 +1983,7 @@ nav.journal-menu li a:hover {  /* Add hover effect */
 /* submit button */
 
 /* author registration */
-.author_reg {
-  text-align: center;
-}
 
-#author_reg_form button{
-  background-color: #d85407;
-  border-color: white;
-  font-size: 1.3rem;
-}
 
 /* card for journal update */
 /* .notifications-container {
