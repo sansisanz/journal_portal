@@ -21,140 +21,13 @@
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-admin-2.css'%}" rel="stylesheet">
 
-    <!-- Add jQuery library if not already included -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-
 </head>
 
 <body id="page-top">
 
-    {% include 'admin_navbar.html' %} 
+    {% include 'admin_sidebar.html' %}
 
-    <div class="2h2" style="margin-left: 5%;">
-        <h2>GIVE PAGE HEADING</h2><br>
-    </div>
-    
-    <div class="container">
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#remove-volume">Remove Volume</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#remove-issue">Remove Issue</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#remove-article">Remove Article</a>
-            </li>
-        </ul>
-        <br>
-      
-        <div class="tab-content">
-            <div id="remove-volume" class="tab-pane fade show active">
-                <form>
-                    <div class="form-group">
-                        <label for="journal-volume">Journal:</label>
-                        <select id="journal-volume" class="form-control">
-                            <option value="">Select a Journal</option>
-                            <option value="journal-a">Journal A</option>
-                            <option value="journal-b">Journal B</option>
-                            <option value="journal-c">Journal C</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="volume-number">Volume:</label>
-                        <select id="volume-number" class="form-control">
-                            <option value="">Select a Volume</option>
-                            <option value="volume-1">Volume 1</option>
-                            <option value="volume-2">Volume 2</option>
-                            <option value="volume-3">Volume 3</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Remove Volume</button>
-                </form>
-            </div>
-            <div id="remove-issue" class="tab-pane fade">
-                <form>
-                    <div class="form-group">
-                        <label for="journal-issue">Journal:</label>
-                        <select id="journal-issue" class="form-control">
-                            <option value="">Select a Journal</option>
-                            <option value="journal-x">Journal X</option>
-                            <option value="journal-y">Journal Y</option>
-                            <option value="journal-z">Journal Z</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="volume-number-issue">Volume:</label>
-                        <select id="volume-number-issue" class="form-control">
-                            <option value="">Select a Volume</option>
-                            <option value="volume-a">Volume A</option>
-                            <option value="volume-b">Volume B</option>
-                            <option value="volume-c">Volume C</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="issue-number">Issue Number:</label>
-                        <select id="issue-number" class="form-control">
-                            <option value="">Select an Issue</option>
-                            <option value="volume-a">Issue 1</option>
-                            <option value="volume-b">Issue 2</option>
-                            <option value="volume-c">Issue 3</option>
-                        </select>
-    
-                    </div>
-                    <button type="submit" class="btn btn-primary">Remove Issue</button>
-                </form>
-            </div>
-            <div id="remove-article" class="tab-pane fade">
-                <form>
-                    <div class="form-group">
-                        <label for="journal-article">Journal:</label>
-                        <select id="journal-article" class="form-control">
-                            <option value="">Select a Journal</option>
-                            <option value="journal-p">Journal P</option>
-                            <option value="journal-q">Journal Q</option>
-                            <option value="journal-r">Journal R</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="volume-number-article">Volume:</label>
-                        <select id="volume-number-article" class="form-control">
-                            <option value="">Select a Volume</option>
-                            <option value="volume-x">Volume X</option>
-                            <option value="volume-y">Volume Y</option>
-                            <option value="volume-z">Volume Z</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="issue-number-article">Issue Number:</label>
-                        <select id="issue-number-article" class="form-control">
-                            <option value="">Select an Issue</option>
-                            <option value="issue-5">5</option>
-                            <option value="issue-6">6</option>
-                            <option value="issue-7">7</option>
-                            <option value="issue-8">8</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="article">Article:</label>
-                        <select id="article" class="form-control">
-                            <option value="">Select an Article</option>
-                            <option value="article-1">Article 1</option>
-                            <option value="article-2">Article 2</option>
-                            <option value="article-3">Article 3</option>
-                            <option value="article-4">Article 4</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Remove Article</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- -----------------------------------------------------===============================--------------------------------------------------------------------- -->
-
+   
     <!-- Bootstrap core JavaScript-->
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
@@ -172,6 +45,6 @@
     <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
     <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
 
-
 </body>
-</html>
+
+</html>    

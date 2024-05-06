@@ -1,0 +1,326 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Journal Page - CUJH</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{% static 'img/favicon.png' %}" rel="icon">
+  <link href="{% static 'img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.0.1/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'vendor/animate.css/animate.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/remixicon/remixicon.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="{% static 'css/public-style.css' %}" rel="stylesheet">
+
+<style>
+  .news-ticker {
+  overflow: hidden;
+}
+
+.news-ticker ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  animation: ticker 20s linear infinite;
+}
+
+.news-ticker li {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+@keyframes ticker {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+/* Define fixed dimensions for editor photos */
+.member-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center; /* For fallback */
+}
+
+.editor-photo {
+  width: 100%; /* Adjust this value as needed */
+  height: auto; /* Maintains aspect ratio */
+  max-width: 200px; /* Maximum width for consistency */
+  max-height: 200px; /* Maximum height for consistency */
+}
+
+</style>
+</head>
+
+<body>
+    {% include 'public_navbar.html' %}
+
+    <!-- aims and scope section -->
+    <section id="aim&scope" class="aim&scope">
+        <div class="container">
+      
+          <div class="section-title" data-aos="zoom-out">
+            <h2>Aim & Scope</h2>
+            <p>Understanding Journals</p>
+          </div>
+      
+          <div class="row">
+            <h4> Journals aim to share new research and knowledge within a specific field, guiding content through an aim (overall purpose) and scope (topic coverage). </h4>
+          </div>
+        </div>
+      </section>    
+    <!-- end of aims and scope section  -->
+
+    
+    <!-- ======= Editorial Board Section ======= -->
+      <section id="editorialboard" class="editorialboard bg-light py-5">
+        <div class="container">
+          <div class="section-title" data-aos="zoom-out">
+            <h2>Editors</h2>
+            <p>Our Esteemed Editorial Board</p>
+          </div>
+      
+          <div class="row justify-content-center">
+      
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="member-item border rounded shadow p-4">
+                <img src="{% static 'img/ed1.png' %}" class="editor-photo"><br>
+                <h4>[Full Name]</h4>
+                <p>[Position in Editorial Board]</p>
+                <ul class="list-unstyled mb-0">
+                  <li><i class="fas fa-map-marker-alt"></i> [Office Address]</li>
+                  <li><i class="fas fa-envelope"></i> [Email Address]</li>
+                  <li><i class="fas fa-phone-alt"></i> [Phone Number (Optional)]</li>
+                </ul>
+              </div>
+            </div>
+      
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="member-item border rounded shadow p-4">
+                <img src="{% static 'img/ed2.png' %}" class="editor-photo"><br>
+                <h4>[Full Name]</h4>
+                <p>[Position in Editorial Board]</p>
+                <ul class="list-unstyled mb-0">
+                  <li><i class="fas fa-map-marker-alt"></i> [Office Address]</li>
+                  <li><i class="fas fa-envelope"></i> [Email Address]</li>
+                  <li><i class="fas fa-phone-alt"></i> [Phone Number (Optional)]</li>
+                </ul>
+              </div>
+            </div>
+      
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="member-item border rounded shadow p-4">
+                <img src="{% static 'img/ed3.png' %}" class="editor-photo"><br>
+                <h4>[Full Name]</h4>
+                <p>[Position in Editorial Board]</p>
+                <ul class="list-unstyled mb-0">
+                  <li><i class="fas fa-map-marker-alt"></i> [Office Address]</li>
+                  <li><i class="fas fa-envelope"></i> [Email Address]</li>
+                  <li><i class="fas fa-phone-alt"></i> [Phone Number (Optional)]</li>
+                </ul>
+              </div>
+            </div>
+      
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="member-item border rounded shadow p-4">
+                <img src="{% static 'img/ed4.png' %}" class="editor-photo"><br>
+                <h4>[Full Name]</h4>
+                <p>[Position in Editorial Board]</p>
+                <ul class="list-unstyled mb-0">
+                  <li><i class="fas fa-map-marker-alt"></i> [Office Address]</li>
+                  <li><i class="fas fa-envelope"></i> [Email Address]</li>
+                  <li><i class="fas fa-phone-alt"></i> [Phone Number (Optional)]</li>
+                </ul>
+              </div>
+            </div>
+      
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="member-item border rounded shadow p-4">
+                <img src="{% static 'img/ed5.png' %}" class="editor-photo"><br>
+                <h4>[Full Name]</h4>
+                <p>[Position in Editorial Board]</p>
+                <ul class="list-unstyled mb-0">
+                  <li><i class="fas fa-map-marker-alt"></i> [Office Address]</li>
+                  <li><i class="fas fa-envelope"></i> [Email Address]</li>
+                  <li><i class="fas fa-phone-alt"></i> [Phone Number (Optional)]</li>
+                </ul>
+              </div>
+            </div>
+
+          <div class="eb-para">
+            <h5>The CU Journal Hub is overseen by a dedicated Editorial Board, ensuring the quality and integrity of the scholarly publications we disseminate. This esteemed body comprises a Chief Editor and several committee members, in recognition of their extensive experience and distinguished reputations within the academic community. We are grateful for their invaluable contributions in guiding the selection and publication of impactful research within our journals.</h5>
+          </div>
+      
+          </div>
+        </div>
+      </section>
+  
+  <!-- End Editorial Board Section -->
+
+  
+    <!-- ======= submit Article Section ======= -->
+      <section id="submitarticle" class="submitarticle">
+        <div class="container">
+      
+          <div class="section-title" data-aos="zoom-out">
+            <h2>Submit Article</h2>
+            <p>Submitting Your Work: Journals Want Your Research!</p>
+          </div>
+      
+          <div class="row">
+            <h4>Aspiring authors can submit their original research to relevant journals for publication and contribution to their field. Authors interested in submitting an article for our journal are required to first register an account. Once registered, you can submit your article to our editor for review. </h4>
+            <a href="/p_authorreg/">Register Now</a>
+            <p>Already a Registered Author ? <a href="/p_index/#cta">Login Now</a></p>
+          </div>
+          <div class="submit_button"></div>
+        </div>
+      </section>
+    <!-- =========== end of submit article ============ -->
+
+<!-- ======== Journal Updates ======== -->
+      <section id="journalupdates" class="journalupdates bg-light py-5">
+        <div class="container">
+          <div class="section-title" data-aos="zoom-out">
+            <h2>Journal Updates</h2>
+            <p>Stay informed with the latest developments!</p>
+          </div>
+
+          <div class="news-ticker">
+            <ul>
+              <li><a href="#" class="volume-published">New Volume Published: Find groundbreaking research and insightful articles.</a></li>
+              <li><a href="#" class="submissions">Stay tuned for submissions: Mark your calendars and prepare your best research!</a></li>
+              <li><a href="#" class="call-for-articles">Call for Articles: Share your valuable insights and contribute to the field.</a></li>
+              <li><a href="#" class="submission-deadline">Important Reminder: Share your valuable insights and contribute to the field.</a></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+<!-- ========= Journal Updates End ========= -->    
+
+  <!-- ======= Contact Section ======= -->
+      <section id="contact" class="contact">
+        <div class="container">
+
+          <div class="section-title" data-aos="zoom-out">
+            <h2>Contact</h2>
+            <p>Contact Us</p>
+          </div>
+
+          <div class="row mt-5">
+
+            <div class="col-lg-4" data-aos="fade-right">
+              <div class="info">
+                <div class="address">
+                  <i class="bi bi-geo-alt"></i>
+                  <h4>Location:</h4>
+                  <p>University of Calicut, Thenhipalam</p>
+                </div>
+
+                <div class="email">
+                  <i class="bi bi-envelope"></i>
+                  <h4>Email:</h4>
+                  <p>user@example.com</p>
+                </div>
+
+                <div class="phone">
+                  <i class="bi bi-phone"></i>
+                  <h4>Call:</h4>
+                  <p>1234567890</p>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="col-lg-8 mt-5 mt-lg-0" data-aos="fade-left">
+
+              <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+                <div class="row">
+                  <div class="col-md-6 form-group">
+                    <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
+                  </div>
+                  <div class="col-md-6 form-group mt-3 mt-md-0">
+                    <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
+                  </div>
+                </div>
+                <div class="form-group mt-3">
+                  <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
+                </div>
+                <div class="form-group mt-3">
+                  <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
+                </div>
+                <div class="my-3">
+                  <div class="loading">Loading</div>
+                  <div class="error-message"></div>
+                  <div class="sent-message">Your message has been sent. Thank you!</div>
+                </div>
+                <div class="text-center"><button type="submit">Send Message</button></div>
+              </form>
+
+            </div>
+
+          </div>
+
+        </div>
+      </section><!-- End Contact Section -->
+
+
+      <!-- ======= Footer ======= -->
+    <footer id="footer">
+        <div class="container">
+          <h3>CU JOURNAL HUB</h3>
+          <p>"Empowering discovery and shaping tomorrow through cutting-edge research."</p>
+          <div class="social-links">
+            <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+            <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+            <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+            <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
+            <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+          </div>
+          <div class="copyright">
+            &copy; Copyright <strong><span>CU JOURNAL HUB</span></strong>. All Rights Reserved
+          </div>
+          <!-- <div class="credits"></div> -->
+        </div>
+      </footer>
+    <!-- End Footer -->
+
+<!-- ---------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+      <!-- Vendor JS Files -->
+  <script src="{% static 'vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'vendor/php-email-form/validate.js' %}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>
