@@ -55,3 +55,5 @@ def e_downloads(request):
 def remove(request):
     return render(request, 'remove.html')
 
+def editor_contact(request):
+    return render(request, 'editor_contact.html')
