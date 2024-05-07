@@ -42,14 +42,10 @@
           <div class="col-md-6 offset-md-3"> <!-- Centering the form for medium and large screens -->
             <div class="form-box">
                 <div class="card-header py-3">
-                    <h4 class="m-0 font-weight-bold text-primary">CREATE A JOURNAL</h4>
+                    <h4 class="m-0 font-weight-bold text-primary">ADD EDITOR</h4>
                 </div><br>  
               <form>
                 <div class="card-header py-3">
-                <div class="form-group">
-                  <label for="journalName">Journal Name</label>
-                  <input type="text" class="form-control" id="journalName" placeholder="Enter Journal Name">
-                </div>
                 <div class="form-group">
                   <label for="department">Department</label>
                   <select class="form-control" id="journalDepartment">j
@@ -61,7 +57,7 @@
                   </select>
                 </div>
                 <div class="form-group">
-                  <label for="editor">Select Editor</label>
+                  <label for="editor">Add Editor</label>
                   <select class="form-control" id="editorId">
                     <option value="">Select Editor</option>
                     <option value="ed_1">Editor 1</option>
@@ -69,6 +65,14 @@
                     <option value="ed_3">Editor 3</option>
                     <option value="ed_4">Editor 4</option>
                   </select>
+                </div>
+                <div class="form-group">
+                    <label for="journalName">Editor's Name</label>
+                    <input type="text" class="form-control" id="journalName" placeholder="Enter Journal Name">
+                  </div>
+                <div class="form-group">
+                  <label for="journalName">Editor's Email</label>
+                  <input type="email" class="form-control" id="editorEmail" placeholder="Enter Editor's Email">
                 </div>
                 <div class="text-center">
                   <button type="submit" class="btn btn-primary">Create</button>

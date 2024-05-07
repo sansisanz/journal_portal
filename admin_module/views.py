@@ -46,3 +46,6 @@ def view_j(request):
  
 def edit_j(request):
     return render(request, 'edit_j.html')
+
+def add_editor(request):
+    return render(request, 'add_editor.html')
