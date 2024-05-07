@@ -21,4 +21,5 @@ urlpatterns = [
     path("e_visits/", views.e_visits),
     path("e_downloads/", views.e_downloads),
     path("remove/", views.remove),
+    path('editor_contact/', views.editor_contact),
 ]
