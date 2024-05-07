@@ -18,5 +18,6 @@ urlpatterns = [
     path("create_j/", views.create_j),
     path("view_j/", views.view_j),
     path("edit_j/", views.edit_j),
+    path("add_editor/", views.add_editor),
 ]
 
