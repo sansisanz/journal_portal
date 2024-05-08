@@ -35,6 +35,9 @@ def p_home(request):
     return render(request, 'p_home.html')
 
 def read(request):
-    return render(request, 'read.html')
+    return render(request, 'read.html') 
+
+def verify_author(request):
+    return render(request, 'verify_author.html')
 
 
