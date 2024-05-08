@@ -2,50 +2,6 @@ from django.db import models
 
 # Create your models here.
 
-#user
-class user(models.Model):
-    user_id = models.BigAutoField(primary_key=True)
-    user_type = models.CharField(max_length=50)
-    
-
-#role_table
-class role_table(models.Model):
-    role_id = models.BigAutoField(primary_key=True)
-    role_name = models.CharField(max_length=30)
-
-    class Meta:
-        db_table="role_table"
-
-
-#seat_table
-class seat_table(models.Model):
-    seat_id = models.BigAutoField(primary_key=True)
-    seat_name = models.CharField(max_length=30)
-    role_id = models.ForeignKey(role_table,default="1",on_delete=models.SET_DEFAULT)    
-
-    class Meta:
-        db_table="seat_table"        
-
-
-#designation_table
-class designation_table(models.Model):
-    designation_id = models.BigAutoField(primary_key=True)
-    designation = models.CharField(max_length=30)
-    role_id = models.ForeignKey(role_table,default="1",on_delete=models.SET_DEFAULT)    
-
-    class Meta:
-        db_table="designation_table"        
-
-
-#usertable
-class usertable(models.Model):
-    usertable_id = models.BigAutoField(primary_key=True)
-    user_id = models.ForeignKey(user,default="1",on_delete=models.SET_DEFAULT)
-    role_id = models.ForeignKey(role_table,default="1",on_delete=models.SET_DEFAULT)    
-
-    class Meta:
-        db_table="usertable"        
-
 
 #author_table
 class author_table(models.Model):
@@ -60,7 +16,7 @@ class author_table(models.Model):
     author_password = models.CharField(max_length=90)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
-    created_by=models.CharField(max_length=50)
+    #created_by=models.CharField(max_length=50)
     status=models.CharField(max_length=25)
     verify = models.BooleanField(default=False)
     token = models.CharField(max_length=30, null=True, blank=True)
@@ -68,21 +24,6 @@ class author_table(models.Model):
     class Meta:
         db_table="author_table"
 
-
-#user_table
-class user_table(models.Model):
-    user_id = models.BigAutoField(primary_key=True)
-    user_name = models.CharField(max_length=50)
-    user_email = models.CharField(max_length=50)
-    user_mobile = models.CharField(max_length=25)
-    user_password = models.CharField(max_length=90)
-    created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now_add=True)
-    created_by=models.CharField(max_length=50)
-    status=models.CharField(max_length=25)
-
-    class Meta:
-        db_table="user_table"
 
 #dept_table
 class dept_table(models.Model):
@@ -164,7 +105,10 @@ class article_table(models.Model):
 class eb_table(models.Model):
     board_id = models.BigAutoField(primary_key=True)
     journal_id = models.ForeignKey(journal_table,default="1",on_delete=models.SET_DEFAULT)
-    # add id for editor
+    editor_name = models.CharField(max_length=25)
+    editor_address = models.CharField(max_length=25)
+    editor_email = models.CharField(max_length=25)
+    editor_mobile = models.CharField(max_length=25)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
     created_by=models.CharField(max_length=50)
@@ -234,4 +178,55 @@ class article_download(models.Model):
         db_table="article_download"
 
 
-#
+#editor_table
+class ea_table(models.Model):   
+    ea_id = models.BigAutoField(primary_key=True)
+    ea_name = models.CharField(max_length=50)
+    ea_email = models.CharField(max_length=50)
+    password = models.CharField(max_length=90)
+    dept_id = models.ForeignKey(dept_table,default="1",on_delete=models.SET_DEFAULT)   
+    ea_type = models.CharField(max_length=50)
+
+    class Meta:
+        db_table="ea_table"
+
+
+#role_table
+class role_table(models.Model):
+    role_id = models.BigAutoField(primary_key=True)
+    role_name = models.CharField(max_length=30)
+    
+    class Meta:
+        db_table="role_table"
+
+
+#seat_table
+class seat_table(models.Model):
+    seat_id = models.BigAutoField(primary_key=True)
+    seat_name = models.CharField(max_length=30)
+    role_id = models.ForeignKey(role_table,default="1",on_delete=models.SET_DEFAULT)    
+
+    class Meta:
+        db_table="seat_table"        
+
+
+#designation_table
+class designation_table(models.Model):
+    designation_id = models.BigAutoField(primary_key=True)
+    designation = models.CharField(max_length=30)
+    role_id = models.ForeignKey(role_table,default="1",on_delete=models.SET_DEFAULT)    
+
+    class Meta:
+        db_table="designation_table"        
+
+
+#usertable
+class usertable(models.Model):
+    usertable_id = models.BigAutoField(primary_key=True)
+    ea_id = models.ForeignKey(ea_table,default="1",on_delete=models.SET_DEFAULT)
+    role_id = models.ForeignKey(role_table,default="1",on_delete=models.SET_DEFAULT)    
+
+    class Meta:
+        db_table="usertable"        
+
+
