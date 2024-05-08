@@ -15,5 +15,6 @@ urlpatterns = [
     path("public_navbar/", views.public_navbar),
     path("p_home/", views.p_home),
     path("read/", views.read),
+    path("verify_author/", views.verify_author),
     
 ]
