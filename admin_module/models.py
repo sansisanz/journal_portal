@@ -6,8 +6,9 @@ from django.db import models
 #author_table
 class author_table(models.Model):
     author_id = models.BigAutoField(primary_key=True)
+    author_type = models.CharField(max_length=50, default='')
     author_name = models.CharField(max_length=50)
-    author_email = models.CharField(max_length=25)
+    author_email = models.CharField(max_length=90)
     author_mobile = models.CharField(max_length=20)
     author_dob = models.DateField(default='')
     author_address = models.CharField(max_length=250)
@@ -31,8 +32,6 @@ class dept_table(models.Model):
     dept_name = models.CharField(max_length=50)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
-    created_by=models.CharField(max_length=50)
-    status=models.CharField(max_length=25)
 
     class Meta:
         db_table="dept_table"
@@ -47,10 +46,10 @@ class journal_table(models.Model):
     journal_ethics = models.TextField()
     journal_update = models.TextField(default='')
     update_link = models.CharField(max_length=60, default='')
-    logo = models.CharField(max_length=100)
+    logo = models.CharField(max_length=100,default="")
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
-    created_by=models.CharField(max_length=50)
+    created_by=models.CharField(max_length=50, default='')
     status=models.CharField(max_length=25)
 
     class Meta:
@@ -62,10 +61,10 @@ class volume_table(models.Model):
     volume_id = models.BigAutoField(primary_key=True)
     journal_id = models.ForeignKey(journal_table,default="1",on_delete=models.SET_DEFAULT)
     volume_no = models.CharField(max_length=50)
-    cover_image = models.CharField(max_length=100)
+    cover_image = models.CharField(max_length=100,default="")
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
-    created_by=models.CharField(max_length=50)
+    created_by=models.CharField(max_length=50, default='')
     status=models.CharField(max_length=25)
 
     class Meta:
@@ -79,7 +78,7 @@ class issue_table(models.Model):
     issue_no =  models.CharField(max_length=50)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
-    created_by=models.CharField(max_length=50)
+    created_by=models.CharField(max_length=50,default="")
     status=models.CharField(max_length=25)
 
     class Meta:
@@ -94,7 +93,7 @@ class article_table(models.Model):
     article_title = models.CharField(max_length=90)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
-    created_by=models.CharField(max_length=50)
+    created_by=models.CharField(max_length=50, default='')
     status=models.CharField(max_length=25)
 
     class Meta:
@@ -105,13 +104,13 @@ class article_table(models.Model):
 class eb_table(models.Model):
     board_id = models.BigAutoField(primary_key=True)
     journal_id = models.ForeignKey(journal_table,default="1",on_delete=models.SET_DEFAULT)
-    editor_name = models.CharField(max_length=25)
-    editor_address = models.CharField(max_length=25)
-    editor_email = models.CharField(max_length=25)
-    editor_mobile = models.CharField(max_length=25)
+    editor_name = models.CharField(max_length=25,default="")
+    editor_address = models.CharField(max_length=25,default="")
+    editor_email = models.CharField(max_length=25,default="")
+    editor_mobile = models.CharField(max_length=25,default="")
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
-    created_by=models.CharField(max_length=50)
+    created_by=models.CharField(max_length=50,default="")
     status=models.CharField(max_length=25)
 
     class Meta:
@@ -126,7 +125,7 @@ class gl_table(models.Model):
     content =  models.TextField()
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
-    created_by=models.CharField(max_length=50)
+    created_by=models.CharField(max_length=50,default="")
     status=models.CharField(max_length=25)
 
 
@@ -156,7 +155,7 @@ class journalpage_visit(models.Model):
     count = models.IntegerField()
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
-    created_by=models.CharField(max_length=50)
+    created_by=models.CharField(max_length=50,default="")
     status=models.CharField(max_length=25)
 
 
@@ -171,21 +170,24 @@ class article_download(models.Model):
     count = models.IntegerField()
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
-    created_by=models.CharField(max_length=50)
+    created_by=models.CharField(max_length=50,default="")
     status=models.CharField(max_length=25)
 
     class Meta:
         db_table="article_download"
 
 
-#editor_table
+#editoradmin_table
 class ea_table(models.Model):   
     ea_id = models.BigAutoField(primary_key=True)
+    employee_id = models.CharField(max_length=50, default="")
     ea_name = models.CharField(max_length=50)
-    ea_email = models.CharField(max_length=50)
+    ea_email = models.CharField(max_length=90, default="")
     password = models.CharField(max_length=90)
     dept_id = models.ForeignKey(dept_table,default="1",on_delete=models.SET_DEFAULT)   
-    ea_type = models.CharField(max_length=50)
+    ea_type = models.CharField(max_length=70, default="")
+    token = models.CharField(max_length=90, default='')
+    status = models.CharField(max_length=50, default="active")
 
     class Meta:
         db_table="ea_table"
@@ -224,7 +226,7 @@ class designation_table(models.Model):
 class usertable(models.Model):
     usertable_id = models.BigAutoField(primary_key=True)
     ea_id = models.ForeignKey(ea_table,default="1",on_delete=models.SET_DEFAULT)
-    role_id = models.ForeignKey(role_table,default="1",on_delete=models.SET_DEFAULT)    
+    seat_id = models.ForeignKey(seat_table,default="1",on_delete=models.SET_DEFAULT)    
 
     class Meta:
         db_table="usertable"        
