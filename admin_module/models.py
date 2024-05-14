@@ -104,13 +104,13 @@ class article_table(models.Model):
 class eb_table(models.Model):
     board_id = models.BigAutoField(primary_key=True)
     journal_id = models.ForeignKey(journal_table,default="1",on_delete=models.SET_DEFAULT)
-    editor_name = models.CharField(max_length=25,default="")
-    editor_address = models.CharField(max_length=25,default="")
-    editor_email = models.CharField(max_length=25,default="")
-    editor_mobile = models.CharField(max_length=25,default="")
+    editor_name = models.CharField(max_length=25, default="")
+    editor_address = models.CharField(max_length=25, default="")
+    editor_email = models.CharField(max_length=25, default="")
+    editor_mobile = models.CharField(max_length=25, default="")
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
-    created_by=models.CharField(max_length=50,default="")
+    created_by= models.CharField(max_length=50, default="")
     status=models.CharField(max_length=25)
 
     class Meta:
@@ -125,7 +125,7 @@ class gl_table(models.Model):
     content =  models.TextField()
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
-    created_by=models.CharField(max_length=50,default="")
+    created_by= models.CharField(max_length=50, default="")
     status=models.CharField(max_length=25)
 
 
@@ -139,7 +139,7 @@ class article_visit(models.Model):
     article_id = models.ForeignKey(article_table,default="1",on_delete=models.SET_DEFAULT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
-    created_by=models.CharField(max_length=50)
+    created_by= models.CharField(max_length=50, default="")
     status = models.CharField(max_length=25)
     count = models.IntegerField()
 
@@ -155,7 +155,7 @@ class journalpage_visit(models.Model):
     count = models.IntegerField()
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
-    created_by=models.CharField(max_length=50,default="")
+    created_by= models.CharField(max_length=50, default="")
     status=models.CharField(max_length=25)
 
 
@@ -170,7 +170,7 @@ class article_download(models.Model):
     count = models.IntegerField()
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
-    created_by=models.CharField(max_length=50,default="")
+    created_by= models.CharField(max_length=50, default="")
     status=models.CharField(max_length=25)
 
     class Meta:
@@ -179,7 +179,7 @@ class article_download(models.Model):
 
 #editoradmin_table
 class ea_table(models.Model):   
-    ea_id = models.BigAutoField(primary_key=True)
+    ea_id = models.BigAutoField(primary_key=True, default="")
     employee_id = models.CharField(max_length=50, default="")
     ea_name = models.CharField(max_length=50)
     ea_email = models.CharField(max_length=90, default="")
@@ -197,6 +197,10 @@ class ea_table(models.Model):
 class role_table(models.Model):
     role_id = models.BigAutoField(primary_key=True)
     role_name = models.CharField(max_length=30)
+    created_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now_add=True)
+    #created_by=models.CharField(max_length=50)
+    status=models.CharField(max_length=25)
     
     class Meta:
         db_table="role_table"
@@ -207,6 +211,10 @@ class seat_table(models.Model):
     seat_id = models.BigAutoField(primary_key=True)
     seat_name = models.CharField(max_length=30)
     role_id = models.ForeignKey(role_table,default="1",on_delete=models.SET_DEFAULT)    
+    created_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now_add=True)
+    #created_by=models.CharField(max_length=50)
+    status=models.CharField(max_length=25)
 
     class Meta:
         db_table="seat_table"        
@@ -216,7 +224,11 @@ class seat_table(models.Model):
 class designation_table(models.Model):
     designation_id = models.BigAutoField(primary_key=True)
     designation = models.CharField(max_length=30)
-    role_id = models.ForeignKey(role_table,default="1",on_delete=models.SET_DEFAULT)    
+    role_id = models.ForeignKey(role_table,default="1",on_delete=models.SET_DEFAULT)   
+    created_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now_add=True)
+    #created_by=models.CharField(max_length=50)
+    status=models.CharField(max_length=25)
 
     class Meta:
         db_table="designation_table"        
