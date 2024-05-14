@@ -3,7 +3,7 @@ from django.urls import path,include
 from public_module import views
 
 urlpatterns = [
-    path("p_index/", views.p_index),
+    path("p_index/", views.p_index, name="authorlogin"),
     path("p_alljournals/", views.p_alljournals),
     path("p_ethics/", views.p_ethics),
     path("p_guidelines/", views.p_guidelines),
@@ -16,5 +16,6 @@ urlpatterns = [
     path("p_home/", views.p_home),
     path("read/", views.read),
     path("verify_author/", views.verify_author),
-    
+    path('author-registration/', views.author_registration, name='author_registration'),
+    path('email_verification/', views.email_verification),
 ]

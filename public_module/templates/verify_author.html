@@ -57,6 +57,14 @@
     .reg-btn{
       margin-right: 150%;
     }
+    #messages {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+    }
+
   </style>
 
 
@@ -76,34 +84,6 @@
 
       <nav id="navbar" class="navbar">
         <ul>  
-          <li>
-            <form action="" class="search-bar">
-              <input type="search" name="search" pattern=".*\S.*" required>
-              <button class="search-btn" type="submit">
-                <span>Search</span>
-              </button>
-            </form>
-          </li>
-          <li><a class="nav-link scrollto " href="/p_j/">Home</a></li>
-          <li class="dropdown"><a href="#"><span>Sign In</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-              <li><a href="#">Author</a></li>
-              <!-- <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
-                <ul>
-                  <li><a href="#">Deep Drop Down 1</a></li>
-                  <li><a href="#">Deep Drop Down 2</a></li>
-                  <li><a href="#">Deep Drop Down 3</a></li>
-                  <li><a href="#">Deep Drop Down 4</a></li>
-                  <li><a href="#">Deep Drop Down 5</a></li>
-                </ul>
-              </li> -->
-              <li><a href="/p_index/#pricing">User</a></li>
-              <!-- <li><a href="#">Drop Down 3</a></li>
-              <li><a href="#">Drop Down 4</a></li> -->
-            </ul>
-          </li>
-          <!-- <li><a class="nav-link scrollto" href="index.html#pricing">Subscription</a></li> -->
-          <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
@@ -131,32 +111,54 @@
 
     <section class="inner-page">
         <div class="container">   
+          <div class="section-title" data-aos="zoom-out">
+            <p>Verify your registration</p>
+        </div>
           
           <section id="verify_author">
           <div class="row justify-content-center">
-            <div class="col-lg-6">
-              <form>
+            <div class="col-md-8"> 
+              <form id="verify-form" action="/email_verification/" method="post">
+                {% csrf_token %}
                 <div class="form-group">
-                  <div class="section-title">
-                    <h2>Verify OTP</h2>
-                  </div>
-                  <label for="otp">OTP to verify your registration:</label>
+                  <label for="otp">OTP :</label>
                   <input type="text" name="otp" class="form-control" id="otp" placeholder="Enter OTP" required>
                 </div>
                 <div class="text-center">
                   <button type="submit" class="btn btn-primary">Verify OTP</button>
                 </div>
+                <div class=""></div>
               </form>
             </div>
+          </div>
+          
+          <div id="messages">
+            {% for message in messages %}
+            {{ message }}
+            {% endfor %}
           </div>
         </section>
         </div>
       </section>
 
+      <script>
+        window.onload = function () {
+            var form = document.getElementById('verify-form');
+            form.addEventListener('submit', function (event) {
+                var messagesElement = document.getElementById('messages');
+                var messages = messagesElement ? messagesElement.textContent : "";
+                if (messages.trim() !== "") {
+                    alert(messages);
+                    window.location.href = "{% url 'authorlogin' %}";
+                }
+            });
+        };
+    </script>
+
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
-  <footer id="footer">
+  <footer id="footer" style="margin-top: 6.4%;">
     <div class="container">
       <h3>CU JOURNAL HUB</h3>
       <p>"Empowering discovery and shaping tomorrow through cutting-edge research."</p>

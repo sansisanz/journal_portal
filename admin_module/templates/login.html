@@ -40,15 +40,17 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">LOGIN</h1>
                                     </div>
-                                    <form class="user">
+                                    <form class="user" method="post" action="/ea_login/">
+                                        {% csrf_token %}
+                                        <span class="text-danger font-weight-bold" >{{login_error}}</span>
                                         <div class="form-group">
-                                            <input type="email" class="form-control form-control-user"
-                                                id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="Enter Email...">
+                                            <input type="text" class="form-control form-control-user"
+                                                id="loginid" name="loginid" aria-describedby="loginid"
+                                                placeholder="Employee Id...">
                                         </div>
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user"
-                                                id="exampleInputPassword" placeholder="Password">
+                                                id="loginPassword" name="loginPassword" placeholder="Password">
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
@@ -57,9 +59,7 @@
                                                     Me</label>
                                             </div>
                                         </div>
-                                        <a href="/index/" class="btn btn-primary btn-user btn-block">
-                                            Login
-                                        </a>                                     
+                                    <button type="submit" class="btn btn-primary">Login</button>                                   
                                     </form>
                                     <hr>
                                     <div class="text-center">

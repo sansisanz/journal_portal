@@ -30,6 +30,7 @@ class Migration(migrations.Migration):
             name='author_table',
             fields=[
                 ('author_id', models.BigAutoField(primary_key=True, serialize=False)),
+                ('author_type', models.CharField(default='', max_length=50)),
                 ('author_name', models.CharField(max_length=50)),
                 ('author_email', models.CharField(max_length=25)),
                 ('author_mobile', models.CharField(max_length=20)),

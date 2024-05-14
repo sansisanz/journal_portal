@@ -29,7 +29,24 @@
           padding: 20px;
           margin-bottom: 70%;
         }
-    </style>
+
+        /* Style for input options in datalist */
+        #departments option {
+            background-color: #ffffff; /* background color */
+            color: #333333; /* text color */
+            padding: 5px 10px; /* padding */
+        }
+
+        /* Additional styles if needed */
+        #departments option:hover {
+            background-color: #f0f0f0; /* hover background color */
+        }
+
+        #departments option:focus {
+            background-color: #e0e0e0; /* focus background color */
+        }
+
+            </style>
 
 </head>
 
@@ -44,40 +61,46 @@
                 <div class="card-header py-3">
                     <h4 class="m-0 font-weight-bold text-primary">ADD EDITOR</h4>
                 </div><br>  
-              <form>
-                <div class="card-header py-3">
-                <div class="form-group">
-                  <label for="department">Department</label>
-                  <select class="form-control" id="journalDepartment">j
-                    <option value="">Select Department</option>
-                    <option value="msc_computer_science">MSC Computer Science</option>
-                    <option value="electrical_engineering">Electrical Engineering</option>
-                    <option value="civil_engineering">Civil Engineering</option>
-                    <option value="biotechnology">Biotechnology</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="editor">Add Editor</label>
-                  <select class="form-control" id="editorId">
-                    <option value="">Select Editor</option>
-                    <option value="ed_1">Editor 1</option>
-                    <option value="ed_2">Editor 2</option>
-                    <option value="ed_3">Editor 3</option>
-                    <option value="ed_4">Editor 4</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                    <label for="journalName">Editor's Name</label>
-                    <input type="text" class="form-control" id="journalName" placeholder="Enter Journal Name">
+                <form method="post" action="/addeditor/">
+                  {% csrf_token %}
+                  <div class="card-header py-3">
+                      <div class="form-group">
+                          <label for="department">Department</label>
+                          <input type="text" class="form-control" id="journalDepartment" name="department" placeholder="Select Department" list="departments" required>
+                          <datalist id="departments">
+                              <option value="Department of Computer Science">
+                              <option value="Department of History">
+                              <option value="Department of Physics">
+                              <option value="Department of Malayalam">
+                          </datalist>
+                      </div>
+                      <div class="form-group">
+                          <label for="employeeId">Employee Id</label>
+                          <input type="text" class="form-control" id="employeeId" name="employeeId" placeholder="Enter Employee Id" required>
+                          <span class="text-danger font-weight-bold" >{{empidcheck}}</span>
+                      </div>
+                      <div class="form-group">
+                          <label for="roleName">Role</label>
+                          <input type="text" class="form-control" id="roleName" name="roleName" placeholder="Enter Role" required>
+                      </div>
+                      <div class="form-group">
+                          <label for="designation">Designation</label>
+                          <input type="text" class="form-control" id="designation" name="designation" placeholder="Enter Designation" required>
+                      </div>
+                      <div class="form-group">
+                          <label for="editorName">Editor's Name</label>
+                          <input type="text" class="form-control" id="editorName" name="editorName" placeholder="Enter Journal Name" required>
+                      </div>
+                      <div class="form-group">
+                          <label for="editorEmail">Editor's Email</label>
+                          <input type="email" class="form-control" id="editorEmail" name="editorEmail" placeholder="Enter Editor's Email" required>
+                          <span class="text-danger font-weight-bold" >{{emailcheck}}</span>
+                      </div>
+                      <div class="text-center">
+                          <button type="submit" class="btn btn-primary">Add</button>
+                      </div>
                   </div>
-                <div class="form-group">
-                  <label for="journalName">Editor's Email</label>
-                  <input type="email" class="form-control" id="editorEmail" placeholder="Enter Editor's Email">
-                </div>
-                <div class="text-center">
-                  <button type="submit" class="btn btn-primary">Create</button>
-                </div>
-              </form>
+              </form>              
             </div>
           </div>
         </div>

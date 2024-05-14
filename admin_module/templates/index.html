@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>JP Admin Panel</title>
+    <title>CUjh Admin Panel</title>
 
     <!-- Custom fonts for this template-->
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
@@ -21,11 +21,101 @@
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-admin-2.css'%}" rel="stylesheet">
 
+    <style>
+        /* Top heading */
+        .top-heading {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Cards container */
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* Individual card */
+        .admin-card {
+            margin: 0 10px;
+            margin-bottom: 20px;
+        }
+
+    </style>
+
 </head>
 
 <body id="page-top">
-
+    
     {% include 'admin_sidebar.html' %}
+
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h1 mb-4 text-gray-800 top-heading">Welcome to CU Journal Hub- Admin Panel</h1>
+
+        <!-- Content Row -->
+        <div class="row card-container">
+
+                <!-- Add Editor Card -->
+                <div class="col-lg-3 col-md-6 admin-card">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Add Editor</h3>
+                            <p class="card-text">Add a new editor to perform actions on journals created by admin.</p>
+                            <a href="#" class="btn btn-primary">Add Editor</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Create Journal Card -->
+                <div class="col-lg-3 col-md-6 admin-card">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Create Journal</h3>
+                            <p class="card-text">Add a new journal for a department and assign an editor to it.</p>
+                            <a href="#" class="btn btn-primary">Create Journal</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View Journals Card -->
+                <div class="col-lg-3 col-md-6 admin-card">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">View Journals</h3>
+                            <p class="card-text">View data on journals created by admin and edit details or remove the journal.</p>
+                            <a href="#" class="btn btn-primary">View Journals</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visit Counts Card -->
+                <div class="col-lg-3 col-md-6 admin-card">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Visit Counts</h3>
+                            <p class="card-text">View how many people viewed the journal's website and each article in it.</p>
+                            <a href="#" class="btn btn-primary">Visit Counts</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Download Count Card -->
+                <div class="col-lg-3 col-md-6 admin-card">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Download Count</h3>
+                            <p class="card-text">View how many people downloaded each article.</p>
+                            <a href="#" class="btn btn-primary">Download Count</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
 
    
     <!-- Bootstrap core JavaScript-->
