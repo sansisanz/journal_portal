@@ -44,40 +44,41 @@
                 <div class="card-header py-3">
                     <h4 class="m-0 font-weight-bold text-primary">CREATE A JOURNAL</h4>
                 </div><br>  
-              <form>
-                <div class="card-header py-3">
-                <div class="form-group">
-                  <label for="journalName">Journal Name</label>
-                  <input type="text" class="form-control" id="journalName" placeholder="Enter Journal Name">
-                </div>
-                <div class="form-group">
-                  <label for="department">Department</label>
-                  <select class="form-control" id="journalDepartment">j
-                    <option value="">Select Department</option>
-                    <option value="msc_computer_science">MSC Computer Science</option>
-                    <option value="electrical_engineering">Electrical Engineering</option>
-                    <option value="civil_engineering">Civil Engineering</option>
-                    <option value="biotechnology">Biotechnology</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="editor">Select Editor</label>
-                  <select class="form-control" id="editorId">
-                    <option value="">Select Editor</option>
-                    <option value="ed_1">Editor 1</option>
-                    <option value="ed_2">Editor 2</option>
-                    <option value="ed_3">Editor 3</option>
-                    <option value="ed_4">Editor 4</option>
-                  </select>
-                </div>
-                <div class="text-center">
-                  <button type="submit" class="btn btn-primary">Create</button>
-                </div>
-              </form>
+                <form method="post" action="/create_journal/">
+                    {% csrf_token %}
+                    <div class="card-header py-3">
+                        <div class="form-group">
+                            <label for="journalName">Journal Name</label>
+                            <input type="text" class="form-control" id="journalName" name="journalName" placeholder="Enter Journal Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="journalDepartment">Department</label>
+                            <select class="form-control" id="journalDepartment" name="journalDepartment">
+                                <option value="">Select Department</option>
+                                {% for department in departments %}
+                                <option value="{{ department.dept_id }}">{{ department.dept_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editorId">Select Editor</label>
+                            <select class="form-control" id="editorId" name="editorId">
+                                <option value="">Select Editor</option>
+                                {% for editor in editors %}
+                                  <option value="{{ editor.ea_id }}">{{ editor.ea_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </div>
+                    </div>
+                </form>
             </div>
           </div>
         </div>
       </div>
+            
 
     <!-- Bootstrap core JavaScript-->
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
