@@ -20,5 +20,6 @@ urlpatterns = [
     path("logout/", views.logout),
     path('addeditor/', views.addeditor, name='addeditor'),
     path("setpassword/", views.setpassword),
+    path("create_journal/", views.create_journal),
 ]
 

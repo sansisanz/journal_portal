@@ -21,6 +21,9 @@
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-admin-2.css'%}" rel="stylesheet">
 
+    <!-- Include jQuery for convenience -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <style>
         .form-box {
           background-color: #f8f9fa;
@@ -44,60 +47,59 @@
       </div>
       <div class="card-body">
           <div class="table-responsive">
-              <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                  <thead>
-                      <tr>
-                          <th>SNo</th>
-                          <th>Journal Name</th>
-                          <th>Department</th>
-                          <th>Editor</th>
-                          <th>Edit</th>
-                          <th>Remove</th>
-                      </tr>
-                  </thead>
-                  <!-- <tfoot>
-                  <tr>
-                      <th>SNo</th>
-                      <th>Journal Name</th>
-                      <th>Department</th>
-                      <th>Editor</th>
-                      <th>Edit</th>
-                      <th>Remove</th>
-                  </tr>
-              </tfoot> -->
-                  <tbody>
-                      <tr>                          
-                          <td>1</td>
-                          <td>CIDA</td>
-                          <td>MSc Computer Science</td>
-                          <td>SDas</td>
-                          <td><a class="btn btn-success font-weight-bolder btn-user btn-block col-sm-6"
-                                  href="/edit_j/">EDIT</a></td>
-                          <td><button class="btn btn-danger font-weight-bolder btn-user btn-block col-sm-6 remove-btn">REMOVE</button></td>        
-                      </tr>
-                      <tr>                          
-                        <td>2</td>
-                        <td>French Revelution</td>
-                        <td>MA History</td>
-                        <td>Alex</td>
-                        <td><a class="btn btn-success font-weight-bolder btn-user btn-block col-sm-6"
-                                href="/edit_j/">EDIT</a></td>
-                        <td><button class="btn btn-danger font-weight-bolder btn-user btn-block col-sm-6 remove-btn">REMOVE</button></td>        
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>SNo</th>
+                        <th>Journal Name</th>
+                        <th>Department</th>
+                        <th>Editor</th>
+                        <th>Edit</th>
+                        <th>Remove</th>
                     </tr>
-                    <tr>                          
-                      <td>3</td>
-                      <td>AI in Business</td>
-                      <td>MCom Finance</td>
-                      <td>Sana</td>
-                      <td><a class="btn btn-success font-weight-bolder btn-user btn-block col-sm-6"
-                              href="/edit_j/">EDIT</a></td>
-                      <td><button class="btn btn-danger font-weight-bolder btn-user btn-block col-sm-6 remove-btn">REMOVE</button></td>        
-                  </tr>
-                  </tbody>
-              </table>
+                </thead>
+                <tbody>
+                    {% for journal in journals %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td> <!-- Auto-populated serial number -->
+                        <td>{{ journal.journal_name }}</td>
+                        <td>{{ journal.dept_id.dept_name }}</td> <!-- Fetch department name using ForeignKey -->
+                        <td>{{ journal.editor.ea_name }}</td> <!-- Fetch editor name using ForeignKey -->
+                        <td><a class="btn btn-success font-weight-bolder btn-user btn-block col-sm-6" href="/edit_j/{{ journal.journal_id }}">EDIT</a></td>
+                        <td><button class="btn btn-danger font-weight-bolder btn-user btn-block col-sm-6 remove-btn" data-journal-id="{{ journal.journal_id }}">REMOVE</button></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
           </div>
       </div>
   </div>
+
+
+  <script>
+    function sortTable(columnIndex) {
+        var table, rows, switching, i, x, y, shouldSwitch;
+        table = document.getElementById("dataTable");
+        switching = true;
+        while (switching) {
+            switching = false;
+            rows = table.rows;
+            for (i = 1; i < (rows.length - 1); i++) {
+                shouldSwitch = false;
+                x = rows[i].getElementsByTagName("td")[columnIndex];
+                y = rows[i + 1].getElementsByTagName("td")[columnIndex];
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+            }
+        }
+    }
+  </script>
   
 
     <!-- Bootstrap core JavaScript-->

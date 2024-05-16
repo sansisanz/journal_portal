@@ -1,14 +1,13 @@
 from django.http import HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import redirect, render
 import hashlib
-from admin_module.models import ea_table, role_table, seat_table, designation_table, usertable, dept_table
+from admin_module.models import ea_table, role_table, seat_table, designation_table, usertable, dept_table, journal_table
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.contrib.auth.hashers import make_password
 import secrets
-
 
 
 # Create your views here.
@@ -69,7 +68,9 @@ def adminresetpassword(request):
 def create_j(request):
     if request.session.has_key('empid'):
         empid = request.session['empid']
-        return render(request, "create_j.html", {"empid": empid})
+        departments = dept_table.objects.all()
+        editors = ea_table.objects.filter(ea_type='editor')        
+        return render(request, "create_j.html", {"empid": empid, 'departments': departments, 'editors': editors})
     else:
         return redirect('/login')
 
@@ -81,7 +82,8 @@ def set_password(request):
 def view_j(request):
     if request.session.has_key('empid'):
         empid = request.session['empid']
-        return render(request, "view_j.html", {"empid": empid})
+        journals = journal_table.objects.all()  # Fetch all journals from the database
+        return render(request, "view_j.html", {"empid": empid, 'journals': journals})
     else:
         return redirect('/login')
  
@@ -247,3 +249,25 @@ def setpassword(request):
 
     return HttpResponse("Invalid Request")
 
+
+def create_journal(request):
+     if request.method == 'POST':
+        journal_name = request.POST.get('journalName')
+        department_id = request.POST.get('journalDepartment')
+        editor_id = request.POST.get('editorId')
+
+        if journal_name and department_id and editor_id:
+            department = dept_table.objects.get(dept_id=department_id)
+            # Get the editor instance using the editor_id
+            editor = ea_table.objects.get(ea_id=editor_id)
+            created_by = "Admin"  # Replace this with the actual logged-in admin's name
+
+            # Create a new journal entry
+            new_journal = journal_table.objects.create(
+                journal_name=journal_name,
+                dept_id=department,
+                editor=editor,  # Assign the editor instance directly
+                created_by=created_by
+            )
+        return redirect('/create_j/')  # Redirect to success page after creating journal
+     return render(request, 'index.html')
