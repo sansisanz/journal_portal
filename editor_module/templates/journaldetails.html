@@ -37,97 +37,80 @@
                 <!-- journal form -->
             
                 <div class="container">
-                    <h2 style="color: #4E73DF;"><b>JOURNAL DETAILS </b></h2><br>
-                    <form action="#" method="post" enctype="multipart/form-data" id="articleForm">
+                    <form action="/journal_details/" method="post" enctype="multipart/form-data" id="articleForm" class="border border-primary p-4">
+                    {% csrf_token %}
+                        <div class="card-header py-3">
+                            <h4 class="m-0 font-weight-bold text-primary">ADD JOURNAL DETAILS</h4>
+                        </div><br>  
                         <div class="form-group">
-                            <label class="required" for="journalSelect">Journal Name:</label>
+                            <label class="required" for="journalSelect">Select Journal:</label>
                             <select id="journalSelect" name="journalname" class="form-control" required>
                                 <option value="">Select Journal</option>
-                                <option value="1">J1</option>
-                                <option value="2">J2</option>
-                                <option value="3">J3</option>
-                                <option value="4">J4</option>
-                                <!-- Options will be populated dynamically -->
+                                {% for journal in journals %}
+                                    <option value="{{ journal.journal_id }}">{{ journal.journal_name }}</option>
+                                {% endfor %}
                             </select>
                         </div>
-
-                        <div class="form-group">
-                            <label for="Ethics">Aims & Scopes:</label>
-                                <div class="mb-3">
-                                  <textarea class="form-control textbox" name="ethics" id="ethics" placeholder="Write your ethics and disclosures here..."></textarea>
-                                </div>
-                        </div>
-                         
-                        
-                        <!-- <div class="container-fluid">
-                            <div class="row">
-                                <div> -->
-                                    <h5><b>Guidelines</b></h5>
-                                    <label for="totalContents">Total Number of Contents:</label>
-
-                                        <div class="form-group row">
-                                            <div class="col-sm-6 mb-3 mb-sm-0">
-                                            <input type="number" id="totalContents" name="totalContents" class="form-control">
-                                            </div>
-                                            <div class="col-sm-6">
-                                            <label for="generateTextboxes"></label>
-                                            <button type="button" id="generateTextboxes" class="btn btn-primary text-white" style="background-color: #007bff; border-color: aliceblue;">Generate Textboxes</button>
-                                        </div>
-                                          
-                                    
-                                    <div id="textBoxesContainer"></div>
-                                    </div>
-                                    
-                            <!-- </div>
-                            </div>
-                        </div> -->
                     
-                        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-                        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-                        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-                        <script>
-                            $(document).ready(function() {
-                                $('#generateTextboxes').on('click', function(event) {
-                                    event.preventDefault();
-                                    const totalContents = parseInt($('#totalContents').val());
-                                    if (!isNaN(totalContents) && totalContents > 0) {
-                                        $('#textBoxesContainer').empty();
-                                        for (let i = 0; i < totalContents; i++) {
-                                            $('#textBoxesContainer').append(`
-                                                <div class="content-group">
-                                                    <div class="form-group">
-                                                        <input type="text" name="heading" placeholder="Heading ${i + 1}" class="form-control">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <input type="text" name="content" placeholder="Content ${i + 1}" class="form-control">
-                                                    </div>
-                                                </div>
-                                            `);
-                                        }
-                                    } else {
-                                        console.error('Please enter a valid number for total contents.');
-                                    }
-                                });
-                            });
-                            </script>
-
                         <div class="form-group">
-                            <label for="Ethics">Ethics:</label>
-                                <div class="mb-3">
-                                  <textarea class="form-control textbox" name="ethics" id="ethics" placeholder="Write your ethics and disclosures here..."></textarea>
+                            <label for="aimsScope">Aims & Scope:</label>
+                            <textarea class="form-control" name="aimsScope" id="aimsScope" placeholder="Write aims and scope here..."></textarea>
+                        </div>
+                    
+                        <div class="form-group">
+                            <label for="guidelines">Guidelines:</label>
+                            <div class="form-group">
+                                <label for="totalContents">Total Number of Contents:</label>
+                                <input type="number" id="totalContents" name="totalContents" class="form-control">
+                            </div>
+                            <div id="textBoxesContainer"></div>
+                        </div>
+                    
+                        <div class="form-group">
+                            <label for="ethics">Ethics:</label>
+                            <textarea class="form-control" name="ethics" id="ethics" placeholder="Write ethics here..."></textarea>
+                        </div>
+                    
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>                                        
+                </div> 
+            </div>  
+        </div>
+   </div>
+   
+                    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#totalContents').on('input', function() {
+                const totalContents = parseInt($(this).val());
+                $('#textBoxesContainer').empty();
+                for (let i = 1; i <= totalContents; i++) {
+                    $('#textBoxesContainer').append(`
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="heading_${i}">Heading ${i}:</label>
+                                    <input type="text" name="heading_${i}" id="heading_${i}" class="form-control" placeholder="Heading ${i}">
                                 </div>
-                        </div><br>
-                    <center> 
-                        <button type="submit" class="btn btn-primary text-white" style="background-color: #007bff; border-color: aliceblue;">Submit</button>
-                    </center>
-                   
-                      </form>
-                             </div> 
-                         </div>  
-                     </div>
-                </div>
-                
-          
+                                <div class="form-group">
+                                    <label for="content_${i}">Content ${i}:</label>
+                                    <textarea name="content_${i}" id="content_${i}" class="form-control" rows="4" placeholder="Content ${i}"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                }
+            });
+        });
+    </script>
+    
+    
+
 
     <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
@@ -154,11 +137,7 @@
         </div>
     </div>
 
-   
-
-         <!-- Bootstrap core JavaScript-->
-
-
+    <!-- Bootstrap core JavaScript-->
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
@@ -166,7 +145,17 @@
     <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="{% static 'js/sb-editor.min.js' %}"></script>
+    <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+
+    <!-- Page level plugins -->
+    <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
+    <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+    <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
 
 </body>
 
