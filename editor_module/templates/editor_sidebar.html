@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>JP Editor</title>
+    <title>CUjh Editor Panel</title>
 
     <!-- Custom fonts for this template-->
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
@@ -19,8 +19,8 @@
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="{% static 'css/sb-editor.css' %}" rel="stylesheet">
-    
+    <link href="{% static 'css/sb-admin-2.css'%}" rel="stylesheet">
+
 </head>
 
 <body id="page-top">
@@ -34,15 +34,15 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/editor_index/">
                 <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-pen"></i>
+                    <i class="fas fa-user"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">JP Editor </div>
+                <div class="sidebar-brand-text mx-3">CUjh Editor</div>
             </a>
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
 
-            <!-- Nav Item - Dashboard -->
+            !-- Nav Item - Dashboard -->
             <li class="nav-item active">
                 <a class="nav-link" href="/editor_index/">
                     <i class="fas fa-fw fa-home"></i>
@@ -78,7 +78,7 @@
               <li class="nav-item">
                 <a class="nav-link" href="/journaldetails/">
                     <i class="fas fa-fw fa-clipboard-list"></i>
-                    <span>Journal Details</span></a>
+                    <span>Add Details</span></a>
             </li>
 
             
@@ -89,7 +89,7 @@
               <li class="nav-item">
                   <a class="nav-link" href="/editorialboard/">
                       <i class="fas fa-fw fa-pen-nib"></i>
-                      <span>Editorialboard</span></a>
+                      <span>Add Editorialboard</span></a>
               </li>
 
                 <!-- Divider -->
@@ -99,20 +99,28 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/editor_updates/">
                         <i class="fas fa-fw fa-bell"></i>
-                        <span>Notifications</span></a>
+                        <span>Add Notifications</span></a>
                 </li>
 
                  <!-- Divider -->
                  <hr class="sidebar-divider">
 
-                <!-- Nav Item - Uploaded Details -->
                 <li class="nav-item">
-                    <a class="nav-link" href="/upddetails/">
-                        <i class="fas fa-fw fa-cloud"></i>
-                        <span>Uploaded Details</span></a>
+                    <a class="nav-link" href="/editor_contact/">
+                        <i class="fas fa-fw fa-user"></i>
+                        <span>Add Contact</span></a>
                 </li>
 
                 <!-- Divider -->
+                <hr class="sidebar-divider">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/upddetails/">
+                        <i class="fas fa-fw fa-cloud"></i>
+                        <span>Journals List</span></a>
+                </li>
+
+                    <!-- Divider -->
                 <hr class="sidebar-divider">
 
                 <!-- Nav Item - Uploaded Details -->
@@ -122,60 +130,26 @@
                         <span>Visits</span></a>
                 </li>
 
-                    <!-- Divider -->
+                 <!-- Divider -->
                 <hr class="sidebar-divider">
 
-                <!-- Nav Item - Uploaded Details -->
                 <li class="nav-item">
                     <a class="nav-link" href="/e_downloads/">
                         <i class="fas fa-fw fa-download"></i>
                         <span>Downloads</span></a>
                 </li>
 
-                 <!-- Divider -->
-                <hr class="sidebar-divider">
-
-                <!-- Nav Item - editorial board -->
-                <li class="nav-item">
-                    <a class="nav-link" href="/editor_contact/">
-                        <i class="fas fa-fw fa-user"></i>
-                        <span>Contact</span></a>
-                </li>
-
-
-            <!-- Nav Item - Utilities Collapse Menu -->
-            <li class="nav-item">
-                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="utilities-color.html">Colors</a>
-                        <a class="collapse-item" href="utilities-border.html">Borders</a>
-                        <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                        <a class="collapse-item" href="utilities-other.html">Other</a>
-                    </div>
-                </div>
-            </li>
-
-            <!-- Divider -->
             <hr class="sidebar-divider">
 
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Login Screens:</h6>
-                        <a class="collapse-item" href="/editor_login/">Login</a>
-                        <a class="collapse-item" href="/editor_register/">Register</a>
-                        <a class="collapse-item" href="/editor_forgotpassword/">Forgot Password</a>
-                </div>
-            </li>
-
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
+            <!-- Nav Item - Tables -->
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="/userlist/">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>User List</span></a>
+                </li> -->
 
         </ul>
+        <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
@@ -194,33 +168,29 @@
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
 
-                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                        <li class="nav-item dropdown no-arrow d-sm-none">
-                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-search fa-fw"></i>
-                            </a>
+                        <!-- Nav Item - Alerts -->
+
+                        <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">EDITOR</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ request.session.editor_name }}</span>
                                 <img class="img-profile rounded-circle"
                                     src="{% static 'img/undraw_profile.svg' %}">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="/editor_profile/">
+                                <a class="dropdown-item" href="/adminprofile/">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
-                                <a class="dropdown-item" href="/editor_resetpassword/">
+                                <a class="dropdown-item" href="/adminresetpassword/">
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Reset Password
                                 </a>
-                               
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -233,9 +203,6 @@
 
                 </nav>
                 <!-- End of Topbar -->
-
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
 
 
     <!-- Scroll to Top Button-->
@@ -257,29 +224,13 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="/editor_login/">Logout</a>
+                    <a class="btn btn-primary" href="/logout/">Logout</a>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="{% static 'vendor/jquery/jquery.min.js' %}]"></script>
-    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="{% static 'js/sb-editor.min.js' %}"></script>
-
-    <!-- Page level plugins -->
-    <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
-
-    <!-- Page level custom scripts -->
-    <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
-    <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
-
+    
 </body>
 
 </html>

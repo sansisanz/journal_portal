@@ -118,8 +118,8 @@ class journal_table(models.Model):
 class volume_table(models.Model):
     volume_id = models.BigAutoField(primary_key=True)
     journal_id = models.ForeignKey(journal_table,default="1",on_delete=models.SET_DEFAULT)
-    volume_no = models.CharField(max_length=50)
-    cover_image = models.CharField(max_length=100)
+    volume = models.CharField(max_length=50, default='')
+    cover_image = models.ImageField(upload_to='volume_covers/', default='')  # Updated to ImageField
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
     created_by=models.CharField(max_length=50)

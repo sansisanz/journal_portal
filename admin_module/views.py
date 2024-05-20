@@ -114,12 +114,12 @@ def ea_login(request):
             if utype == "admin":
                 name = user.ea_name
                 request.session['empid'] = empid
-                request.session['name'] = name
+                request.session['admin_name'] = name
                 return redirect("/index/")
             elif utype == "editor":
                 name = user.ea_name
                 request.session['empid'] = empid
-                request.session['name'] = name  
+                request.session['editor_name'] = name  
                 return redirect("/editor_index/")
             else:
                 return render(request,"login.html")
