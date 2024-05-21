@@ -21,58 +21,48 @@
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-editor.css' %}" rel="stylesheet">
     <link href="{% static 'css/editorialboard.css' %}" rel="stylesheet">
+
 </head>
 
 <body id="page-top">
 
     {% include 'editor_sidebar.html' %}
 
-   
-                
-                <div class="container">
-                    <h2 style="color: #4E73DF;"><b>ADD CONTACT DETAILS</b></h2><br>
-                    <form action="#" method="post">
-                        <div class="form-group">
-                            <label class="required" for="full_name">Location:</label>
-                            <input type="text" name="full_name" id="full_name" placeholder="Enter location" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="required" for="email_address">Email Address:</label>
-                            <input type="email" name="email_address" id="email_address" placeholder="Enter email address" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="required" for="phone_number">Phone Number:</label>
-                            <input type="text" name="phone_number" id="phone_number" placeholder="Enter phone number" required>
-                        </div>
-                        <center><button type="submit" class="submit-btn">ADD DETAILS</button> </center>
-                          </form>
-                </div>
-
-
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="/editor_login/">Logout</a>
-                </div>
+    <div class="container form-container">
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <h3 class="m-0 font-weight-bold text-primary">ADD CONTACT INFO</h3>
+            </div><br>  
+            <div class="card-body">
+                <form action="/add_contact/" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="required" for="journalSelect">Journal Name:</label>
+                        <select id="journalSelect" name="journal_id" class="form-control" required>
+                            <option value="">Select Journal</option>
+                            {% for journal in journals %}
+                                <option value="{{ journal.journal_id }}">{{ journal.journal_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="required" for="email_address">Email Address:</label>
+                        <input type="email" name="email_address" id="email_address" class="form-control" placeholder="Enter email address" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="required" for="phone_number">Phone Number:</label>
+                        <input type="text" name="phone_number" id="phone_number" class="form-control" placeholder="Enter phone number" required>
+                    </div>
+                    <br>
+                    <div class="text-center">
+                        <button type="submit" class="submit-btn">ADD CONTACT INFO</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+
+
 
     <!-- Bootstrap core JavaScript-->
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>

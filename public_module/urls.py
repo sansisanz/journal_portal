@@ -18,4 +18,7 @@ urlpatterns = [
     path("verify_author/", views.verify_author),
     path('author-registration/', views.author_registration, name='author_registration'),
     path('email_verification/', views.email_verification),
+    path('author_login/', views.author_login),
+    path('author_logout/', views.author_logout),
+
 ]

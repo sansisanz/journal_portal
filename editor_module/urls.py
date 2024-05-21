@@ -14,7 +14,7 @@ urlpatterns = [
     path("editor_sidebar/", views.editor_sidebar),
     path("editor_register/", views.editor_register),
     path("editor_resetpassword/", views.editor_resetpassword),
-    path("editor_updates/", views.editor_updates),
+    path("notifications/", views.notifications),
     path("editor_assignedjournal/", views.editor_assignedjournal),
     path("uploadArticle/", views.uploadArticle),
     path("journaldetails/", views.journaldetails),
@@ -25,5 +25,8 @@ urlpatterns = [
     path("e_downloads/", views.e_downloads),
     path("remove/", views.remove),
     path('editor_contact/', views.editor_contact),
+    path('notify/', views.notify),
+    path('add_contact/', views.add_contact),
+    path('add_editorial_board_member/', views.add_editorial_board_member),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

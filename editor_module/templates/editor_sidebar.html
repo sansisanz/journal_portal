@@ -97,7 +97,7 @@
 
                 <!-- Nav Item - Updates -->
                 <li class="nav-item">
-                    <a class="nav-link" href="/editor_updates/">
+                    <a class="nav-link" href="/notifications/">
                         <i class="fas fa-fw fa-bell"></i>
                         <span>Add Notifications</span></a>
                 </li>
@@ -176,7 +176,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ request.session.editor_name }}</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ request.session.editor_name|upper }}</span>
                                 <img class="img-profile rounded-circle"
                                     src="{% static 'img/undraw_profile.svg' %}">
                             </a>

@@ -8,4 +8,9 @@ urlpatterns = [
     path("author_resetpassword/", views.author_resetpassword),
     path("author_forgotpassword/", views.author_forgotpassword),
     path("author_submitarticle/", views.author_submitarticle),
+    path("author_sidebar", views.author_sidebar),
+    path('article_submission/', views.article_submission, name='article_submission'),
+    path('ajax/load-volumes/', views.load_volumes, name='ajax_load_volumes'),
+    path('ajax/load-issues/', views.load_issues, name='ajax_load_issues'),
+    
 ]
