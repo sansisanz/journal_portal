@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from admin_module.models import ea_table, dept_table, gl_table, journal_table, volume_table, issue_table
+from admin_module.models import ea_table, dept_table, gl_table, journal_table, notification_table, volume_table, issue_table, eb_table
 # Create your views here.
 
 def editor_article(request):
@@ -12,9 +12,46 @@ def editor_article(request):
 def editorialboard(request):
     if request.session.has_key('empid'):
         empid = request.session['empid']
-        return render(request, "editorialboard.html", {"empid": empid})
+        # Fetch journals assigned to the logged-in user
+        journals = journal_table.objects.filter(editor__employee_id=empid)
+        return render(request, "editorialboard.html", {"empid": empid, "journals": journals})
     else:
         return redirect('/login')
+      
+def add_editorial_board_member(request):
+     if request.session.has_key('empid'):
+        empid = request.session['empid']
+        user_name = request.session['editor_name']
+    
+     if request.method == 'POST':
+        journals = request.POST.get('journalname')
+        editor_name = request.POST.get('full_name')
+        editor_address = request.POST.get('office_address')
+        editor_email = request.POST.get('email_address')
+        editor_mobile = request.POST.get('phone_number')
+        photo = request.FILES.get('Upload Photo')
+        created_by = user_name  # You need to set the creator value
+
+        editor = ea_table.objects.get(employee_id=empid)
+        editor_id = editor.ea_id
+        journal = journal_table.objects.get(journal_id=journals)
+
+        # Create an Editorial Board Member object
+        new_member = eb_table(
+            journal_id=journal,
+            editor_name=editor_name,
+            editor_address=editor_address,
+            editor_email=editor_email,
+            editor_mobile=editor_mobile,
+            created_by=user_name,
+            status="Active",  # Set the default status
+            photo=photo
+        )
+        new_member.save()
+        
+        return redirect('/editor_index/')  # Redirect to a success page after saving
+     else:
+        return render(request,'add_editorial_board_member.html')
 
 def editor_forgotpassword(request):
     if request.session.has_key('empid'):
@@ -106,12 +143,49 @@ def editor_sidebar(request):
     else:
         return redirect('/login')    
 
-def editor_updates(request):
+def notifications(request):
     if request.session.has_key('empid'):
         empid = request.session['empid']
-        return render(request, "notifications.html", {"empid": empid})
+        # Fetch journals assigned to the logged-in user
+        journals = journal_table.objects.filter(editor__employee_id=empid)
+        return render(request, "notifications.html", {"empid": empid, "journals": journals})
     else:
         return redirect('/login')
+    
+def notify(request):
+    if request.session.has_key('empid'):
+        empid = request.session['empid']
+        if request.method == 'POST':
+            journal_id = request.POST.get('journalname')
+            notification = request.POST.get('volume')
+            link = request.POST.get('next_volume')
+
+            # Get the editor's ID (ea_id) based on the employee_id
+            editor = ea_table.objects.get(employee_id=empid)
+            editor_id = editor.ea_id
+
+            # Get the selected journal
+            journal = journal_table.objects.get(journal_id=journal_id)
+
+            # Create and save the new notification
+            new_notification = notification_table(
+                journal_id=journal,
+                notification=notification,
+                link=link,
+                created_by=editor.ea_name,
+                status='active'
+            )
+            new_notification.save()
+
+            return redirect('/editor_index/')  # Redirect to a success page after form submission
+        else:
+            # Fetch journals assigned to the logged-in user
+            editor = ea_table.objects.get(employee_id=empid)
+            journals = journal_table.objects.filter(editor=editor)
+
+            return render(request, "notifications.html", {"journals": journals})
+    else:
+        return redirect('/login')    
 
 def editor_assignedjournal(request):
     if request.session.has_key('empid'):
@@ -139,13 +213,6 @@ def uploadArticle(request):
         return render(request, "uploadarticle.html", {"empid": empid})
     else:
         return redirect('/login')
-
-def journaldetails(request):
-    if request.session.has_key('empid'):
-        empid = request.session['empid']
-        return render(request, "journaldetails.html", {"empid": empid})
-    else:
-        return redirect('/login')
     
 
 def journaldetails(request):
@@ -157,35 +224,6 @@ def journaldetails(request):
     else:
         return redirect('/login')
 
-def journal_details(request):
-    if request.session.has_key('empid'):
-        if request.method == 'POST':
-            empid = request.session['empid']
-            journal_id = request.POST.get('journalname')
-            aims_scope = request.POST.get('aimsScope')
-            ethics = request.POST.get('ethics')
-
-            # Get the editor's ID (ea_id) based on the employee_id
-            editor = ea_table.objects.get(employee_id=empid)
-            editor_id = editor.ea_id
-
-            # Save aims_scope and ethics to journal_table
-            journal = journal_table.objects.get(journal_id=journal_id)
-            journal.journal_aim = aims_scope
-            journal.journal_ethics = ethics
-            journal.save()
-
-            # Save guidelines to gl_table
-            total_contents = int(request.POST.get('totalContents'))
-            for i in range(1, total_contents + 1):
-                heading = request.POST.get(f'heading_{i}')
-                content = request.POST.get(f'content_{i}')
-                guideline = gl_table(journal_id=journal_id, heading=heading, content=content)
-                guideline.save()
-
-            return redirect('/editor_index/')  # Redirect to success page after form submission
-    else:
-        return redirect('/login')
 
 def journal_details(request):
     if request.session.has_key('empid'):
@@ -259,6 +297,38 @@ def remove(request):
 def editor_contact(request):
     if request.session.has_key('empid'):
         empid = request.session['empid']
-        return render(request, "editor_contact.html", {"empid": empid})
+        # Fetch journals assigned to the logged-in user
+        journals = journal_table.objects.filter(editor__employee_id=empid)
+        departments = dept_table.objects.all()
+        return render(request, "editor_contact.html", {"empid": empid, "journals": journals, 'departments':departments})
     else:
         return redirect('/login')
+    
+def add_contact(request):
+    if request.session.has_key('empid'):
+        empid = request.session['empid']
+        user_name = request.session['editor_name']
+
+    if request.method == 'POST':
+        journals = request.POST.get('journal_id')
+        departments = request.POST.get('dept_id')
+        editor_email = request.POST.get('email_address')
+        editor_mobile = request.POST.get('phone_number')
+        created_by = user_name  # You need to set the creator value
+
+        editor = ea_table.objects.get(employee_id=empid)
+        editor_id = editor.ea_id
+        journal = journal_table.objects.get(journal_id=journals)
+
+        # Create an Editorial Board Member object
+        journal.email=editor_email
+        journal.phone=editor_mobile
+        created_by=user_name
+        status="Active"  # Set the default status
+       
+        journal.save()
+        
+        return redirect('/editor_index/')  # Redirect to a success page after saving
+    else:
+        return render(request,'add_contact.html')
+    

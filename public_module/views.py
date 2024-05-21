@@ -4,7 +4,7 @@ import hashlib
 import random
 from django.core.mail import send_mail
 from django.contrib import messages
-from admin_module.models import author_table
+from admin_module.models import author_table, ea_table
 
 # Create your views here.
 def p_index(request):
@@ -141,6 +141,30 @@ def email_verification(request):
         
 
     
+
+def author_login(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        password = hashlib.sha1(request.POST.get("password").encode('utf-8')).hexdigest()
+
+        try:
+            user = author_table.objects.get(author_email=email, author_password=password)
+            request.session['author_email'] = user.author_email
+            request.session['author_name'] = user.author_name
+            return redirect("/author_index/")  # Redirect to the author's home page
+        except author_table.DoesNotExist:
+            return render(request, "p_index.html", {"login_error": "Invalid Email or Password"})
+
+    return render(request, "p_index.html#cta")
+
+def author_logout(request):
+    try:
+        del request.session['author_email']
+        del request.session['author_name']
+    except KeyError:
+        pass
+    return redirect("/p_index/#cta")
+
         
 
     

@@ -306,24 +306,26 @@
             <p>Authors interested in submitting an article for our journal are required to first register an account. Once registered, you can submit your article to our editor for review.</p>
           </div>
     
-          <div class="col-lg-6">  <div class="login-form-wrapper bg-light p-4 rounded">  <h3>Sign in as Author</h3>
-              <form id="author-login-form">
-    
+          <div class="col-lg-6">  
+            <div class="login-form-wrapper bg-light p-4 rounded">  
+              <h3>Sign in as Author</h3>
+              <form id="author-login-form" method="post" action="/author_login/">
+                {% csrf_token %}
                 <div class="form-group">
-                  <input type="email" id="email" required class="form-control" placeholder="Enter Your Email">
-                </div> <br>
-    
-                <div class="form-group">
-                  <input type="password" id="password" required class="form-control" placeholder="Enter Password">
-                </div><br>
-    
-                <div class="d-flex justify-content-between align-items-center">
-                  <a href="#">Forgot Password?</a>  <a href="/p_authorreg/">Register if not already a Author</a>  </div>
-    
-                <div class="btn-wrap">
-                  <button type="submit" class="cta-btn">Login</button>
+                    <input type="email" name="email" required class="form-control" placeholder="Enter Your Email">
                 </div>
-    
+                <br>
+                <div class="form-group">
+                    <input type="password" name="password" required class="form-control" placeholder="Enter Password">
+                </div>
+                <br>
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="#">Forgot Password?</a>
+                    <a href="/p_authorreg/">Register if not already an Author</a>
+                </div>
+                <div class="btn-wrap">
+                    <button type="submit" class="cta-btn">Login</button>
+                </div>
               </form>
             </div>
           </div>

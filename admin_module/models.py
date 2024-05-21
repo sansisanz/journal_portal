@@ -97,13 +97,13 @@ class journal_table(models.Model):
     journal_name = models.CharField(max_length=50)
     journal_aim = models.TextField()
     journal_ethics = models.TextField()
-    journal_update = models.TextField()
-    update_link = models.CharField(max_length=60)
     logo = models.CharField(max_length=100,default="")
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
     created_by=models.CharField(max_length=50)
     status=models.CharField(max_length=25)
+    email = models.CharField(max_length=90, default='')
+    phone = models.CharField(max_length=20, default = '')
 
     class Meta:
         db_table="journal_table"
@@ -112,8 +112,7 @@ class journal_table(models.Model):
         # Update the updated_at attribute before saving
         self.updated_at = datetime.now()
         super().save(*args, **kwargs)    
-
-
+    
 #volume_table
 class volume_table(models.Model):
     volume_id = models.BigAutoField(primary_key=True)
@@ -147,7 +146,10 @@ class issue_table(models.Model):
 class article_table(models.Model):
     article_id = models.BigAutoField(primary_key=True)
     issue_id = models.ForeignKey(issue_table,default="1",on_delete=models.SET_DEFAULT)
-    author_name = models.ForeignKey(author_table,default="1",on_delete=models.SET_DEFAULT,blank=True)
+    author_id = models.ForeignKey(author_table,default="1",on_delete=models.SET_DEFAULT,blank=True)
+    author1 = models.CharField(max_length=90, default='1')
+    author2 = models.CharField(max_length=90, default='1')
+    author3 = models.CharField(max_length=90, default='1')
     article_title = models.CharField(max_length=90)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
@@ -170,6 +172,7 @@ class eb_table(models.Model):
     updated_at=models.DateTimeField(auto_now_add=True)
     created_by=models.CharField(max_length=50)
     status=models.CharField(max_length=25)
+    photo=models.ImageField(upload_to='eb_photos/', default='')
 
     class Meta:
         db_table="eb_table"
@@ -189,6 +192,21 @@ class gl_table(models.Model):
 
     class Meta:
         db_table="gl_table"
+
+
+#notification_table
+class notification_table(models.Model):
+    notification_id = models.BigAutoField(primary_key=True)
+    journal_id = models.ForeignKey(journal_table,default="1",on_delete=models.SET_DEFAULT)
+    notification = models.CharField(max_length=100)
+    link = models.CharField(max_length=100)
+    created_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now_add=True)
+    created_by=models.CharField(max_length=50)
+    status=models.CharField(max_length=25)
+
+    class Meta:
+        db_table="notification_table"        
 
 
 #article_visit
