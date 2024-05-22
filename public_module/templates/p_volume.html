@@ -38,50 +38,61 @@
 
 <!-- Include Bootstrap's JavaScript -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-<style>  
-  body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 0;
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
     }
-    .header {
-      text-align: center;
-      padding: 20px;
-      background-color: #fff;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
     }
-    .manga-grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-      padding: 20px;
+    .section-title {
+        text-align: center;
+        margin-bottom: 30px;
     }
-    .manga-item {
-      background-color: #0a0041;
-      margin: 10px;
-      text-align: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      width: 250px; /* Increased width */
-      border-radius: 4px;
-      overflow: hidden;
+    .chapter-list {
+        list-style-type: none;
+        padding: 0;
     }
-    .manga-item img {
-      width: 100%;
-      height: 350px; /* Fixed height for uniformity */
+    .chapter-item {
+        background-color: #f8f8f8;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        border-radius: 4px;
+        transition: transform 0.3s ease;
     }
-    .manga-info {
-      padding: 15px; /* Increased padding */
-      font-size: 20px; /* Increased font size */
+    .chapter-item:hover {
+        transform: translateY(-5px);
+        background-color: #f1ec9c;
     }
-    .manga-info a {
-      text-decoration: none;
-      color: #ffffff;
+    .chapter-info {
+        font-size: 18px;
+        margin-bottom: 10px;
     }
-    .manga-info a:hover {
-      color: #57f80dfd;
+    .chapter-date {
+        font-style: italic;
+        margin-bottom: 10px;
     }
-  </style>
+    .chapter-status {
+        text-align: right;
+    }
+    .chapter-status span {
+        padding: 5px 10px;
+        background-color: #ff3300;
+        color: #fff;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .chapter-status span:hover {
+        background-color: #0056b3;
+    }
+</style>
 
 </head>
 
@@ -91,53 +102,51 @@
 
     <!-- ========= BAck Volume ========= -->
     <section id="alljournals" class="alljournals">
-      <div class="container">
-        <div class="section-title" data-aos="zoom-out">
-            <h2>All Journals</h2>
-            <p>Our Back volumes</p>
+        <div class="container">
+            <div class="section-title" data-aos="zoom-out">
+                <h2>All Journals</h2>
+                <p>Articles</p>
+            </div>
+            <ul class="chapter-list">
+                <li class="chapter-item">
+                    <div class="chapter-info">Unraveling the Mysteries: Exploring the Hidden Lore of One Piece</div>
+                    <div class="chapter-date">Subin Das</div>
+                    <div class="chapter-status"><span>Read</span></div>
+                </li>
+                <li class="chapter-item">
+                    <div class="chapter-info">From Straw Hats to Yonko: Character Evolution in One Piece</div>
+                    <div class="chapter-date">Subin Das, Sansi</div>
+                    <div class="chapter-status"><span>Read</span></div>
+                </li>
+                <li class="chapter-item">
+                    <div class="chapter-info">The Grand Line Chronicles: Legendary Adventures in One Piece</div>
+                    <div class="chapter-date">Arjun, Shahina</div>
+                    <div class="chapter-status"><span>Read</span></div>
+                </li>
+                <li class="chapter-item">
+                    <div class="chapter-info">Oda's Masterpiece: Analyzing the Themes of Friendship and Freedom in One Piece</div>
+                    <div class="chapter-date">Subin Das</div>
+                    <div class="chapter-status"><span>Read</span></div>
+                </li>
+                <li class="chapter-item">
+                    <div class="chapter-info">The World Government vs. Straw Hat Pirates: Power Dynamics in One Piece</div>
+                    <div class="chapter-date">Roopak, Athul, Mumthaz</div>
+                    <div class="chapter-status"><span>Read</span></div>
+                </li>
+                <li class="chapter-item">
+                    <div class="chapter-info">Navigating the New World: Revealing the Secrets of One Piece's Final Saga</div>
+                    <div class="chapter-date">Sdas</div>
+                    <div class="chapter-status"><span>Read</span></div>
+                </li>
+                <li class="chapter-item">
+                    <div class="chapter-info">Legendary Treasure: The Symbolism and Significance of the One Piece in Eiichiro Oda's Epic</div>
+                    <div class="chapter-date">Sn Das</div>
+                    <div class="chapter-status"><span>Read</span></div>
+                </li>
+            </ul>
         </div>
-        <div class="manga-grid">
-          <div class="manga-item">
-              <img src="{% static 'img/bc1.jpg' %}" alt="JoJo's Bizarre Adventure: Part 6">
-              <div class="manga-info">
-                  <a href="/p_volume/">
-                      <p>One Piece</p>
-                      <p>Volume 3 issue 2</p>
-                  </a>
-              </div>
-          </div>
-          <div class="manga-item">
-              <img src="{% static 'img/bc2.jpg' %}" alt="Chainsaw Man">
-              <div class="manga-info">
-                <a href="/p_home/">
-                  <p>One Piece</p>
-                  <p>Volume 3 issue 1</p>
-                </a>
-              </div>
-          </div>
-          <div class="manga-item">
-              <img src="{% static 'img/bc3.jpg' %}" alt="Boruto: Two Blue Vortex">
-              <div class="manga-info">
-                  <a href="/p_home/">
-                    <p>One Piece</p>
-                    <p>Volume 2 issue 2</p>
-                  </a>
-              </div>
-          </div>
-          <div class="manga-item">
-              <img src="{% static 'img/bc4.jpg' %}" alt="Dandadan">
-              <div class="manga-info">
-                  <a href="/p_home/">
-                    <p>One Piece</p>
-                    <p>Volume 2 issue 1</p>
-                  </a>
-              </div>
-          </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  
   
   <!-- ========= Back Volume End========= -->
 

@@ -20,5 +20,6 @@ urlpatterns = [
     path('email_verification/', views.email_verification),
     path('author_login/', views.author_login),
     path('author_logout/', views.author_logout),
+    path('p_volume/', views.p_volume),
 
 ]
