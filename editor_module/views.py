@@ -1,5 +1,6 @@
-from django.shortcuts import render,redirect
-from admin_module.models import ea_table, dept_table, gl_table, journal_table, notification_table, volume_table, issue_table, eb_table
+from django.http import FileResponse
+from django.shortcuts import get_object_or_404, render,redirect
+from admin_module.models import article_table, ea_table, dept_table, gl_table, journal_table, notification_table, volume_table, issue_table, eb_table
 # Create your views here.
 
 def editor_article(request):
@@ -49,7 +50,7 @@ def add_editorial_board_member(request):
         )
         new_member.save()
         
-        return redirect('/editor_index/')  # Redirect to a success page after saving
+        return redirect('/editorialboard/')  # Redirect to a success page after saving
      else:
         return render(request,'add_editorial_board_member.html')
 
@@ -207,12 +208,34 @@ def editor_assignedjournal(request):
     else:
         return redirect('/login')
 
-def uploadArticle(request):   
+def view_articles(request):   
     if request.session.has_key('empid'):
         empid = request.session['empid']
-        return render(request, "uploadarticle.html", {"empid": empid})
+        # Fetch journals assigned to the logged-in user
+        journals = journal_table.objects.filter(editor__employee_id=empid)
+
+        # Fetch articles related to those journals
+        articles = article_table.objects.filter(issue_id__volume_id__journal_id__in=journals)
+
+        return render(request, "view_articles.html", {"empid": empid, "articles": articles})
     else:
-        return redirect('/login')
+        return redirect('/login') 
+
+def view_article(request, article_id):
+    article = get_object_or_404(article_table, pk=article_id)
+    return FileResponse(article.article_file)
+
+def approve_article(request, article_id):
+    article = get_object_or_404(article_table, pk=article_id)
+    article.status = 'approved'
+    article.save()
+    return redirect('/view_articles/')
+
+def reject_article(request, article_id):
+    article = get_object_or_404(article_table, pk=article_id)
+    article.status = 'rejected'
+    article.save()
+    return redirect('/view_articles/')
     
 
 def journaldetails(request):

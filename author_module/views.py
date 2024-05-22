@@ -54,16 +54,7 @@ def author_resetpassword(request):
         return render(request, "author_resetpassword.html", {"author_email": author_email})
     else:
         return redirect('/p_index/#cta')
-
     
-def author_submitarticle(request):
-    if request.session.has_key('author_email'):
-        author_email = request.session['author_email']
-        journals = journal_table.objects.all()
-        return render(request, "submit-article.html", {"author_email": author_email, "journals": journals})
-    else:
-        return redirect('/p_index/#cta')    
-
 
 def author_sidebar(request):
 
@@ -76,8 +67,16 @@ def author_sidebar(request):
         }
         return render(request, "editor_sidebar.html", {"author_email": author_email}, context)
     else:
-        return redirect('/p_index/#cta')
+        return redirect('/p_index/#cta')   
 
+    
+def author_submitarticle(request):
+    if request.session.has_key('author_email'):
+        author_email = request.session['author_email']
+        journals = journal_table.objects.all()
+        return render(request, "submit-article.html", {"author_email": author_email, "journals": journals})
+    else:
+        return redirect('/p_index/#cta')    
 
 # Function to handle form submission
 def article_submission(request):
@@ -95,9 +94,6 @@ def article_submission(request):
             author_email = request.session.get('author_email')
             author = get_object_or_404(author_table, author_email=author_email)
 
-            # Save the article file
-            file_path = default_storage.save(f'articles/{article_file.name}', article_file)
-
             # Save article details
             article = article_table(
                 issue_id=get_object_or_404(issue_table, pk=issue_id),
@@ -107,7 +103,8 @@ def article_submission(request):
                 status='pending approval',
                 author1=authors[0] if author_count >= 1 else '',
                 author2=authors[1] if author_count >= 2 else '',
-                author3=authors[2] if author_count >= 3 else ''
+                author3=authors[2] if author_count >= 3 else '',
+                article_file=article_file  # Save the uploaded file
             )
             article.save()
 
@@ -117,13 +114,11 @@ def article_submission(request):
     else:
         return redirect('/p_index/#cta')
 
-# Function to dynamically load volumes based on the selected journal
 def load_volumes(request):
     journal_id = request.GET.get('journal_id')
     volumes = volume_table.objects.filter(journal_id=journal_id).all()
     return JsonResponse(list(volumes.values('volume_id', 'volume')), safe=False)
 
-# Function to dynamically load issues based on the selected volume
 def load_issues(request):
     volume_id = request.GET.get('volume_id')
     issues = issue_table.objects.filter(volume_id=volume_id).all()

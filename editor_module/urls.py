@@ -16,7 +16,7 @@ urlpatterns = [
     path("editor_resetpassword/", views.editor_resetpassword),
     path("notifications/", views.notifications),
     path("editor_assignedjournal/", views.editor_assignedjournal),
-    path("uploadArticle/", views.uploadArticle),
+    path("view_articles/", views.view_articles),
     path("journaldetails/", views.journaldetails),
     path("journal_details/", views.journal_details),
     path("upddetails/", views.upddetails),
@@ -28,5 +28,8 @@ urlpatterns = [
     path('notify/', views.notify),
     path('add_contact/', views.add_contact),
     path('add_editorial_board_member/', views.add_editorial_board_member),
+    path('view_article/<int:article_id>/', views.view_article),
+    path('approve_article/<int:article_id>/', views.approve_article),
+    path('reject_article/<int:article_id>/', views.reject_article),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
