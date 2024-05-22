@@ -166,5 +166,8 @@ def author_logout(request):
     return redirect("/p_index/#cta")
 
         
+def p_volume(request):
+    return render(request, 'p_volume.html')
+    
 
     
