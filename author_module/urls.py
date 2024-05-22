@@ -1,6 +1,8 @@
+from django.conf import settings
 from django.contrib import admin
 from django.urls import path,include
 from author_module import views
+from django.conf.urls.static import static
 
 urlpatterns = [
     path("author_index/", views.author_index),
@@ -13,4 +15,5 @@ urlpatterns = [
     path('ajax/load-volumes/', views.load_volumes, name='ajax_load_volumes'),
     path('ajax/load-issues/', views.load_issues, name='ajax_load_issues'),
     
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

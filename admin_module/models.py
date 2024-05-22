@@ -155,6 +155,7 @@ class article_table(models.Model):
     updated_at=models.DateTimeField(auto_now_add=True)
     created_by=models.CharField(max_length=50)
     status=models.CharField(max_length=25)
+    article_file = models.FileField(upload_to='articles/', default='')
 
     class Meta:
         db_table="article_table"
