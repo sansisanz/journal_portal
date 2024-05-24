@@ -4,7 +4,7 @@ import hashlib
 import random
 from django.core.mail import send_mail
 from django.contrib import messages
-from admin_module.models import author_table, ea_table
+from admin_module.models import author_table, ea_table,volume_table,journal_table,dept_table,eb_table,notification_table
 
 # Create your views here.
 def p_index(request):
@@ -23,7 +23,9 @@ def p_j(request):
     return render(request, 'p_j.html')
 
 def p_journals(request):
-    return render(request, 'p_journals.html')
+    j_data = journal_table.objects.all()
+
+    return render(request, 'p_journals.html',{'jdata':j_data})
 
 def p_authorreg(request):
     return render(request, 'p_authorreg.html')
@@ -37,8 +39,12 @@ def p_userprofile(request):
 def public_navbar(request):
     return render(request, 'public_navbar.html')
 
-def p_home(request):
-    return render(request, 'p_home.html')
+def p_home(request,id):
+    j_data = journal_table.objects.get(journal_id=id)
+    v_data = volume_table.objects.get(journal_id=id)
+    p_data = eb_table.objects.filter(journal_id=id)
+    n_data = notification_table.objects.filter(journal_id=id)
+    return render(request, 'p_home.html',{'jdata':j_data,'vdata':v_data,'pdata':p_data,'ndata':n_data})
 
 def read(request):
     return render(request, 'read.html') 

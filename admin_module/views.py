@@ -214,7 +214,7 @@ def addeditor(request):
         sender_email = 'subindax@gmail.com'  # Update with your email address
         send_mail(subject, plain_message, sender_email, [ea_email], html_message=html_message)
         
-        return redirect('/index')
+        return redirect('/index/')
 
     # Render the form page
     return render(request, 'set_password.html', {'employee_id': employee_id})
@@ -271,3 +271,5 @@ def create_journal(request):
             )
         return redirect('/create_j/')  # Redirect to success page after creating journal
      return render(request, 'index.html')
+
+
