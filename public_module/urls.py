@@ -21,5 +21,6 @@ urlpatterns = [
     path('author_login/', views.author_login),
     path('author_logout/', views.author_logout),
     path('p_volume/', views.p_volume),
+    path('read_article/', views.read_article),
 
 ]
