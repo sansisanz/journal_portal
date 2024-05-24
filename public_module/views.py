@@ -52,8 +52,8 @@ def read(request):
 def verify_author(request):
     return render(request, 'verify_author.html')
 
-def verify_author(request):
-    return render(request, 'verify_author.html')
+def read_article(request):
+    return render(request, 'read_article.html')
 
 
 #author registration

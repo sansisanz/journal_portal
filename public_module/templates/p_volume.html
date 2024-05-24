@@ -40,59 +40,84 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        margin: 0;
-        padding: 0;
-    }
-    .container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-    .section-title {
-        text-align: center;
-        margin-bottom: 30px;
-    }
-    .chapter-list {
-        list-style-type: none;
-        padding: 0;
-    }
-    .chapter-item {
-        background-color: #f8f8f8;
-        padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        border-radius: 4px;
-        transition: transform 0.3s ease;
-    }
-    .chapter-item:hover {
-        transform: translateY(-5px);
-        background-color: #f1ec9c;
-    }
-    .chapter-info {
-        font-size: 18px;
-        margin-bottom: 10px;
-    }
-    .chapter-date {
-        font-style: italic;
-        margin-bottom: 10px;
-    }
-    .chapter-status {
-        text-align: right;
-    }
-    .chapter-status span {
-        padding: 5px 10px;
-        background-color: #ff3300;
-        color: #fff;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-    .chapter-status span:hover {
-        background-color: #0056b3;
-    }
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.section-title {
+    text-align: center;
+    margin-bottom: 30px;
+}
+.chapter-list {
+    list-style-type: none;
+    padding: 0;
+}
+.chapter-item {
+    padding: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    transition: transform 0.3s ease;
+    position: relative;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+}
+.chapter-item:nth-child(odd) {
+    background-color: #dfefff;
+    border-left: 4px solid #007bff;    
+}
+
+.chapter-item:nth-child(odd):hover {
+    transform: translateY(-5px);
+    background-color: #f1ec9c;
+}    
+
+.chapter-item:nth-child(even) {
+    background-color: #fff8e1;
+    border-left: 4px solid #ff9800;
+}
+.chapter-item:nth-child(even):hover {
+    transform: translateY(-5px);
+    background-color: #90bff1;
+}  
+.chapter-icon {
+    font-size: 24px;
+    margin-right: 10px;
+}
+.chapter-info {
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+.chapter-date {
+    font-style: italic;
+    margin-bottom: 8px;
+}
+.chapter-status {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.chapter-status span {
+    padding: 3px 8px;
+    background-color: #ff3300;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.chapter-status span:hover {
+    background-color: #0056b3;
+}
 </style>
+
 
 </head>
 
@@ -109,38 +134,38 @@
             </div>
             <ul class="chapter-list">
                 <li class="chapter-item">
-                    <div class="chapter-info">Unraveling the Mysteries: Exploring the Hidden Lore of One Piece</div>
-                    <div class="chapter-date">Subin Das</div>
+                    <div class="chapter-info">Unraveling the Mysteries: Exploring the Hidden Lore of One Piece <br> 
+                        - Subin Das</div>
                     <div class="chapter-status"><span>Read</span></div>
                 </li>
                 <li class="chapter-item">
-                    <div class="chapter-info">From Straw Hats to Yonko: Character Evolution in One Piece</div>
-                    <div class="chapter-date">Subin Das, Sansi</div>
+                    <div class="chapter-info">From Straw Hats to Yonko: Character Evolution in One Piece <br> 
+                        - Subin Das, Sansi</div>
                     <div class="chapter-status"><span>Read</span></div>
                 </li>
                 <li class="chapter-item">
-                    <div class="chapter-info">The Grand Line Chronicles: Legendary Adventures in One Piece</div>
-                    <div class="chapter-date">Arjun, Shahina</div>
+                    <div class="chapter-info">The Grand Line Chronicles: Legendary Adventures in One Piece <br> 
+                        - Arjun, Shahina</div>
                     <div class="chapter-status"><span>Read</span></div>
                 </li>
                 <li class="chapter-item">
-                    <div class="chapter-info">Oda's Masterpiece: Analyzing the Themes of Friendship and Freedom in One Piece</div>
-                    <div class="chapter-date">Subin Das</div>
+                    <div class="chapter-info">Oda's Masterpiece: Analyzing the Themes of Friendship and Freedom in One Piece <br> 
+                        - Subin Das</div>
                     <div class="chapter-status"><span>Read</span></div>
                 </li>
                 <li class="chapter-item">
-                    <div class="chapter-info">The World Government vs. Straw Hat Pirates: Power Dynamics in One Piece</div>
-                    <div class="chapter-date">Roopak, Athul, Mumthaz</div>
+                    <div class="chapter-info">The World Government vs. Straw Hat Pirates: Power Dynamics in One Piece< <br> 
+                        - Roopak, Athul, Mumthaz</div>
                     <div class="chapter-status"><span>Read</span></div>
                 </li>
                 <li class="chapter-item">
-                    <div class="chapter-info">Navigating the New World: Revealing the Secrets of One Piece's Final Saga</div>
-                    <div class="chapter-date">Sdas</div>
+                    <div class="chapter-info">Navigating the New World: Revealing the Secrets of One Piece's Final Saga <br> 
+                        - Sdas</div>
                     <div class="chapter-status"><span>Read</span></div>
                 </li>
                 <li class="chapter-item">
-                    <div class="chapter-info">Legendary Treasure: The Symbolism and Significance of the One Piece in Eiichiro Oda's Epic</div>
-                    <div class="chapter-date">Sn Das</div>
+                    <div class="chapter-info">Legendary Treasure: The Symbolism and Significance of the One Piece in Eiichiro Oda's Epic <br> 
+                        - Sn Das</div>
                     <div class="chapter-status"><span>Read</span></div>
                 </li>
             </ul>
