@@ -163,18 +163,14 @@ The University of Calicut is proud to launch the CU Journal Hub, a comprehensive
         <div class="col-md-3 sidebar bg-light rounded shadow">
           <h3>Journals</h3>
           <ul class="list-group list-group-flush">
+            {% for i in jdata %}
             <li class="list-group-item">
 
               <!-- onclick="showJournal('Journal1', 'assets/img/eb.jpg', ['Article 1', 'Article 2', 'Article 3'])" -->
 
-            <a href="/p_j/" >History</a>
+            <a href="/p_home/{{i.journal_id}}" >{{i.journal_name}}</a>
             </li>
-            <li class="list-group-item">
-              <a href="#">English</a>
-            </li>
-            <li class="list-group-item">
-              <a href="#">Malayalam</a>
-            </li>
+            {% endfor %}
             <!-- Add more journal links here -->
           </ul>
         </div>

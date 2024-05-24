@@ -13,7 +13,7 @@ urlpatterns = [
     path("p_userreg/", views.p_userreg),
     path("p_userprofile/", views.p_userprofile),
     path("public_navbar/", views.public_navbar),
-    path("p_home/", views.p_home),
+    path("p_home/<int:id>", views.p_home),
     path("read/", views.read),
     path("verify_author/", views.verify_author),
     path('author-registration/', views.author_registration, name='author_registration'),

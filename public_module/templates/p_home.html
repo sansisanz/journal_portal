@@ -79,7 +79,35 @@
 
 <body>
     {% include 'public_navbar.html' %}
-
+    <main id="main">
+      <section class="inner-page">
+        <div class="container"></div>   
+        <!-- header for journal -->
+  
+          <section id="cta" class="cta">
+            <div class="container">  <div class="row">
+              <div class="col-sm-4">  <img src="/media/{{vdata.cover_image}}" alt="Journal Cover Image" style="width: 250px; height: auto;">  </div>
+                <div class="col-sm-8">
+                  <h1 class="j_menu_h1 text-center"  style="text-transform: capitalize;">{{jdata.journal_name}}</h1>  <h4 class="j_menu_h4 text-center" style="text-transform: capitalize;">{{jdata.dept_id.dept_name}}</h4>
+                <br><br>
+                  <nav class="journal-menu">
+                    <ul>                
+                      <li><a href="/p_home/{{jdata.journal_id}}#aim&scope">Aim & Scopes</a></li>
+                      <li><a href="/p_home/{{jdata.journal_id}}#editorialboard">Editorial Board</a></li>
+                      <li><a href="/p_home/{{jdata.journal_id}}#submitarticle">Submit Article</a></li>
+                      <li><a href="/p_home/{{jdata.journal_id}}#journalupdates">Journal Updates</a></li>
+                      <li><a href="/p_guidelines/">Submission Guidelines</a></li>
+                      <li><a href="/p_ethics/">Ethics & Disclosure</a></li>
+                      <li><a href="/p_alljournals/">All Journals</a></li>
+                      <li><a href="/p_home/{{jdata.journal_id}}#contact">Contact Us</a></li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </section>
+          <!-- Your content here -->
+      </section>
     <!-- aims and scope section -->
     <section id="aim&scope" class="aim&scope">
         <div class="container">
@@ -90,7 +118,7 @@
           </div>
       
           <div class="row">
-            <h4> Journals aim to share new research and knowledge within a specific field, guiding content through an aim (overall purpose) and scope (topic coverage). </h4>
+            <h4> {{jdata.journal_aim}}</h4>
           </div>
         </div>
       </section>    
@@ -106,76 +134,25 @@
           </div>
       
           <div class="row justify-content-center">
-      
+            {% for i in pdata %}
             <div class="col-lg-4 col-md-6 mb-4">
               <div class="member-item border rounded shadow p-4">
-                <img src="{% static 'img/ed1.png' %}" class="editor-photo"><br>
-                <h4>[Full Name]</h4>
-                <p>[Position in Editorial Board]</p>
+                <img src="/media/{{i.photo}}" class="editor-photo" style="width: 250px; height: 250px; border-radius: 50%;"><br>
+                <h4>{{i.editor_name}}</h4>
+                <p>Editor</p>
                 <ul class="list-unstyled mb-0">
-                  <li><i class="fas fa-map-marker-alt"></i> [Office Address]</li>
-                  <li><i class="fas fa-envelope"></i> [Email Address]</li>
-                  <li><i class="fas fa-phone-alt"></i> [Phone Number (Optional)]</li>
+                  <li><i class="fas fa-map-marker-alt"></i> {{i.editor_address}}</li>
+                  <li><i class="fas fa-envelope"></i> {{i.editor_email}}</li>
+                  <li><i class="fas fa-phone-alt"></i> {{i.editor_mobile}}</li>
                 </ul>
               </div>
             </div>
-      
-            <div class="col-lg-4 col-md-6 mb-4">
-              <div class="member-item border rounded shadow p-4">
-                <img src="{% static 'img/ed2.png' %}" class="editor-photo"><br>
-                <h4>[Full Name]</h4>
-                <p>[Position in Editorial Board]</p>
-                <ul class="list-unstyled mb-0">
-                  <li><i class="fas fa-map-marker-alt"></i> [Office Address]</li>
-                  <li><i class="fas fa-envelope"></i> [Email Address]</li>
-                  <li><i class="fas fa-phone-alt"></i> [Phone Number (Optional)]</li>
-                </ul>
-              </div>
-            </div>
-      
-            <div class="col-lg-4 col-md-6 mb-4">
-              <div class="member-item border rounded shadow p-4">
-                <img src="{% static 'img/ed3.png' %}" class="editor-photo"><br>
-                <h4>[Full Name]</h4>
-                <p>[Position in Editorial Board]</p>
-                <ul class="list-unstyled mb-0">
-                  <li><i class="fas fa-map-marker-alt"></i> [Office Address]</li>
-                  <li><i class="fas fa-envelope"></i> [Email Address]</li>
-                  <li><i class="fas fa-phone-alt"></i> [Phone Number (Optional)]</li>
-                </ul>
-              </div>
-            </div>
-      
-            <div class="col-lg-4 col-md-6 mb-4">
-              <div class="member-item border rounded shadow p-4">
-                <img src="{% static 'img/ed4.png' %}" class="editor-photo"><br>
-                <h4>[Full Name]</h4>
-                <p>[Position in Editorial Board]</p>
-                <ul class="list-unstyled mb-0">
-                  <li><i class="fas fa-map-marker-alt"></i> [Office Address]</li>
-                  <li><i class="fas fa-envelope"></i> [Email Address]</li>
-                  <li><i class="fas fa-phone-alt"></i> [Phone Number (Optional)]</li>
-                </ul>
-              </div>
-            </div>
-      
-            <div class="col-lg-4 col-md-6 mb-4">
-              <div class="member-item border rounded shadow p-4">
-                <img src="{% static 'img/ed5.png' %}" class="editor-photo"><br>
-                <h4>[Full Name]</h4>
-                <p>[Position in Editorial Board]</p>
-                <ul class="list-unstyled mb-0">
-                  <li><i class="fas fa-map-marker-alt"></i> [Office Address]</li>
-                  <li><i class="fas fa-envelope"></i> [Email Address]</li>
-                  <li><i class="fas fa-phone-alt"></i> [Phone Number (Optional)]</li>
-                </ul>
-              </div>
-            </div>
+            {% endfor %} 
 
-          <div class="eb-para">
-            <h5>The CU Journal Hub is overseen by a dedicated Editorial Board, ensuring the quality and integrity of the scholarly publications we disseminate. This esteemed body comprises a Chief Editor and several committee members, in recognition of their extensive experience and distinguished reputations within the academic community. We are grateful for their invaluable contributions in guiding the selection and publication of impactful research within our journals.</h5>
-          </div>
-      
+            <div class="eb-para">
+              <h5>The CU Journal Hub is overseen by a dedicated Editorial Board, ensuring the quality and integrity of the scholarly publications we disseminate. This esteemed body comprises a Chief Editor and several committee members, in recognition of their extensive experience and distinguished reputations within the academic community. We are grateful for their invaluable contributions in guiding the selection and publication of impactful research within our journals.</h5>
+            </div>
+        
           </div>
         </div>
       </section>
@@ -212,10 +189,9 @@
 
           <div class="news-ticker">
             <ul>
-              <li><a href="#" class="volume-published">New Volume Published: Find groundbreaking research and insightful articles.</a></li>
-              <li><a href="#" class="submissions">Stay tuned for submissions: Mark your calendars and prepare your best research!</a></li>
-              <li><a href="#" class="call-for-articles">Call for Articles: Share your valuable insights and contribute to the field.</a></li>
-              <li><a href="#" class="submission-deadline">Important Reminder: Share your valuable insights and contribute to the field.</a></li>
+              {% for i in ndata %}
+              <li><a href="/p_home/{{i.journal_id}}" >{{i.notification}}</a></li>
+              {% endfor %}
             </ul>
           </div>
         </div>
@@ -235,22 +211,18 @@
 
             <div class="col-lg-4" data-aos="fade-right">
               <div class="info">
-                <div class="address">
-                  <i class="bi bi-geo-alt"></i>
-                  <h4>Location:</h4>
-                  <p>University of Calicut, Thenhipalam</p>
-                </div>
+                
 
                 <div class="email">
                   <i class="bi bi-envelope"></i>
                   <h4>Email:</h4>
-                  <p>user@example.com</p>
+                  <p>{{jdata.email}}</p>
                 </div>
 
                 <div class="phone">
                   <i class="bi bi-phone"></i>
-                  <h4>Call:</h4>
-                  <p>1234567890</p>
+                  <h4>{{jdata.phone}}</h4>
+                  
                 </div>
 
               </div>
