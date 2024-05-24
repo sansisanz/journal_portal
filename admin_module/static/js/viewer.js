@@ -1,33 +1,7 @@
-/* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
-/* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
-/* Copyright 2012 Mozilla Foundation
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/* globals PDFJS, PDFBug, FirefoxCom, Stats, Cache, ProgressBar,
- DownloadManager, getFileName, getPDFFileNameFromURL,
- PDFHistory, Preferences, SidebarView, ViewHistory, Stats,
- PDFThumbnailViewer, URL, noContextMenuHandler, SecondaryToolbar,
- PasswordPrompt, PDFPresentationMode, PDFDocumentProperties, HandTool,
- Promise, PDFLinkService, PDFOutlineView, PDFAttachmentView,
- OverlayManager, PDFFindController, PDFFindBar, PDFViewer,
- PDFRenderingQueue, PresentationModeState, parseQueryString,
- RenderingStates, UNKNOWN_SCALE, DEFAULT_SCALE_VALUE,
- IGNORE_CURRENT_POSITION_ON_ZOOM: true */
 
 'use strict';
 
-var DEFAULT_URL =  "ai1.pdf";
+var DEFAULT_URL =  "/admin_module/static/ai1.pdf";
 var DEFAULT_SCALE_DELTA = 1.1;
 var MIN_SCALE = 0.25;
 var MAX_SCALE = 10.0;
@@ -36,9 +10,9 @@ var SCALE_SELECT_PADDING = 22;
 var PAGE_NUMBER_LOADING_INDICATOR = 'visiblePageIsLoading';
 var DISABLE_AUTO_FETCH_LOADING_BAR_TIMEOUT = 5000;
 
-PDFJS.imageResourcesPath = 'images/';
-PDFJS.workerSrc = 'static/js/pdf.worker.js';
-PDFJS.cMapUrl = 'pdfjs/cmaps/';
+PDFJS.imageResourcesPath = '/admin_module/static/img/';
+PDFJS.workerSrc = '/admin_module/static/js/pdf.worker.js';
+PDFJS.cMapUrl = '/admin_module/static/cmaps';
 PDFJS.cMapPacked = true;
 
 var mozL10n = document.mozL10n || document.webL10n;

@@ -41,7 +41,7 @@ def public_navbar(request):
 
 def p_home(request,id):
     j_data = journal_table.objects.get(journal_id=id)
-    v_data = volume_table.objects.get(journal_id=id)
+    v_data = volume_table.objects.filter(journal_id=id).order_by('-volume_id').first()
     p_data = eb_table.objects.filter(journal_id=id)
     n_data = notification_table.objects.filter(journal_id=id)
     return render(request, 'p_home.html',{'jdata':j_data,'vdata':v_data,'pdata':p_data,'ndata':n_data})
@@ -175,5 +175,5 @@ def author_logout(request):
 def p_volume(request):
     return render(request, 'p_volume.html')
     
-
+    
     
