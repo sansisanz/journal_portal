@@ -86,7 +86,13 @@
   
           <section id="cta" class="cta">
             <div class="container">  <div class="row">
-              <div class="col-sm-4">  <img src="/media/{{vdata.cover_image}}" alt="Journal Cover Image" style="width: 250px; height: auto;">  </div>
+              <div class="col-sm-4">
+                {% if vdata %}
+                    <img src="{{ vdata.cover_image.url }}" alt="Journal Cover Image" style="width: 250px; height: auto;">
+                {% else %}
+                    <p>No cover image available.</p>
+                {% endif %}
+              </div>
                 <div class="col-sm-8">
                   <h1 class="j_menu_h1 text-center"  style="text-transform: capitalize;">{{jdata.journal_name}}</h1>  <h4 class="j_menu_h4 text-center" style="text-transform: capitalize;">{{jdata.dept_id.dept_name}}</h4>
                 <br><br>
