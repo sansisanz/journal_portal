@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>JP Admin Profile</title>
+    <title>JP Editor Profile</title>
 
     <!-- Custom fonts for this template-->
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
@@ -19,7 +19,7 @@
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="{% static 'css/sb-admin-2.css'%}" rel="stylesheet">
+    <link href="{% static 'css/sb-editor.css'%}" rel="stylesheet">
 
     <style>
         .form-box {
@@ -35,7 +35,7 @@
 
 <body id="page-top">
 
-    {% include 'admin_sidebar.html' %}
+    {% include 'editor_sidebar.html' %}
 
     <div class="container-fluid">
         <div class="row">
@@ -43,7 +43,7 @@
             <div class="col-lg-6">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h4 class="m-0 font-weight-bold text-primary" style="text-align: center;">Admin Profile</h4>
+                        <h4 class="m-0 font-weight-bold text-primary" style="text-align: center;">Editor Profile</h4>
                     </div>
                     <div class="card-body">
                         <form id="profile-form" method="POST" action="/update_profile/">
@@ -71,7 +71,9 @@
                                 <label for="address">Address:</label>
                                 <input type="text" class="form-control" id="address" name="address" value="{{ user.ea_address }}" placeholder="Enter address">
                             </div>
-                            <button type="submit" class="btn btn-success btn-block mt-2">Update Profile</button>
+                            <div style="display: flex; justify-content: center;">
+                                <button type="submit" class="btn btn-primary">Update Profile</button>
+                            </div>
                         </form>
                     </div>
                 </div>

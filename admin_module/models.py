@@ -34,6 +34,11 @@ class dept_table(models.Model):
     class Meta:
         db_table="dept_table"
 
+    def save(self, *args, **kwargs):
+        # Update the updated_at attribute before saving
+        self.updated_at = datetime.now()
+        super().save(*args, **kwargs)        
+
 #editoradmin_table
 class ea_table(models.Model):   
     ea_id = models.BigAutoField(primary_key=True)
@@ -45,9 +50,16 @@ class ea_table(models.Model):
     ea_type = models.CharField(max_length=70)
     token = models.CharField(max_length=90)
     status = models.CharField(max_length=50, default="active")
+    ea_mobile = models.CharField(max_length=20, default='')
+    ea_address = models.CharField(max_length=200, default='')
 
     class Meta:
         db_table="ea_table"
+
+    def save(self, *args, **kwargs):
+        # Update the updated_at attribute before saving
+        self.updated_at = datetime.now()
+        super().save(*args, **kwargs)        
 
 
 #role_table
@@ -93,7 +105,7 @@ class usertable(models.Model):
 class journal_table(models.Model):
     journal_id = models.BigAutoField(primary_key=True)
     dept_id = models.ForeignKey(dept_table,default="1",on_delete=models.SET_DEFAULT)
-    editor = models.ForeignKey(ea_table,default="1",on_delete=models.SET_DEFAULT)
+    editor = models.ForeignKey(ea_table, null=True, blank=True, default="1",on_delete=models.SET_DEFAULT)
     journal_name = models.CharField(max_length=50)
     journal_aim = models.TextField()
     journal_ethics = models.TextField()
