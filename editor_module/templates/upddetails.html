@@ -41,39 +41,24 @@
                             <th>SNO</th>
                             <th>JOURNAL NAME</th>
                             <th>TOTAL VOLUMES</th>
+                            <th>TOTAL ISSUES</th>
                             <th>TOTAL ARTICLES</th>
                             <th>EDIT</th>
                             <th>REMOVE</th>
                         </tr>
                     </thead>
-                    <!-- <tfoot>
-                    <tr>
-                        <th>Name</th>
-                        <th>Position</th>
-                        <th>Email</th>
-                        <th>Department</th>
-                        <th>Equipment in-charge</th>
-                        <th>Status</th>
-                    </tr>
-                </tfoot> -->
                     <tbody>
+                        {% for journal in journal_data %}
                         <tr>
-                            <td>1</td>
-                            <td>Mathematical Science</td>
-                            <td>3</td>
-                            <td>18</td>
-                            <td><a class="btn btn-success font-weight-bolder btn-user btn-block col-sm-10"  href="/edit/"> Edit </a></td>
-                            <td><a class="btn btn-danger font-weight-bolder btn-user btn-block col-sm-6" href="/remove/"> Remove </a></td>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ journal.journal_name }}</td>
+                            <td>{{ journal.total_volumes }}</td>
+                            <td>{{ journal.total_issues }}</td>
+                            <td>{{ journal.total_articles }}</td>
+                            <td><a class="btn btn-success font-weight-bolder btn-user btn-block col-sm-10" href="/edit_vic/{{ journal.journal_id }}/">Edit</a></td>
+                            <td><a class="btn btn-danger font-weight-bolder btn-user btn-block col-sm-6" href="/remove/{{ journal.journal_id }}/">Remove</a></td>
                         </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Computer Science</td>
-                            <td>3</td>
-                            <td>21</td>
-                            <td><a class="btn btn-success font-weight-bolder btn-user btn-block col-sm-10" href="/edit/" > Edit </a></td>
-                            <td><a class="btn btn-danger font-weight-bolder btn-user btn-block col-sm-6" href="/remove/"> Remove </a></td>
-                        </tr>
-                       
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -84,31 +69,6 @@
 
 
     <!-- End of Page Wrapper -->
-
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-</div>
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="/editor_login/">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Bootstrap core JavaScript-->
     <script src="{% static 'vendor/jquery/jquery.min.js' %}]"></script>

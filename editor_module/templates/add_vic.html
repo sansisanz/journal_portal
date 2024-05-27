@@ -23,112 +23,71 @@
     <link href="{% static 'css/journal.css' %}" rel="stylesheet" >
 
     <style>
-        .custum-file-upload {
-            height: 200px;
-            width: 300px;
+        .form-box {
+          background-color: #f8f9fa;
+          border: 1px solid #ced4da;
+          border-radius: 10px;
+          padding: 20px;
+          margin-bottom: 70%;
+        }
+        .center-content {
             display: flex;
-            flex-direction: column;
-            align-items: space-between;
-            gap: 20px;
-            cursor: pointer;
-            align-items: center;
             justify-content: center;
-            border: 2px dashed #cacaca;
-            background-color: rgba(255, 255, 255, 1);
-            padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0px 48px 35px -48px rgba(0,0,0,0.1);
-        }
-
-        .custum-file-upload .icon {
-            display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 10px; /* Optional: Add space between the link and the button */
         }
-
-        .custum-file-upload .icon svg {
-            height: 80px;
-            fill: rgba(75, 85, 99, 1);
-        }
-
-        .custum-file-upload .text {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .custum-file-upload .text span {
-            font-weight: 400;
-            color: rgba(75, 85, 99, 1);
-        }
-
-        .custum-file-upload input {
-            display: none;
-        }
-
     </style>
 </head>
 
 <body id="page-top">
 
     {% include 'editor_sidebar.html' %}
-
-  
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
-
-                    <!-- Page Heading -->
                    
-                <!-- journal form -->
-            
-                <div class="container mt-5">
-                    <div class="border p-4">
-                        <form method="post" enctype="multipart/form-data" action="/add_vic/{{ journal_id }}/">
-                            {% csrf_token %}
-                            <input type="hidden" name="journal_id" value="{{ journal_id }}">
-                            <div class="form-group">
-                                <label for="volume">Volume Name or Number:</label>
-                                <input type="text" class="form-control" id="volume" name="volume" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="coverImage">Cover Image:</label>
-                                <input type="file" class="form-control-file" id="coverImage" name="cover_image" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="numIssues">Number of Issues:</label>
-                                <input type="number" class="form-control" id="numIssues" name="num_issues" min="1" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </form>
+                <!-- journal form -->            
+                <div class="container">
+                    <div class="row">
+                      <div class="col-md-6 offset-md-3"> <!-- Centering the form for medium and large screens -->
+                        <div class="form-box">
+                            <div class="card-header py-3">
+                                <h4 class="m-0 font-weight-bold text-primary" style="text-align: center;">Add Volumes and Issues</h4>
+                            </div><br>  
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            <form method="post" enctype="multipart/form-data" action="/add_vic/{{ journal_id }}/">
+                                {% csrf_token %}
+                                <input type="hidden" name="journal_id" value="{{ journal_id }}">
+                                <div class="form-group">
+                                    <label for="volume">Volume Name or Number:</label>
+                                    <input type="text" class="form-control" id="volume" name="volume" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="coverImage">Cover Image:</label>
+                                    <input type="file" class="form-control-file" id="coverImage" name="cover_image" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="numIssues">Number of Issues:</label>
+                                    <input type="number" class="form-control" id="numIssues" name="num_issues" min="1" required>
+                                </div>                
+                                <div class="text">
+                                    <button type="submit" class="btn btn-success btn-block mt-3" id="submitVic">Submit</button>
+                                </div>          
+                            </form>
+                        </div>
                     </div>
                 </div>
+            </div>    
+                 
                 
-          
+                
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="/editor_login/">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Bootstrap core JavaScript-->
        <!-- Bootstrap core JavaScript-->

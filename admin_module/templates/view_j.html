@@ -40,66 +40,113 @@
 
     {% include 'admin_sidebar.html' %}
 
-    <!-- DataTales Example -->
+    <!-- view_j.html -->
     <div class="card shadow mb-4">
-      <div class="card-header py-3">
-          <h4 class="m-0 font-weight-bold text-primary">VIEW JOURNALS</h4>
-      </div>
-      <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th>SNo</th>
-                        <th>Journal Name</th>
-                        <th>Department</th>
-                        <th>Editor</th>
-                        <th>Edit</th>
-                        <th>Remove</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for journal in journals %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td> <!-- Auto-populated serial number -->
-                        <td>{{ journal.journal_name }}</td>
-                        <td>{{ journal.dept_id.dept_name }}</td> <!-- Fetch department name using ForeignKey -->
-                        <td>{{ journal.editor.ea_name }}</td> <!-- Fetch editor name using ForeignKey -->
-                        <td><a class="btn btn-success font-weight-bolder btn-user btn-block col-sm-6" href="/edit_j/{{ journal.journal_id }}">EDIT</a></td>
-                        <td><button class="btn btn-danger font-weight-bolder btn-user btn-block col-sm-6 remove-btn" data-journal-id="{{ journal.journal_id }}">REMOVE</button></td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-          </div>
-      </div>
-  </div>
+        <div class="card-header py-3">
+            <h4 class="m-0 font-weight-bold text-primary">VIEW JOURNALS</h4>
+        </div>
+        <div class="card-body">
+            <!-- Display success message -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>SNo</th>
+                            <th>Journal Name</th>
+                            <th>Department</th>
+                            <th>Editor</th>
+                            <th>Edit</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for journal in journals %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ journal.journal_name }}</td>
+                            <td>{{ journal.dept_id.dept_name }}</td>
+                            <td>{{ journal.editor.ea_name }}</td>
+                            <td>
+                                <a class="btn btn-success font-weight-bolder btn-user btn-block col-sm-6" href="/edit_j/{{ journal.journal_id }}/">EDIT</a>
+                            </td>
+                            <td>
+                                <a class="btn btn-danger font-weight-bolder btn-user btn-block col-sm-6" href="/confirm_delete_journal/{{ journal.journal_id }}/">REMOVE</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
 
-  <script>
-    function sortTable(columnIndex) {
-        var table, rows, switching, i, x, y, shouldSwitch;
-        table = document.getElementById("dataTable");
-        switching = true;
-        while (switching) {
-            switching = false;
-            rows = table.rows;
-            for (i = 1; i < (rows.length - 1); i++) {
-                shouldSwitch = false;
-                x = rows[i].getElementsByTagName("td")[columnIndex];
-                y = rows[i + 1].getElementsByTagName("td")[columnIndex];
-                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                    shouldSwitch = true;
-                    break;
+
+    <script>
+        function sortTable(columnIndex) {
+            var table, rows, switching, i, x, y, shouldSwitch;
+            table = document.getElementById("dataTable");
+            switching = true;
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("td")[columnIndex];
+                    y = rows[i + 1].getElementsByTagName("td")[columnIndex];
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
                 }
             }
-            if (shouldSwitch) {
-                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                switching = true;
-            }
         }
-    }
-  </script>
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const removeButtons = document.querySelectorAll('.remove-btn');
+            removeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const journalId = this.getAttribute('data-journal-id');
+                    if (confirm('Are you sure you want to remove this journal?')) {
+                        fetch(`/remove_journal/${journalId}/`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': '{{ csrf_token }}',
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                // Reload the page after successful removal
+                                location.reload();
+                            } else {
+                                alert('Failed to remove the journal.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                    }
+                });
+            });
+        });
+    </script>
   
 
     <!-- Bootstrap core JavaScript-->

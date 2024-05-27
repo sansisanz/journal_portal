@@ -59,49 +59,62 @@
           <div class="col-md-6 offset-md-3"> <!-- Centering the form for medium and large screens -->
             <div class="form-box">
                 <div class="card-header py-3">
-                    <h4 class="m-0 font-weight-bold text-primary">ADD EDITOR</h4>
+                    <h4 class="m-0 font-weight-bold text-primary" style="text-align: center;">ADD EDITOR</h4>
                 </div><br>  
                 <form method="post" action="/addeditor/">
                   {% csrf_token %}
                   <div class="card-header py-3">
-                      <div class="form-group">
-                          <label for="department">Department</label>
-                          <input type="text" class="form-control" id="journalDepartment" name="department" placeholder="Select Department" list="departments" required>
-                          <datalist id="departments">
-                              <option value="Department of Computer Science">
-                              <option value="Department of History">
-                              <option value="Department of Physics">
-                              <option value="Department of Malayalam">
-                          </datalist>
-                      </div>
-                      <div class="form-group">
-                          <label for="employeeId">Employee Id</label>
-                          <input type="text" class="form-control" id="employeeId" name="employeeId" placeholder="Enter Employee Id" required>
-                          <span class="text-danger font-weight-bold" >{{empidcheck}}</span>
-                      </div>
-                      <div class="form-group">
-                          <label for="roleName">Role</label>
-                          <input type="text" class="form-control" id="roleName" name="roleName" placeholder="Enter Role" required>
-                      </div>
-                      <div class="form-group">
-                          <label for="designation">Designation</label>
-                          <input type="text" class="form-control" id="designation" name="designation" placeholder="Enter Designation" required>
-                      </div>
-                      <div class="form-group">
-                          <label for="editorName">Editor's Name</label>
-                          <input type="text" class="form-control" id="editorName" name="editorName" placeholder="Enter Journal Name" required>
-                      </div>
-                      <div class="form-group">
-                          <label for="editorEmail">Editor's Email</label>
-                          <input type="email" class="form-control" id="editorEmail" name="editorEmail" placeholder="Enter Editor's Email" required>
-                          <span class="text-danger font-weight-bold" >{{emailcheck}}</span>
-                      </div>
-                      <div class="text-center">
-                          <button type="submit" class="btn btn-primary">Add</button>
-                      </div>
-                  </div>
-              </form>              
+                    <!-- Display success message -->
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <div class="form-group">
+                        <label for="department">Department</label>
+                        <input type="text" class="form-control" id="journalDepartment" name="department" placeholder="Select Department" list="departments" required>
+                        <datalist id="departments">
+                            <option value="Department of Computer Science">
+                            <option value="Department of History">
+                            <option value="Department of Physics">
+                            <option value="Department of Malayalam">
+                        </datalist>
+                    </div>
+                    <div class="form-group">
+                        <label for="employeeId">Employee Id</label>
+                        <input type="text" class="form-control" id="employeeId" name="employeeId" placeholder="Enter Employee Id" required>
+                        <span class="text-danger font-weight-bold" >{{empidcheck}}</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="roleName">Role</label>
+                        <input type="text" class="form-control" id="roleName" name="roleName" placeholder="Enter Role" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="designation">Designation</label>
+                        <input type="text" class="form-control" id="designation" name="designation" placeholder="Enter Designation" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editorName">Editor's Name</label>
+                        <input type="text" class="form-control" id="editorName" name="editorName" placeholder="Enter Journal Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editorEmail">Editor's Email</label>
+                        <input type="email" class="form-control" id="editorEmail" name="editorEmail" placeholder="Enter Editor's Email" required>
+                        <span class="text-danger font-weight-bold" >{{emailcheck}}</span>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-block mt-2" id="saveJournalBtn">Add</button>
+                 </div>
+                 <div class="text-center">
+                    <a class="small" href="/remove_editor/">To remove an editor, click here.</a>
+                </div>
+                </form>              
             </div>
+            
           </div>
         </div>
       </div>
