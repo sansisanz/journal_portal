@@ -265,4 +265,16 @@ class article_download(models.Model):
     class Meta:
         db_table="article_download"
 
+#message_table
+class message_table(models.Model):
+    msg_id = models.BigAutoField(primary_key=True)
+    journal_id = models.ForeignKey(journal_table,default="1",on_delete=models.SET_DEFAULT)
+    ea_id = models.ForeignKey(ea_table,default="1",on_delete=models.SET_DEFAULT)
+    msg_name = models.CharField(max_length=50)
+    msg_email = models.CharField(max_length=90)
+    subject = models.CharField(max_length=200)
+    message = models.CharField(max_length=50)
+
+    class Meta:
+        db_table="message_table"
 

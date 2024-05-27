@@ -30,6 +30,8 @@ urlpatterns = [
     path('approve_article/<int:article_id>/', views.approve_article),
     path('reject_article/<int:article_id>/', views.reject_article),
     path('edit_vic/<int:journal_id>/', views.edit_vic),
+    path('edit_volume/<int:journal_id>/', views.edit_volume),
     path('remove/<int:journal_id>/', views.remove),
+    path('remove_via/', views.remove_via),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

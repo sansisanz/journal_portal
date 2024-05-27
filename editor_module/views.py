@@ -1,5 +1,7 @@
+from django.contrib import messages
 from django.http import FileResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render,redirect
+from django.urls import reverse
 from admin_module.models import article_table, ea_table, dept_table, gl_table, journal_table, notification_table, volume_table, issue_table, eb_table
 # Create your views here.
 
@@ -322,46 +324,122 @@ def edit_vic(request, journal_id):
         empid = request.session['empid']
         
         # Fetch volumes for the selected journal
-        volumes = getvolume(journal_id)
+        volumes = volume_table.objects.filter(journal_id=journal_id)
         
         return render(request, "edit_vic.html", {"empid": empid, "volumes": volumes, "journal_id": journal_id})
     else:
         return redirect('/login/')
-    
+
 def edit_volume(request, journal_id):
     if request.session.has_key('empid'):
+        empid = request.session['empid']
+        editor = ea_table.objects.get(employee_id=request.session['empid'])
+        editor_name = editor.ea_name
+
         if request.method == 'POST':
-            action = request.POST.get('action')
             volume_id = request.POST.get('volume')
             volume = get_object_or_404(volume_table, volume_id=volume_id)
 
-            if action == 'updateVolume':
+            # Update Volume Name
+            if request.POST.get('updateVolume') == 'on':
                 volume_name = request.POST.get('volumeName')
-                volume.volume = volume_name
-                volume.save()
-            elif action == 'updateCoverPhoto':
-                cover_photo = request.FILES['coverPhoto']
-                volume.cover_image = cover_photo
-                volume.save()
-            elif action == 'addMoreIssues':
-                more_issues = int(request.POST.get('issueNumber'))
-                for _ in range(more_issues):
-                    new_issue = issue_table(volume_id=volume)
-                    new_issue.save()
-        
+                if volume_name:
+                    volume.volume = volume_name
+                    volume.save()
+                    messages.success(request, 'Volume name updated successfully.')
+
+            # Update Cover Photo
+            if request.POST.get('updateCoverPhoto') == 'on':
+                if 'coverPhoto' in request.FILES:
+                    cover_photo = request.FILES['coverPhoto']
+                    volume.cover_image = cover_photo
+                    volume.save()
+                    messages.success(request, 'Cover photo updated successfully.')
+
+            # Add More Issues
+            if request.POST.get('addMoreIssues') == 'on':
+                more_issues = request.POST.get('issueNumber')
+                if more_issues:
+                    more_issues = int(more_issues)
+                    last_issue = issue_table.objects.filter(volume_id=volume).order_by('issue_no').last()
+                    start_issue_no = int(last_issue.issue_no) + 1 if last_issue else 1
+
+
+                    for i in range(more_issues):
+                        new_issue = issue_table(
+                            volume_id=volume,
+                            issue_no=start_issue_no + i,
+                            created_by=editor_name,
+                            status='active'
+                        )
+                        new_issue.save()
+                    messages.success(request, f'{more_issues} issues added successfully.')
+
         return redirect('/edit_vic/{}/'.format(journal_id))
     else:
-        return redirect('/login/')    
+        return redirect('/login/')
+    
+def remove(request, journal_id):
+    if request.session.has_key('empid'):
+        empid = request.session['empid']
+        
+        # Fetch volumes, issues, and articles for the selected journal
+        volumes = volume_table.objects.filter(journal_id=journal_id)
+        issues = issue_table.objects.filter(volume_id__journal_id=journal_id)
+        articles = article_table.objects.filter(issue_id__volume_id__journal_id=journal_id)
+        
+        return render(request, "remove.html", {
+            "empid": empid,
+            "volumes": volumes,
+            "issues": issues,
+            "articles": articles,
+            "journal_id": journal_id
+        })
+    else:
+        return redirect('/login/') 
+
 
 def remove(request, journal_id):
     if request.session.has_key('empid'):
         empid = request.session['empid']
-        # Perform the removal operation here
-        journal = journal_table.objects.get(journal_id=journal_id)
-        journal.delete()
-        return redirect('/upddetails/')
+        
+        # Fetch volumes for the selected journal
+        volumes = volume_table.objects.filter(journal_id=journal_id)
+        volume_names = [volume.volume for volume in volumes]
+        
+        return render(request, "remove.html", {"empid": empid, "volumes": volumes, "journal_id": journal_id})
     else:
         return redirect('/login/')
+
+    
+def remove_via(request):
+    if request.method == 'POST':
+        item_type = request.POST.get('item_type')
+        item_id = request.POST.get('item_id')
+        # Depending on the item type, perform the removal action
+        if item_type == 'volume':
+            # Remove the volume and its related issues and articles
+            volume = volume_table.objects.get(pk=item_id)
+
+            related_issues = issue_table.objects.filter(volume_id=volume.volume_id)
+            for issue in related_issues:
+                related_articles = article_table.objects.filter(issue_id=issue.issue_id)
+                related_articles.delete()  # Delete related articles
+            related_issues.delete()  # Delete related issues
+            volume.delete()  # Delete volume
+        elif item_type == 'issue':
+            # Remove the issue and its related articles
+            issue = issue_table.objects.get(pk=item_id)
+            related_articles = article_table.objects.filter(issue_id=issue.issue_id)
+            related_articles.delete()  # Delete related articles
+            issue.delete()  # Delete issue
+        elif item_type == 'article':
+            # Remove the article
+            article = article_table.objects.get(pk=item_id)
+            article.delete()  # Delete article
+        return JsonResponse({'success': True})
+    else:
+        return render(request, "remove.html")    
         
 #-------------------------------------------------------------------------------------------------------------------------------------    
 
