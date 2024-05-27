@@ -508,3 +508,13 @@ def add_contact(request):
     
 #-----------------------------------------------------------------------------------------------------
 
+def edit_journals(request):
+    if request.session.has_key('empid'):
+        empid = request.session['empid']
+                
+        return render(request, "edit_journals.html", {"empid": empid})
+    else:
+        return redirect('/login/')
+    
+
+    

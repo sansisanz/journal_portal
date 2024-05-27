@@ -33,5 +33,6 @@ urlpatterns = [
     path('edit_volume/<int:journal_id>/', views.edit_volume),
     path('remove/<int:journal_id>/', views.remove),
     path('remove_via/', views.remove_via),
+    path('edit_journals/', views.edit_journals),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
