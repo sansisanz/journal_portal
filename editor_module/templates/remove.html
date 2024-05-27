@@ -25,6 +25,16 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+    <style>
+        .form-box {
+          background-color: #f8f9fa;
+          border: 1px solid #ced4da;
+          border-radius: 10px;
+          padding: 20px;
+          margin-bottom: 70%;
+        }
+    </style>
+
 
 </head>
 
@@ -32,126 +42,190 @@
 
     {% include 'editor_sidebar.html' %} 
 
-    <div class="2h2" style="margin-left: 5%;">
-        <h2 style="color: #4E73DF;"><b>REMOVE JOURNAL INFO</b></h2><br><br>
-    </div>
-    
     <div class="container">
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#remove-volume">Remove Volume</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#remove-issue">Remove Issue</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#remove-article">Remove Article</a>
-            </li>
-        </ul>
-        <br>
-      
-        <div class="tab-content">
-            <div id="remove-volume" class="tab-pane fade show active">
-                <form>
-                    <div class="form-group">
-                        <label for="journal-volume">Journal:</label>
-                        <select id="journal-volume" class="form-control">
-                            <option value="">Select a Journal</option>
-                            <option value="journal-a">Journal A</option>
-                            <option value="journal-b">Journal B</option>
-                            <option value="journal-c">Journal C</option>
-                        </select>
+        <div class="row">
+            <div class="col-md-6 offset-md-3"> <!-- Centering the form for medium and large screens -->
+                <div class="form-box">
+                    <div class="card-header py-3">
+                        <h4 class="m-0 font-weight-bold text-primary" style="text-align: center;">Remove Journal Components</h4><br>
+                    </div>                   
+                    <div class="container">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#remove-volume">Remove Volume</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#remove-issue">Remove Issue</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#remove-article">Remove Article</a>
+                            </li>
+                        </ul>
+                        <br>
+                    
+                        <div class="tab-content">
+                            <div id="remove-volume" class="tab-pane fade show active">
+                                <form id="removeForm" method="post" action="/remove_via/">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="item_type" value="volume">
+                                    <div class="form-group">
+                                        <label for="volume-number">Volume:</label>
+                                        <select id="volume-number" name="item_id" class="form-control">
+                                            {% for volume in volumes %}
+                                                <option value="{{ volume.pk }}">{{ volume.volume }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmationModal">Remove Volume</button>
+                                </form>
+                            </div>
+                            <div id="remove-issue" class="tab-pane fade">
+                                <form id="removeForm" method="post" action="/remove_via/">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="item_type" value="issue">
+                                    <div class="form-group">
+                                        <label for="volume-number-issue">Volume:</label>
+                                        <select id="volume-number-issue" name="item_id" class="form-control">
+                                            {% for volume in volumes %}
+                                                <option value="{{ volume.pk }}">{{ volume.volume }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="issue-number">Issue Number:</label>
+                                        <select id="issue-number" name="item_id" class="form-control">
+                                            {% for issue in issues %}
+                                                <option value="{{ issue.pk }}">Issue {{ issue.pk }}</option>
+                                            {% endfor %}
+                                        </select>
+                    
+                                    </div>
+                                    <button type="button" class="btn btn-success btn-block mt-3" data-toggle="modal" data-target="#confirmationModal">Remove</button>
+                                </form>
+                            </div>
+                            <div id="remove-article" class="tab-pane fade">
+                                <form id="removeForm" method="post" action="/remove_via/">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="item_type" value="article">
+                                    <div class="form-group">
+                                        <label for="volume-number-article">Volume:</label>
+                                        <select id="volume-number-article" name="item_id" class="form-control">
+                                            {% for volume in volumes %}
+                                                <option value="{{ volume.pk }}">{{ volume.volume }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="issue-number-article">Issue Number:</label>
+                                        <select id="issue-number-article" name="item_id" class="form-control">
+                                            {% for issue in issues %}
+                                                <option value="{{ issue.pk }}">Issue {{ issue.pk }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="article">Article:</label>
+                                        <select id="article" name="item_id" class="form-control">
+                                            {% for article in articles %}
+                                                <option value="{{ article.pk }}">Article {{ article.pk }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmationModal">Remove Article</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="volume-number">Volume:</label>
-                        <select id="volume-number" class="form-control">
-                            <option value="">Select a Volume</option>
-                            <option value="volume-1">Volume 1</option>
-                            <option value="volume-2">Volume 2</option>
-                            <option value="volume-3">Volume 3</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="color: white;">Remove Volume</button>
-                </form>
-            </div>
-            <div id="remove-issue" class="tab-pane fade">
-                <form>
-                    <div class="form-group">
-                        <label for="journal-issue">Journal:</label>
-                        <select id="journal-issue" class="form-control">
-                            <option value="">Select a Journal</option>
-                            <option value="journal-x">Journal X</option>
-                            <option value="journal-y">Journal Y</option>
-                            <option value="journal-z">Journal Z</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="volume-number-issue">Volume:</label>
-                        <select id="volume-number-issue" class="form-control">
-                            <option value="">Select a Volume</option>
-                            <option value="volume-a">Volume A</option>
-                            <option value="volume-b">Volume B</option>
-                            <option value="volume-c">Volume C</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="issue-number">Issue Number:</label>
-                        <select id="issue-number" class="form-control">
-                            <option value="">Select an Issue</option>
-                            <option value="volume-a">Issue 1</option>
-                            <option value="volume-b">Issue 2</option>
-                            <option value="volume-c">Issue 3</option>
-                        </select>
-    
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="color: white;">Remove Issue</button>
-                </form>
-            </div>
-            <div id="remove-article" class="tab-pane fade">
-                <form>
-                    <div class="form-group">
-                        <label for="journal-article">Journal:</label>
-                        <select id="journal-article" class="form-control">
-                            <option value="">Select a Journal</option>
-                            <option value="journal-p">Journal P</option>
-                            <option value="journal-q">Journal Q</option>
-                            <option value="journal-r">Journal R</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="volume-number-article">Volume:</label>
-                        <select id="volume-number-article" class="form-control">
-                            <option value="">Select a Volume</option>
-                            <option value="volume-x">Volume X</option>
-                            <option value="volume-y">Volume Y</option>
-                            <option value="volume-z">Volume Z</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="issue-number-article">Issue Number:</label>
-                        <select id="issue-number-article" class="form-control">
-                            <option value="">Select an Issue</option>
-                            <option value="issue-5">5</option>
-                            <option value="issue-6">6</option>
-                            <option value="issue-7">7</option>
-                            <option value="issue-8">8</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="article">Article:</label>
-                        <select id="article" class="form-control">
-                            <option value="">Select an Article</option>
-                            <option value="article-1">Article 1</option>
-                            <option value="article-2">Article 2</option>
-                            <option value="article-3">Article 3</option>
-                            <option value="article-4">Article 4</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="color: white;">Remove Article</button>
-                </form>
+                </div>
             </div>
         </div>
     </div>
+    <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmationModalLabel">Confirmation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to remove {{ item_type }} "{{ item_name }}"?
+                    {% if item_type == "volume" %}
+                        This action will also remove {{ issue_count }} issues and {{ article_count }} articles associated with it.
+                    {% elif item_type == "issue" %}
+                        This action will also remove {{ article_count }} articles associated with it.
+                    {% endif %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <a href="#" class="btn btn-danger" id="confirmRemove">Remove</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <script>
+        $(document).ready(function(){
+            $('#confirmRemoveBtn').click(function(){
+                // Handle remove action here
+            });
+
+            $('#removeForm').submit(function(event){
+                event.preventDefault(); // Prevent form submission
+                var itemType = $('input[name="item_type"]').val(); // Get item type
+                var itemId = $('select[name="item_id"]').val(); // Get item ID
+                // AJAX request to fetch related items
+                $.ajax({
+                    type: 'GET',
+                    url: '/get_related_items/', // Your URL to fetch related items
+                    data: {item_type: itemType, item_id: itemId},
+                    dataType: 'json',
+                    success: function(response){
+                        if(response.success){
+                            var itemsList = $('#itemsToRemoveList');
+                            itemsList.empty(); // Clear existing items
+                            // Loop through related items and add to list
+                            $.each(response.items, function(index, item){
+                                itemsList.append('<li>' + item + '</li>');
+                            });
+                            $('#confirmationModal').modal('show'); // Show confirmation modal
+                        } else {
+                            // Handle error response
+                            console.log(response.message);
+                        }
+                    },
+                    error: function(xhr, status, error){
+                        // Handle AJAX error
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $('#removeButton').click(function() {
+            var item_id = $(this).data('id');
+            var item_name = $(this).data('name');
+            var item_type = $(this).data('type');
+            var issue_count = $(this).data('issue-count');
+            var article_count = $(this).data('article-count');
+    
+            $('#confirmationModal').modal('show');
+            $('#confirmationModal').find('.modal-body').html('Are you sure you want to remove ' + item_type + ' "' + item_name + '"?');
+            $('#confirmationModal').find('.modal-body').append('<br>');
+    
+            if (item_type == 'volume') {
+                $('#confirmationModal').find('.modal-body').append('This action will also remove ' + issue_count + ' issues and ' + article_count + ' articles associated with it.');
+            } else if (item_type == 'issue') {
+                $('#confirmationModal').find('.modal-body').append('This action will also remove ' + article_count + ' articles associated with it.');
+            }
+    
+            $('#confirmRemove').attr('href', '/remove_via/' + item_type + '/' + item_id + '/');
+        });
+    </script>
+    
 
     <!-- -----------------------------------------------------===============================--------------------------------------------------------------------- -->
 
