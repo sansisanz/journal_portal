@@ -39,3 +39,4 @@ urlpatterns = [
     path('get_notification_details/<int:notification_id>/', views.get_notification_details, name='get_notification_details'),
      path('get_editor_details/<int:editor_id>/', views.get_editor_details, name='get_editor_details'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

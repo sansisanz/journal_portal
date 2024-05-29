@@ -33,24 +33,24 @@
             <div class="card-header py-3">
                 <h4 class="m-0 font-weight-bold text-primary">ARTICLES</h4>
             </div>
-            <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
+                                <th>SI NO</th>
                                 <th>ARTICLE TITLE</th>
                                 <th>AUTHOR(S)</th>
                                 <th>JOURNAL NAME</th>
                                 <th>VOLUME</th>
                                 <th>ISSUE</th>
                                 <th>VIEW</th>
-                                <th>APPROVE</th>
-                                <th>REJECT</th>
+                                <th>ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for article in articles %}
                                 <tr>
+                                    <td>{{ forloop.counter }}</td>
                                     <td>{{ article.article_title }}</td>
                                     <td>
                                         {{ article.author1 }}{% if article.author2 %}, {{ article.author2 }}{% endif %}{% if article.author3 %}, {{ article.author3 }}{% endif %}
@@ -58,17 +58,38 @@
                                     <td>{{ article.issue_id.volume_id.journal_id.journal_name }}</td>
                                     <td>{{ article.issue_id.volume_id.volume }}</td>
                                     <td>{{ article.issue_id.issue_no }}</td>
-                                    <td><a href="/view_article/{{ article.article_id }}" class="btn btn-primary text-white font-weight-bolder btn-user btn-block col-sm-10">View Article</a></td>
-                                    <td><a href="/approve_article/{{ article.article_id }}"  class="btn btn-success font-weight-bolder btn-user btn-block col-sm-10">Approve</a></td>
-                                    <td><a href="/reject_article/{{ article.article_id }}" class="btn btn-danger font-weight-bolder btn-user btn-block col-sm-10">Reject</a></td>
+                                    <td>
+                                        <a href="/view_article/{{ article.article_id }}/" class="btn btn-primary text-white font-weight-bolder btn-user btn-block col-sm-10">View Article</a>
+                                    </td>
+                                    <td>
+                                        {% if article.status == 'pending approval' %}
+                                            <a href="/approve_article/{{ article.article_id }}/" class="btn btn-success font-weight-bolder btn-user btn-block col-sm-10">Approve</a>
+                                            <a href="/reject_article/{{ article.article_id }}/" class="btn btn-danger font-weight-bolder btn-user btn-block col-sm-10">Reject</a>
+                                        {% elif article.status == 'approved' %}
+                                            <button class="btn btn-success font-weight-bolder btn-user btn-block col-sm-10" disabled>Approved</button>
+                                        {% elif article.status == 'rejected' %}
+                                            <button class="btn btn-danger font-weight-bolder btn-user btn-block col-sm-10" disabled>Rejected</button>
+                                        {% endif %}
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
-                    </table>
-                </div>
+                    </table>                    
+                    <div class="card-body">
+                        {% if messages %}
+                            <div class="container mt-4">
+                                {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
             </div>
         </div>
     </div>
+    
    
 
     <!-- Bootstrap core JavaScript-->
