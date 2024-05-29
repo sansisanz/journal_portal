@@ -30,12 +30,6 @@
           padding: 20px;
           margin-bottom: 70%;
         }
-        .center-content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px; /* Optional: Add space between the link and the button */
-        }
     </style>
 </head>
 
@@ -43,53 +37,96 @@
 
     {% include 'editor_sidebar.html' %}
                    
-                <!-- journal form -->            
-                <div class="container">
-                    <div class="row">
-                      <div class="col-md-6 offset-md-3"> <!-- Centering the form for medium and large screens -->
-                        <div class="form-box">
-                            <div class="card-header py-3">
-                                <h4 class="m-0 font-weight-bold text-primary" style="text-align: center;">Add Volumes and Issues</h4>
-                            </div><br>  
-                            {% if messages %}
-                                {% for message in messages %}
-                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                        {{ message }}
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                {% endfor %}
-                            {% endif %}
-                            <form method="post" enctype="multipart/form-data" action="/add_vic/{{ journal_id }}/">
-                                {% csrf_token %}
-                                <input type="hidden" name="journal_id" value="{{ journal_id }}">
-                                <div class="form-group">
-                                    <label for="volume">Volume Name or Number:</label>
-                                    <input type="text" class="form-control" id="volume" name="volume" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="coverImage">Cover Image:</label>
-                                    <input type="file" class="form-control-file" id="coverImage" name="cover_image" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="numIssues">Number of Issues:</label>
-                                    <input type="number" class="form-control" id="numIssues" name="num_issues" min="1" required>
-                                </div>                
-                                <div class="text">
-                                    <button type="submit" class="btn btn-success btn-block mt-3" id="submitVic">Submit</button>
-                                </div>          
-                            </form>
+    <div class="container" style="width: 60%;">
+        <!-- Form for adding volumes -->
+        <div class="form-box mb-5">
+            <div class="card-header py-3">
+                <h4 class="m-0 font-weight-bold text-primary" style="text-align: center;">Create Volume</h4>
+            </div><br>
+            {% if messages %}
+                {% for message in messages %}
+                    {% if 'add_vol_alert' in message.tags %}
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
-                    </div>
+                    {% elif 'add_vol_success' in message.tags %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            <form id="add_vol" method="post" enctype="multipart/form-data" action="/add_vic/{{ journal_id }}/">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="add_vol">
+                <input type="hidden" name="journal_id" value="{{ journal_id }}">
+                <div class="form-group">
+                    <label for="volume">New Volume:</label>
+                    <input type="text" class="form-control" id="volume" name="volume" required>
+                </div>                                    
+                <button type="submit" class="btn btn-success btn-block mt-3">Submit</button>
+            </form>
+        </div>
+    
+        <!-- Form for adding issues -->
+        <div class="form-box">
+            <div class="card-header py-3">
+                <h4 class="m-0 font-weight-bold text-primary" style="text-align: center;">Add Issue</h4>
+            </div><br>
+            {% if messages %}
+                {% for message in messages %}
+                    {% if 'add_issue_alert' in message.tags %}
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% elif 'add_issue_success' in message.tags %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            <form id="add_issue" method="post" enctype="multipart/form-data" action="/add_vic/{{ journal_id }}/">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="add_issue">
+                <input type="hidden" name="journal_id" value="{{ journal_id }}">
+                <div class="form-group">
+                    <label for="volumeSelect">Select Volume:</label>
+                    <select class="form-control" id="volumeSelect" name="volume_id" required>
+                        {% for volume in volumes %}
+                            <option value="{{ volume.volume_id }}">{{ volume.volume }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
-            </div>    
+                <div class="form-group">
+                    <label for="issueNumber">Issue Number:</label>
+                    <input type="number" class="form-control" id="issueNumber" name="issue_number" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="coverImage">Cover Image:</label>
+                    <input type="file" class="form-control-file" id="coverImage" name="cover_image" required>
+                </div>
+                <button type="submit" class="btn btn-success btn-block mt-3">Submit</button>
+            </form>                
+        </div>
+    </div>
+    
+                     
                  
                 
-                
-
-
-    <!-- Bootstrap core JavaScript-->
+                <!-- Bootstrap core JavaScript-->
        <!-- Bootstrap core JavaScript-->
        <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
        <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>

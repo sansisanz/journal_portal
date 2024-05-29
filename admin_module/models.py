@@ -130,7 +130,6 @@ class volume_table(models.Model):
     volume_id = models.BigAutoField(primary_key=True)
     journal_id = models.ForeignKey(journal_table,default="1",on_delete=models.SET_DEFAULT)
     volume = models.CharField(max_length=50, default='')
-    cover_image = models.ImageField(upload_to='volume_covers/', default='')  # Updated to ImageField
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
     created_by=models.CharField(max_length=50)
@@ -149,6 +148,7 @@ class issue_table(models.Model):
     updated_at=models.DateTimeField(auto_now_add=True)
     created_by=models.CharField(max_length=50)
     status=models.CharField(max_length=25)
+    cover_image = models.ImageField(upload_to='issue_covers/', default='')
 
     class Meta:
         db_table="issue_table"

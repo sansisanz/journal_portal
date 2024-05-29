@@ -40,47 +40,118 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 <style>  
   body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 0;
-    }
-    .header {
-      text-align: center;
-      padding: 20px;
-      background-color: #fff;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .manga-grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-      padding: 20px;
-    }
-    .manga-item {
-      background-color: #0a0041;
-      margin: 10px;
-      text-align: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      width: 250px; /* Increased width */
-      border-radius: 4px;
-      overflow: hidden;
-    }
-    .manga-item img {
-      width: 100%;
-      height: 350px; /* Fixed height for uniformity */
-    }
-    .manga-info {
-      padding: 15px; /* Increased padding */
-      font-size: 20px; /* Increased font size */
-    }
-    .manga-info a {
-      text-decoration: none;
-      color: #ffffff;
-    }
-    .manga-info a:hover {
-      color: #57f80dfd;
-    }
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        #footer {
+            background: #222;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: auto;
+        }
+
+        #footer .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        #footer h3 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        #footer p {
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+
+        .social-links {
+            margin: 20px 0;
+        }
+
+        .social-links a {
+            font-size: 1.2em;
+            color: #fff;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+
+        .social-links a:hover {
+            color: #007bff;
+        }
+
+        .copyright {
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+  /* Journal Grid Section Styles */
+  #journal-grid {
+    background-color: #f8f9fa;
+    padding: 30px 0;
+  }
+
+  .journal-item {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .journal-item:hover {
+    transform: translateY(-5px);
+  }
+
+  .journal-img {
+    overflow: hidden;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .journal-img img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .journal-img img:hover {
+    transform: scale(1.05);
+  }
+
+  .journal-info {
+    padding: 15px;
+  }
+
+  .journal-info h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+
+  .journal-info p {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 0;
+  }
+
+  .journal-info a {
+    text-decoration: none;
+    color: inherit; /* Inherit the color from the parent */
+  }
+
+  .journal-info a:hover {
+    color: #57f80dfd; /* Change color on hover */
+  }
+
   </style>
 
 </head>
@@ -88,79 +159,60 @@
 <body>
     {% include 'public_navbar.html' %}
 
+    
+
 
     <!-- ========= BAck Volume ========= -->
-    <section id="alljournals" class="alljournals">
+    <!-- Journal Grid Section -->
+    <section id="journal-grid" class="journal-grid">
       <div class="container">
         <div class="section-title" data-aos="zoom-out">
           <br><br>
             <h2>All Journals</h2>
             <p>Our Back volumes</p>
         </div>
-        <div class="manga-grid">
-          <div class="manga-item">
-              <img src="{% static 'img/bc1.jpg' %}" alt="JoJo's Bizarre Adventure: Part 6">
-              <div class="manga-info">
-                  <a href="/p_volume/">
-                      <p>One Piece</p>
-                      <p>Volume 3 issue 2</p>
-                  </a>
-              </div>
+        <div class="row">
+          {% for item in volume_issues_list %}
+          <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="journal-item" data-aos="fade-up" data-aos-delay="100">
+              <a href="/issue_detail/{{ issue.issue_id }}/">
+                <div class="journal-img">
+                  <img src="{{ item.cover_image }}" class="img-fluid" alt="{{ item.volume }}">
+                </div>
+                <div class="journal-info">
+                  <h4><a href="/issue_detail/{{ issue.issue_id }}/">{{ item.volume }}{% if item.issue_no %} - Issue: {{ item.issue_no }}{% endif %}</a></h4>
+                </div>
+              </a>
+            </div>
           </div>
-          <div class="manga-item">
-              <img src="{% static 'img/bc2.jpg' %}" alt="Chainsaw Man">
-              <div class="manga-info">
-                <a href="/p_home/">
-                  <p>One Piece</p>
-                  <p>Volume 3 issue 1</p>
-                </a>
-              </div>
-          </div>
-          <div class="manga-item">
-              <img src="{% static 'img/bc3.jpg' %}" alt="Boruto: Two Blue Vortex">
-              <div class="manga-info">
-                  <a href="/p_home/">
-                    <p>One Piece</p>
-                    <p>Volume 2 issue 2</p>
-                  </a>
-              </div>
-          </div>
-          <div class="manga-item">
-              <img src="{% static 'img/bc4.jpg' %}" alt="Dandadan">
-              <div class="manga-info">
-                  <a href="/p_home/">
-                    <p>One Piece</p>
-                    <p>Volume 2 issue 1</p>
-                  </a>
-              </div>
-          </div>
+          {% endfor %}
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+
 
   
   
   <!-- ========= Back Volume End========= -->
 
 
-      <!-- ======= Footer ======= -->
+<!-- ======= Footer ======= -->
     <footer id="footer">
         <div class="container">
-          <h3>CU JOURNAL HUB</h3>
-          <p>"Empowering discovery and shaping tomorrow through cutting-edge research."</p>
-          <div class="social-links">
-            <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-            <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-            <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-            <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-            <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
-          </div>
-          <div class="copyright">
-            &copy; Copyright <strong><span>CU JOURNAL HUB</span></strong>. All Rights Reserved
-          </div>
-          <!-- <div class="credits"></div> -->
+            <h3>CU JOURNAL HUB</h3>
+            <p>"Empowering discovery and shaping tomorrow through cutting-edge research."</p>
+            <div class="social-links">
+                <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+                <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+                <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+                <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
+                <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+            </div>
+            <div class="copyright">
+                &copy; Copyright <strong><span>CU JOURNAL HUB</span></strong>. All Rights Reserved
+            </div>
         </div>
-      </footer>
+    </footer>
     <!-- End Footer -->
 
 <!-- ---------------------------------------------------------------------------------------------------------------------------------------------------------------- -->

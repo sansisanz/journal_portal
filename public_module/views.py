@@ -4,14 +4,11 @@ import hashlib
 import random
 from django.core.mail import send_mail
 from django.contrib import messages
-from admin_module.models import author_table, ea_table,volume_table,journal_table,dept_table,eb_table,notification_table,gl_table
+from admin_module.models import article_table, author_table, ea_table, issue_table,volume_table,journal_table,dept_table,eb_table,notification_table,gl_table
 
 # Create your views here.
 def p_index(request):
     return render(request, 'p_index.html')
-
-def p_alljournals(request):
-    return render(request, 'p_alljournals.html')
 
 def p_ethics(request,id):
     e_data = journal_table.objects.get(journal_id=id)
@@ -28,6 +25,39 @@ def p_journals(request):
     j_data = journal_table.objects.all()
 
     return render(request, 'p_journals.html',{'jdata':j_data})
+
+def p_alljournals(request, journal_id):
+    # Retrieve the selected journal
+    selected_journal = journal_table.objects.get(journal_id=journal_id)
+
+    # Retrieve all volumes for the selected journal
+    volumes = volume_table.objects.filter(journal_id=journal_id)
+
+    # Create a list to store volume and issue information
+    volume_issues_list = []
+
+    for volume in volumes:
+        # Retrieve issues for each volume and sort them by creation time (newest first)
+        issues = issue_table.objects.filter(volume_id=volume.volume_id).order_by('-created_at')
+
+        # Count the number of issues for the volume
+        issue_count = issues.count()
+
+        for index, issue in enumerate(issues):
+            cover_image_url = issue.cover_image.url if issue.cover_image else 'admin_module/static/img/book_cover.jpeg'
+            volume_issues_list.append({
+                'volume': volume.volume,
+                'issue_no': issue.issue_no if issue_count > 1 else None,  # Only include issue number if there are multiple issues
+                'cover_image': cover_image_url,
+                'created_at': issue.created_at,
+                'issue_id': issue.issue_id  # Add issue_id to the dictionary
+            })
+
+    # Sort the volume_issues_list by created_at in descending order
+    volume_issues_list = sorted(volume_issues_list, key=lambda x: x['created_at'], reverse=True)
+
+    return render(request, 'p_alljournals.html', {'selected_journal': selected_journal, 'volume_issues_list': volume_issues_list, 'issue':issue})
+
 
 def p_authorreg(request):
     return render(request, 'p_authorreg.html')
@@ -47,6 +77,25 @@ def p_home(request,id):
     p_data = eb_table.objects.filter(journal_id=id)
     n_data = notification_table.objects.filter(journal_id=id)
     return render(request, 'p_home.html',{'jdata':j_data,'vdata':v_data,'pdata':p_data,'ndata':n_data})
+
+def p_home(request, id):
+    # Fetch the journal data
+    j_data = journal_table.objects.get(journal_id=id)
+    
+    # Fetch the latest issue for the journal
+    latest_issue = issue_table.objects.filter(volume_id__journal_id=id).order_by('-issue_id').first()
+    
+    # Fetch editorial board and notifications data
+    p_data = eb_table.objects.filter(journal_id=id)
+    n_data = notification_table.objects.filter(journal_id=id)
+    
+    return render(request, 'p_home.html', {
+        'jdata': j_data,
+        'latest_issue': latest_issue,
+        'pdata': p_data,
+        'ndata': n_data
+    })
+
 
 def read(request):
     return render(request, 'read.html') 
@@ -174,8 +223,28 @@ def author_logout(request):
     return redirect("/p_index/#cta")
 
         
-def p_volume(request):
-    return render(request, 'p_volume.html')
+def issue_detail(request, issue_id):
+    # Retrieve the selected issue
+    selected_issue = issue_table.objects.get(issue_id=issue_id)
+
+    # Retrieve articles associated with the selected issue
+    articles = article_table.objects.filter(issue_id=issue_id)
+
+    # Create a list to store article information
+    articles_list = []
+
+    # Iterate over articles and format author names
+    for article in articles:
+        authors = [article.author1, article.author2, article.author3]
+        authors = [author.strip() for author in authors if author.strip()]  # Remove empty author names
+        authors_str = ' and '.join(authors[:-1]) + ', ' + authors[-1] if len(authors) > 1 else authors[0]
+        articles_list.append({
+            'title': article.article_title,
+            'authors': authors_str
+        })
+
+    return render(request, 'issue_detail.html', {'selected_issue': selected_issue, 'articles_list': articles_list})
+
     
     
     

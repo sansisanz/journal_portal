@@ -36,3 +36,4 @@ urlpatterns = [
     path('edit_journals/', views.edit_journals),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

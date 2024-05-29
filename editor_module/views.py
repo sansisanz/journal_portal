@@ -1,5 +1,10 @@
+import os
+from PyPDF2 import PdfMerger
+from weasyprint import HTML, html
+from django.template.loader import render_to_string
+from django.conf import settings
 from django.contrib import messages
-from django.http import FileResponse, JsonResponse
+from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render,redirect
 from django.urls import reverse
 from admin_module.models import article_table, ea_table, dept_table, gl_table, journal_table, notification_table, volume_table, issue_table, eb_table
@@ -98,39 +103,71 @@ def add_vic(request, journal_id):
         return redirect('/login')
 
     empid = request.session['empid']
-    user_name = request.session['editor_name']  # Assuming user's name is stored in session
+    user_name = request.session['editor_name']
 
     if request.method == 'POST':
-        # Retrieve form data
-        volume_name = request.POST.get('volume')
-        cover_image = request.FILES.get('cover_image')
-        num_issues = int(request.POST.get('num_issues'))
+        form_type = request.POST.get('form_type')
 
-        # Get the journal corresponding to the provided journal_id
-        journal = journal_table.objects.get(pk=journal_id)
+        if form_type == 'add_vol':
+            # Retrieve form data for adding volume
+            volume_name = request.POST.get('volume')
 
-        # Create a new volume entry for the journal
-        new_volume = volume_table.objects.create(
-            journal_id=journal, 
-            volume=volume_name, 
-            cover_image=cover_image, 
-            created_by=user_name,
-            status='active'
-        )
+            # Get the journal corresponding to the provided journal_id
+            journal = journal_table.objects.get(pk=journal_id)
 
-        # Create issues for the volume
-        for issue_number in range(1, num_issues + 1):
-            issue_table.objects.create(
-                volume_id=new_volume, 
-                issue_no=str(issue_number),
+            # Check if volume with the same name already exists
+            if volume_table.objects.filter(journal_id=journal, volume=volume_name).exists():
+                messages.warning(request, 'Volume with the same name already exists.', extra_tags='add_vol_alert')
+                return render(request, 'add_vic.html', {
+                    'journal_id': journal_id,
+                    'volumes': volume_table.objects.filter(journal_id=journal_id)
+                })
+
+            # Create a new volume entry for the journal
+            new_volume = volume_table.objects.create(
+                journal_id=journal,
+                volume=volume_name,
                 created_by=user_name,
                 status='active'
             )
 
-        # Redirect to a success page or back to the journal list
-        return redirect('/editor_assignedjournal/')  # Change this to your success URL
+            messages.success(request, 'Volume added successfully.', extra_tags='add_vol_success')
+            return redirect('/add_vic/{}/'.format(journal_id))   # Change this to your success URL
 
-    return render(request, 'add_vic.html', {'journal_id': journal_id})
+        elif form_type == 'add_issue':
+            # Retrieve form data for adding issue
+            volume_id = request.POST.get('volume_id')
+            issue_number = int(request.POST.get('issue_number'))
+            cover_image = request.FILES.get('cover_image')
+
+            # Check if the issue already exists
+            if issue_table.objects.filter(volume_id=volume_id, issue_no=str(issue_number)).exists():
+                messages.warning(request, 'Issue already exists.', extra_tags='add_issue_alert')
+                return render(request, 'add_vic.html', {
+                    'journal_id': journal_id,
+                    'volumes': volume_table.objects.filter(journal_id=journal_id)
+                })
+
+            # Create a new issue for the selected volume
+            issue_table.objects.create(
+                volume_id=volume_table.objects.get(pk=volume_id),
+                issue_no=str(issue_number),
+                cover_image=cover_image,
+                created_by=user_name,
+                status='active'
+            )
+
+            messages.success(request, 'Issue added successfully.', extra_tags='add_issue_success')
+            return redirect('/add_vic/{}/'.format(journal_id))  # Change this to your success URL
+
+    # On GET request, render the form with volume options
+    return render(request, 'add_vic.html', {
+        'journal_id': journal_id,
+        'volumes': volume_table.objects.filter(journal_id=journal_id)
+    })
+
+
+
 #---------------------------------------------------------------------------------------------------------------
 
 def editorprofile(request):
@@ -217,7 +254,6 @@ def notify(request):
         return redirect('/login')
     
 #---------------------------------------------------------------------------------------------------------------    
-
 def view_articles(request):   
     if request.session.has_key('empid'):
         empid = request.session['empid']
@@ -233,20 +269,98 @@ def view_articles(request):
 
 def view_article(request, article_id):
     article = get_object_or_404(article_table, pk=article_id)
-    return FileResponse(article.article_file)
+    # Assuming the article_file field contains the path to the PDF file
+    pdf_path = os.path.join(settings.MEDIA_ROOT, str(article.article_file))
+    with open(pdf_path, 'rb') as pdf_file:
+        response = HttpResponse(pdf_file.read(), content_type='application/pdf')
+        response['Content-Disposition'] = 'inline; filename=' + os.path.basename(pdf_path)
+        return response
 
 def approve_article(request, article_id):
     article = get_object_or_404(article_table, pk=article_id)
-    article.status = 'approved'
-    article.save()
+    
+    if article.status == 'approved':
+        messages.warning(request, 'The article has already been approved.')
+    else:
+        # Update article status
+        article.status = 'approved'
+        article.save()
+        
+        # Generate the PDF from the template
+        pdf_file_path = generate_article_pdf(article)
+        
+        # Merge the generated PDF with the article's PDF
+        merged_pdf_path = merge_pdfs(pdf_file_path, article.article_file.path)
+        
+        # Update the article file with the merged PDF
+        article.article_file.name = os.path.relpath(merged_pdf_path, settings.MEDIA_ROOT)
+        article.save()
+        
+        # Add a success message
+        messages.success(request, 'The article has been successfully approved.')
+    
     return redirect('/view_articles/')
+
+def generate_article_pdf(article):
+    # Fetch related details
+    journal = article.issue_id.volume_id.journal_id
+    department = journal.dept_id.dept_name
+    volume = article.issue_id.volume_id.volume
+    issue = article.issue_id.issue_no
+    
+    # Prepare context for the template
+    context = {
+        'journal_name': journal.journal_name,
+        'department': department,
+        'volume': volume,
+        'issue': issue,
+        'article_title': article.article_title,
+        'authors': ', '.join(filter(None, [article.author1, article.author2, article.author3])),
+        'url': f'{settings.MEDIA_URL}merged_pdfs/article_{os.path.basename(article.article_file.name)}',
+        'published_by': journal.journal_name,
+    }
+    
+    # Render HTML content from template
+    html_content = render_to_string('pdftemp.html', context)
+    
+    # Define the path for the generated PDF
+    generated_pdfs_dir = os.path.join(settings.MEDIA_ROOT, 'generated_pdfs')
+    os.makedirs(generated_pdfs_dir, exist_ok=True)
+    pdf_file_path = os.path.join(generated_pdfs_dir, f'{article.article_id}_pg1.pdf')
+    
+    # Generate PDF file from HTML content
+    HTML(string=html_content).write_pdf(pdf_file_path)
+    
+    return pdf_file_path
+
+def merge_pdfs(generated_pdf_path, article_pdf_path):
+    merger = PdfMerger()
+    
+    # Append the generated PDF first, then the article PDF
+    merger.append(generated_pdf_path)
+    merger.append(article_pdf_path)
+    
+    merged_pdfs_dir = os.path.join(settings.MEDIA_ROOT, 'merged_pdfs')
+    os.makedirs(merged_pdfs_dir, exist_ok=True)
+    merged_pdf_path = os.path.join(merged_pdfs_dir, f'article_{os.path.basename(article_pdf_path)}')
+    with open(merged_pdf_path, 'wb') as merged_file:
+        merger.write(merged_file)
+    
+    return merged_pdf_path
 
 def reject_article(request, article_id):
     article = get_object_or_404(article_table, pk=article_id)
-    article.status = 'rejected'
-    article.save()
+    
+    if article.status == 'pending approval':
+        article.status = 'rejected'
+        article.save()
+        messages.success(request, 'The article has been rejected.')
+    elif article.status == 'rejected':
+        messages.warning(request, 'The article has already been rejected.')
+    else:
+        messages.warning(request, 'The article cannot be rejected.')
+    
     return redirect('/view_articles/')
-
 
 #---------------------------------------------------------------------------------------------------------------    
 
