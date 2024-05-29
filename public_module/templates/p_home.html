@@ -84,34 +84,39 @@
         <div class="container"></div>   
         <!-- header for journal -->
   
-          <section id="cta" class="cta">
-            <div class="container">  <div class="row">
-              <div class="col-sm-4">
-                {% if vdata %}
-                    <img src="{{ vdata.cover_image.url }}" alt="Journal Cover Image" style="width: 250px; height: auto;">
-                {% else %}
-                    <p>No cover image available.</p>
-                {% endif %}
+        <section id="cta" class="cta">
+          <div class="col-12 text-left mb-3">
+            <p>Visit count: 99999</p>
+          <div class="container">
+              <div class="row justify-content-center align-items-center">                  
+                  <div class="col-sm-5 text-center">
+                      {% if latest_issue %}
+                          <img src="{{ latest_issue.cover_image.url }}" alt="Journal Cover Image" style="width: 100%; height: auto; max-width: 400px;">
+                      {% else %}
+                          <p>No cover image available.</p>
+                      {% endif %}
+                  </div>
+                  <div class="col-sm-7 text-center">
+                      <h1 class="j_menu_h1" style="text-transform: capitalize;">{{ jdata.journal_name }}</h1>
+                      <h4 class="j_menu_h4" style="text-transform: capitalize;">{{ jdata.dept_id.dept_name }}</h4>
+                      <br><br>
+                      <nav class="journal-menu">
+                          <ul>
+                              <li><a href="/p_home/{{ jdata.journal_id }}#aim&scope">Aim & Scopes</a></li>
+                              <li><a href="/p_home/{{ jdata.journal_id }}#editorialboard">Editorial Board</a></li>
+                              <li><a href="/p_home/{{ jdata.journal_id }}#submitarticle">Submit Article</a></li>
+                              <li><a href="/p_home/{{ jdata.journal_id }}#journalupdates">Journal Updates</a></li>
+                              <li><a href="/p_guidelines/{{ jdata.journal_id }}">Submission Guidelines</a></li>
+                              <li><a href="/p_ethics/{{ jdata.journal_id }}">Ethics & Disclosure</a></li>
+                              <li><a href="/p_alljournals/{{ jdata.journal_id }}/">All Journals</a></li>
+                              <li><a href="/p_home/{{ jdata.journal_id }}#contact">Contact Us</a></li>
+                          </ul>
+                      </nav>
+                  </div>
               </div>
-                <div class="col-sm-8">
-                  <h1 class="j_menu_h1 text-center"  style="text-transform: capitalize;">{{jdata.journal_name}}</h1>  <h4 class="j_menu_h4 text-center" style="text-transform: capitalize;">{{jdata.dept_id.dept_name}}</h4>
-                <br><br>
-                  <nav class="journal-menu">
-                    <ul>                
-                      <li><a href="/p_home/{{jdata.journal_id}}#aim&scope">Aim & Scopes</a></li>
-                      <li><a href="/p_home/{{jdata.journal_id}}#editorialboard">Editorial Board</a></li>
-                      <li><a href="/p_home/{{jdata.journal_id}}#submitarticle">Submit Article</a></li>
-                      <li><a href="/p_home/{{jdata.journal_id}}#journalupdates">Journal Updates</a></li>
-                      <li><a href="/p_guidelines/{{jdata.journal_id}}">Submission Guidelines</a></li>
-                      <li><a href="/p_ethics/{{jdata.journal_id}}">Ethics & Disclosure</a></li>
-                      <li><a href="/p_alljournals/">All Journals</a></li>
-                      <li><a href="/p_home/{{jdata.journal_id}}#contact">Contact Us</a></li>
-                    </ul>
-                  </nav>
-                </div>
-              </div>
-            </div>
-          </section>
+          </div>
+      </section>       
+      
           <!-- Your content here -->
       </section>
     <!-- aims and scope section -->

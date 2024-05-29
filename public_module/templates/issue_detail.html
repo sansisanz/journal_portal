@@ -40,12 +40,64 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
 <style>
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-}
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        #footer {
+            background: #222;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: auto;
+        }
+
+        #footer .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        #footer h3 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        #footer p {
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+
+        .social-links {
+            margin: 20px 0;
+        }
+
+        .social-links a {
+            font-size: 1.2em;
+            color: #fff;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+
+        .social-links a:hover {
+            color: #007bff;
+        }
+
+        .copyright {
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        
 .container {
     max-width: 800px;
     margin: 0 auto;
@@ -131,44 +183,16 @@ body {
                 <p>Articles</p>
             </div>
             <ul class="chapter-list">
+                {% for article in articles_list %}
                 <li class="chapter-item">
-                    <div class="chapter-info">Unraveling the Mysteries: Exploring the Hidden Lore of One Piece <br> 
-                        - Subin Das</div>
+                    <div class="chapter-info">{{ article.title }}<br>- {{ article.authors }}</div>
                     <div class="chapter-status"><span>Read</span></div>
                 </li>
-                <li class="chapter-item">
-                    <div class="chapter-info">From Straw Hats to Yonko: Character Evolution in One Piece <br> 
-                        - Subin Das, Sansi</div>
-                    <div class="chapter-status"><span>Read</span></div>
-                </li>
-                <li class="chapter-item">
-                    <div class="chapter-info">The Grand Line Chronicles: Legendary Adventures in One Piece <br> 
-                        - Arjun, Shahina</div>
-                    <div class="chapter-status"><span>Read</span></div>
-                </li>
-                <li class="chapter-item">
-                    <div class="chapter-info">Oda's Masterpiece: Analyzing the Themes of Friendship and Freedom in One Piece <br> 
-                        - Subin Das</div>
-                    <div class="chapter-status"><span>Read</span></div>
-                </li>
-                <li class="chapter-item">
-                    <div class="chapter-info">The World Government vs. Straw Hat Pirates: Power Dynamics in One Piece< <br> 
-                        - Roopak, Athul, Mumthaz</div>
-                    <div class="chapter-status"><span>Read</span></div>
-                </li>
-                <li class="chapter-item">
-                    <div class="chapter-info">Navigating the New World: Revealing the Secrets of One Piece's Final Saga <br> 
-                        - Sdas</div>
-                    <div class="chapter-status"><span>Read</span></div>
-                </li>
-                <li class="chapter-item">
-                    <div class="chapter-info">Legendary Treasure: The Symbolism and Significance of the One Piece in Eiichiro Oda's Epic <br> 
-                        - Sn Das</div>
-                    <div class="chapter-status"><span>Read</span></div>
-                </li>
+                {% endfor %}
             </ul>
         </div>
     </section>
+    
 
   
   <!-- ========= Back Volume End========= -->
