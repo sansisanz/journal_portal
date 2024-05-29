@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-
+    <meta name="csrf-token" content="{{csrf_token}}">
     <title>JP Editor</title>
 
     <!-- Custom fonts for this template-->
@@ -66,6 +66,13 @@
             border-color: #d0e9c6;
             color: #3c763d;
         }
+        
+        .guide{
+            background-color:  #dff0d8;
+            padding: 2rem;
+            border-radius: 10px;
+            border-color: #c4a1e0 ;
+        }
 
     </style>
 
@@ -77,10 +84,10 @@
 
     <div class="container">
         <div class="row">
-          <div class="col-md-10 offset-md-3"> <!-- Centering the form for medium and large screens -->
+          <div class="col-md-10 offset-md-1"> <!-- Centering the form for medium and large screens -->
             <div class="form-box">
                 <div class="card-header py-3">
-                    <h3 class="m-0 font-weight-bold text-primary">Edit Journals and Detais</h3>
+                    <h3 class="m-0 font-weight-bold text-primary">Edit Journals and Details</h3>
                 </div><br>  
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -162,25 +169,34 @@
                         </form>
                     </div>
                     <div class="tab-pane fade" id="details" role="tabpanel" aria-labelledby="details-tab">
-                        <form action="/journal_details/{{ journal_id }}/edit/" method="post" enctype="multipart/form-data" id="editArticleForm" class="border border-primary p-4">
+                        <form action="/details_edit/{{ jdata.journal_id }}/" method="post" enctype="multipart/form-data" id="editArticleForm" class="border border-primary p-4">
                         {% csrf_token %}                                                           
                             <div class="form-group">
                                 <label for="aimsScope">Aims & Scope:</label>
-                                <textarea class="form-control" name="aimsScope" id="aimsScope" placeholder="Write aims and scope here...">{{ existing_aims_scope }}</textarea>
+                                <textarea class="form-control" name="aimsScope" id="aimsScope"  placeholder="Write aims and scope here...">{{ jdata.journal_aim }}</textarea>
                             </div>
 
                             <div class="form-group">
                                 <label for="guidelines">Guidelines:</label>
-                                <div class="form-group">
-                                    <label for="totalContents">Total Number of Contents:</label>
-                                    <input type="number" id="totalContents" name="totalContents" class="form-control" value="{{ existing_total_contents }}">
+                                {% for i in gdata %}
+                                <div class=" form-group row guide">
+                                <div class="col-sm-4">
+                                    <label for="totalContents">heading:</label>
+                                    <input type="text" id="heading" name="heading" class="form-control" value="{{ i.heading }}">
                                 </div>
+                                <div class="col-sm-8">
+                                    <label for="totalContents"> Content:</label>
+                                    <input type="text" id="Content" name="Content" class="form-control" value="{{ i.content }}">
+                                </div>
+                                </div>
+
+                                {% endfor %}
                                 <div id="textBoxesContainer"></div>
                             </div>
 
                             <div class="form-group">
                                 <label for="ethics">Ethics:</label>
-                                <textarea class="form-control" name="ethics" id="ethics" placeholder="Write ethics here...">{{ existing_ethics }}</textarea>
+                                <textarea class="form-control" name="ethics" id="ethics" placeholder="Write ethics here...">{{jdata.journal_ethics}}</textarea>
                             </div>
 
                             <div class="text-center">
@@ -188,49 +204,51 @@
                             </div>
                         </form>
                     </div>
+
+
                     <div class="tab-pane fade" id="editorial-board" role="tabpanel" aria-labelledby="editorial-board-tab">
                         <form action="/edit_editorial_board_member/{{ member_id }}/" method="post" enctype="multipart/form-data" id="editArticleForm" class="border border-primary p-4">
                             {% csrf_token %}
                             <div class="form-group">
-                                <label class="required" for="journalSelect">Select Journal:</label>
+                                <label class="required" for="journalSelect">Select Editor:</label>
                                 <select id="ebSelect" name="editorname" class="form-control" required>
-                                    <option>Select Editor</option>
-                                    <option>Alex</option>
-                                    <option>Sam</option>                                
-                                </select>
+                                    {% for i in ebdata %}
+
+
+                                    <!-- <option>Select Editor</option> -->
+
+                                    <option value="{{i.board_id}}">{{i.editor_name}}</option>
+                                    {% endfor %}
+
+                                </select><br>
+                                <label for="editor_name">Full Name: </label>
+                                <input type="text" id="editor_name" name="editor_name" class="form-control" ><br>
+                                <label for="editor_address">Office Address: </label>
+                                <input type="text" id="editor_address" name="editor_address" class="form-control" ><br>
+                                <label for="editor_email">Email: </label>
+                                <input type="email" id="editor_email" name="editor_email" class="form-control" ><br>
+                                <label for="editor_mobile">Mobile: </label>
+                                <input type="text" id="editor_mobile" name="editor_mobile" class="form-control" ><br>
+                                <img id="editor_photo" src="" alt="Editor Photo" width="120px" height="160px">
+
+
+                                <div id="eboard"></div>
                             </div>                            
-                            <div class="form-group">
-                                <label for="full_name">Full name</label>
-                                <input type="text" class="form-control" id="fullName">
-                            </div>
-                            <div class="form-group">
-                                <label for="office_address">office address</label>
-                                <input type="text" class="form-control" id="officeAddress">
-                            </div>
-                            <div class="form-group">
-                                <label for="email_address">email address</label>
-                                <input type="email" class="form-control" id="emailAddress">
-                            </div>
-                            <div class="form-group">
-                                <label for="phone_number">phone number</label>
-                                <input type="text" class="form-control" id="phoneNnumber">
-                            </div>
-                            <div class="form-group">
-                                <label for="Upload Photo">Upload Photo</label>
-                                <input type="file" class="form-control" id="Upload Photo" accept="image/*">
-                            </div>
                             <br>
                             <center><button type="submit" class="submit-btn">Update</button></center>
                         </form>                        
                     </div>
+
+
                     <div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
                         <form action="/edit_notification/{{ notification_id }}/" method="post" enctype="multipart/form-data" id="editArticleForm" class="border border-primary p-4 rounded">
                             {% csrf_token %}
                             <div class="form-group">
-                                <label class="required" for="journalSelect">Select Journal:</label>
+                                <label class="required" for="journalSelect">Select notification:</label>
                                 <select id="notificationSelect" name="notification" class="form-control" required>
-                                    <option>Select notification</option>
-                                    <option>ai $ ml last date soon</option>                                
+                                    {% for notification in notifications %}
+                                    <option value="{{ notification.notification_id }}">{{ notification.notification }}</option>
+                                    {% endfor %}                               
                                 </select>
                             </div>
                             <div class="form-group">
@@ -242,16 +260,19 @@
                             </div>
                         </form>                        
                     </div>
+
+
+
                     <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                        <form action="/edit_notification/{{ notification_id }}/" method="post" enctype="multipart/form-data" id="editArticleForm" class="border border-primary p-4 rounded">
+                        <form action="/contact_edit/{{ jdata.journal_id }}/" method="post" enctype="multipart/form-data" id="editArticleForm" class="border border-primary p-4 rounded">
                             {% csrf_token %}
                             <div class="form-group mt-3">
                             <label for="ContactMobile">Mobile</label>
-                            <input type="text" class="form-control" id="contactName" placeholder="Enter your name">
+                            <input type="text" class="form-control" id="contactName" value="{{contact.phone}}" placeholder="Enter your name" name = "contact">
                             </div>
                             <div class="form-group">
                             <label for="contactEmail">Email address</label>
-                            <input type="email" class="form-control" id="contactEmail" placeholder="Enter your email">
+                            <input type="email" class="form-control" id="contactEmail" value="{{contact.email}}" placeholder="Enter your email" name = "mail">
                             </div>                            
                             <button type="submit" class="btn btn-primary">Edit</button>
                         </form>
@@ -271,16 +292,61 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     
     <script>
-        function toggleVisibility(id) {
-            var element = document.getElementById(id);
-            if (element.style.display === "none") {
-                element.style.display = "block";
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('notificationSelect').addEventListener('change', function() {
+                var notificationId = this.value;
+    
+                if (notificationId) {
+                    fetch('/get_notification_details/' + notificationId + '/')
+                    .then(response => response.json())
+                    .then(data => {
+                        populateNotificationDetails(data);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                }
+            });
+        });
+    
+        function populateNotificationDetails(notificationDetails) {
+            if (notificationDetails) {
+                document.getElementById('next_volume').value = notificationDetails.link;
+                // Populate other fields as needed
             } else {
-                element.style.display = "none";
+                // Clear form fields if no data is available
+                document.getElementById('next_volume').value = '';
+                // Clear other fields as needed
             }
         }
     </script>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#ebSelect').change(function(){
+            var selectedEditorId = $(this).val();
+            $.ajax({
+                url: '/get_editor_details/' + selectedEditorId + '/', // Endpoint to fetch editor details
+                type: 'GET',
+                success: function(response){
+                    // Assuming response is a JSON object containing editor details
+                    $('#editor_name').val(response.editor_name);
+                    $('#editor_address').val(response.editor_address);
+                    $('#editor_email').val(response.editor_email);
+                    $('#editor_mobile').val(response.editor_mobile);
+                    // You might need to handle the photo separately if it's not in base64 format or a URL
+                    $('#editor_photo').attr('src', response.photo); // Assuming editor_photo is the ID of the <img> tag for the photo
+                },
+                error: function(xhr, status, error){
+                    console.error(error);
+                }
+            });
+        });
+    });
+</script>
+
+    
     <!-- Bootstrap core JavaScript-->
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>

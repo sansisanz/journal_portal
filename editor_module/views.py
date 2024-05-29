@@ -1,3 +1,4 @@
+import json
 import os
 from PyPDF2 import PdfMerger
 from weasyprint import HTML, html
@@ -6,6 +7,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render,redirect
+from django.views.decorators.csrf import csrf_protect
 from django.urls import reverse
 from admin_module.models import article_table, ea_table, dept_table, gl_table, journal_table, notification_table, volume_table, issue_table, eb_table
 # Create your views here.
@@ -60,6 +62,8 @@ def add_editorial_board_member(request):
         return redirect('/editorialboard/')  # Redirect to a success page after saving
      else:
         return render(request,'add_editorial_board_member.html')
+     
+
 
 def editor_forgotpassword(request):
     if request.session.has_key('empid'):
@@ -622,13 +626,75 @@ def add_contact(request):
     
 #-----------------------------------------------------------------------------------------------------
 
-def edit_journals(request):
+def edit_journals(request,journal_id):
     if request.session.has_key('empid'):
         empid = request.session['empid']
-                
-        return render(request, "edit_journals.html", {"empid": empid})
+        jdata = journal_table.objects.get(journal_id=journal_id)
+        ebdata = eb_table.objects.filter(journal_id=journal_id)
+        volumes = volume_table.objects.filter(journal_id=journal_id)
+        notifications = notification_table.objects.filter(journal_id=journal_id)
+        contact = journal_table.objects.get(journal_id=journal_id)
+        gdata = gl_table.objects.filter(journal_id = journal_id)
+        return render(request, "edit_journals.html", {"empid": empid,"jdata":jdata,"ebdata":ebdata,"volumes":volumes,"notifications":notifications,"contact":contact,"gdata":gdata})
     else:
         return redirect('/login/')
     
+
+#-------------------------------------------------------------------------------------------------------
+
+def contact_edit(request,journal_id):
+    if request.method == 'POST':
+        mobile = request.POST.get("contact")
+        email = request.POST.get("mail")
+        cdata = journal_table.objects.get(journal_id=journal_id)
+        cdata.phone = mobile
+        cdata.email = email
+        cdata.save()
+
+    return render(request,"edit_journals.html")
+
+#--------------------------------------------------------------------------------------------------------
+
+def details_edit(request,journal_id):
+    if request.method == 'POST':
+        aim = request.POST.get("aimsScope")
+        ethics = request.POST.get("ethics")
+        ghead = request.POST.get("heading")
+        guidecontent = request.POST.get("content")
+        ddata = journal_table.objects.get(journal_id=journal_id)
+        ddata.journal_aim = aim
+        ddata.journal_ethics = ethics
+        ddata.heading = ghead
+        ddata.content = guidecontent
+        ddata.save()
+
+    return render(request,"edit_journals.html")
+
+#-----------------------------------------------------------------------------------------------------------
+
+def get_notification_details(request, notification_id):
+    try:
+        notification = notification_table.objects.get(notification_id=notification_id)
+        data = {
+            'notification': notification.notification,
+            'link': notification.link
+            # Add other fields as needed
+        }
+        return JsonResponse(data)
+    except notification_table.DoesNotExist:
+        return JsonResponse({'error': 'Notification not found'}, status=404)
+    
+#-------------------------------------------------------------------------------------------------------------
+
+def get_editor_details(request, editor_id):
+    editor = get_object_or_404(eb_table, pk=editor_id)
+    editor_details = {
+        'editor_name':editor.editor_name,
+        'editor_address': editor.editor_address,
+        'editor_email': editor.editor_email,
+        'editor_mobile': editor.editor_mobile,
+        'photo': editor.photo.url if editor.photo else ''  # Assuming photo is a FileField or ImageField
+    }
+    return JsonResponse(editor_details)
 
     
