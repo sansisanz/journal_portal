@@ -31,12 +31,14 @@ urlpatterns = [
     path('reject_article/<int:article_id>/', views.reject_article),
     path('edit_vic/<int:journal_id>/', views.edit_vic),
     path('edit_volume/<int:journal_id>/', views.edit_volume),
-    path('remove/<int:journal_id>/', views.remove),
-    path('remove_via/', views.remove_via),
     path('edit_journals/<int:journal_id>', views.edit_journals),
     path('contact_edit/<int:journal_id>/', views.contact_edit),
     path('details_edit/<int:journal_id>/', views.details_edit),
     path('get_notification_details/<int:notification_id>/', views.get_notification_details, name='get_notification_details'),
-     path('get_editor_details/<int:editor_id>/', views.get_editor_details, name='get_editor_details'),
+    path('get_editor_details/<int:editor_id>/', views.get_editor_details, name='get_editor_details'),
+    path('remove/<int:journal_id>/', views.remove, name='remove'),
+    path('remove_volume/<int:journal_id>/', views.remove_volume, name='remove_volume'),
+    path('remove_issue/<int:journal_id>/', views.remove_issue),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

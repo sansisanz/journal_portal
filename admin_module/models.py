@@ -278,3 +278,4 @@ class message_table(models.Model):
     class Meta:
         db_table="message_table"
 
+

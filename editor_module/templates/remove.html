@@ -1,251 +1,234 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-
     <title>JP Admin Panel</title>
-
     <!-- Custom fonts for this template-->
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <!-- Custom styles for this template-->
-    <link href="{% static 'css/sb-editor.css'%}" rel="stylesheet">
-
+    <link href="{% static 'css/sb-editor.css' %}" rel="stylesheet">
     <!-- Add jQuery library if not already included -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
     <style>
         .form-box {
           background-color: #f8f9fa;
           border: 1px solid #ced4da;
           border-radius: 10px;
           padding: 20px;
-          margin-bottom: 70%;
+          margin-bottom: 20px; /* Adjusted margin to create space between tabs */
         }
     </style>
-
-
 </head>
-
 <body id="page-top">
-
     {% include 'editor_sidebar.html' %} 
-
     <div class="container">
         <div class="row">
-            <div class="col-md-6 offset-md-3"> <!-- Centering the form for medium and large screens -->
+            <div class="col-md-8 offset-md-2">
                 <div class="form-box">
                     <div class="card-header py-3">
-                        <h4 class="m-0 font-weight-bold text-primary" style="text-align: center;">Remove Journal Components</h4><br>
+                        <h4 class="m-0 font-weight-bold text-primary" style="text-align: center;">Journal Management - Removal</h4><br>
                     </div>                   
                     <div class="container">
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
-                                <a class="nav-link active" data-toggle="tab" href="#remove-volume">Remove Volume</a>
+                                <a class="nav-link active" data-toggle="tab" href="#remove-volume">Volume</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#remove-issue">Remove Issue</a>
+                                <a class="nav-link" data-toggle="tab" href="#remove-issue">Issue</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#remove-article">Remove Article</a>
+                                <a class="nav-link" data-toggle="tab" href="#remove-article">Article</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#remove-aim">Aim & Scopes</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#remove-guideline">Guidelines</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#remove-ethics">Ethics</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#remove-editor">Editor</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#remove-notification">Notification</a>
                             </li>
                         </ul>
                         <br>
-                    
+                        <!-- REMOVE VOLUME TAB CONTENT -->
                         <div class="tab-content">
-                            <div id="remove-volume" class="tab-pane fade show active">
-                                <form id="removeForm" method="post" action="/remove_via/">
+                            <div class="tab-pane fade show active" id="remove-volume" role="tabpanel" aria-labelledby="remove-volume-tab">
+                                <form id="removeVolumeForm" method="POST" action="/remove_volume/{{ journal_id }}/"> <!-- Updated form action -->
                                     {% csrf_token %}
-                                    <input type="hidden" name="item_type" value="volume">
                                     <div class="form-group">
-                                        <label for="volume-number">Volume:</label>
-                                        <select id="volume-number" name="item_id" class="form-control">
+                                        <label for="volume">Select Volume:</label>
+                                        <select class="form-control" name="volume_id" id="volume">
                                             {% for volume in volumes %}
-                                                <option value="{{ volume.pk }}">{{ volume.volume }}</option>
+                                                {% if volume.status == 'active' %}
+                                                    <option value="{{ volume.volume_id }}">{{ volume.volume }}</option>
+                                                {% endif %}
                                             {% endfor %}
                                         </select>
                                     </div>
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmationModal">Remove Volume</button>
+                                    <button type="button" id="showConfirmationModalVolume" class="btn btn-danger">Remove Volume</button> <!-- Updated button type to "button" -->
                                 </form>
+                                <!-- Confirmation Modal for Volume -->
+                                <div class="modal fade" id="confirmationModalVolume" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabelVolume" aria-hidden="true">
+                                    <!-- Confirmation Modal Content -->
+                                </div>
                             </div>
-                            <div id="remove-issue" class="tab-pane fade">
-                                <form id="removeForm" method="post" action="/remove_via/">
+                            <!-- REMOVE ISSUE TAB CONTENT -->
+                            <div class="tab-pane fade" id="remove-issue" role="tabpanel" aria-labelledby="remove-issue-tab">
+                                <!-- Display form for selecting volume and issue -->
+                                <form id="removeIssueForm" method="POST" action="/remove_issue/{{ journal_id }}/"> <!-- Updated form action -->
                                     {% csrf_token %}
-                                    <input type="hidden" name="item_type" value="issue">
                                     <div class="form-group">
-                                        <label for="volume-number-issue">Volume:</label>
-                                        <select id="volume-number-issue" name="item_id" class="form-control">
+                                        <label for="volume">Select Volume:</label>
+                                        <select class="form-control" name="volume_id" id="volume">
                                             {% for volume in volumes %}
-                                                <option value="{{ volume.pk }}">{{ volume.volume }}</option>
+                                                <option value="{{ volume.volume_id }}">{{ volume.volume }}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="issue-number">Issue Number:</label>
-                                        <select id="issue-number" name="item_id" class="form-control">
-                                            {% for issue in issues %}
-                                                <option value="{{ issue.pk }}">Issue {{ issue.pk }}</option>
-                                            {% endfor %}
+                                        <label for="issue">Select Issue:</label>
+                                        <select class="form-control" name="issue_id" id="issue">
+                                            <!-- Options for issues will be populated dynamically using JavaScript based on the selected volume -->
                                         </select>
-                    
                                     </div>
-                                    <button type="button" class="btn btn-success btn-block mt-3" data-toggle="modal" data-target="#confirmationModal">Remove</button>
+                                    <button type="submit" class="btn btn-danger">Remove Issue</button>
                                 </form>
+
+                                <!-- Confirmation Modal -->
+                                <div class="modal fade" id="confirmationModalIssue" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabelIssue" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="confirmationModalLabelIssue">Confirmation</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Are you sure you want to remove this issue? This action cannot be undone.</p>
+                                                <!-- Additional details about what will be removed -->
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                <button type="submit" form="removeIssueForm" class="btn btn-danger">Remove Issue</button> <!-- Updated button to submit the form -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div id="remove-article" class="tab-pane fade">
-                                <form id="removeForm" method="post" action="/remove_via/">
+
+                            <script>
+                                // Show confirmation modal when Remove Issue button is clicked
+                                $('#removeIssueForm').submit(function(e) {
+                                    e.preventDefault(); // Prevent form submission
+                                    $('#confirmationModalIssue').modal('show'); // Show confirmation modal
+                                });
+                            </script>
+
+                            <!-- REMOVE ARTICLE TAB CONTENT -->
+                            <div class="tab-pane fade" id="remove-article" role="tabpanel" aria-labelledby="remove-article-tab">
+                                <form id="removeArticleForm" method="POST" action="/remove_article/{{ journal_id }}/"> <!-- Updated form action -->
                                     {% csrf_token %}
-                                    <input type="hidden" name="item_type" value="article">
                                     <div class="form-group">
-                                        <label for="volume-number-article">Volume:</label>
-                                        <select id="volume-number-article" name="item_id" class="form-control">
+                                        <label for="volume">Select Volume:</label>
+                                        <select class="form-control" name="volume_id" id="volumeArticle">
                                             {% for volume in volumes %}
-                                                <option value="{{ volume.pk }}">{{ volume.volume }}</option>
+                                                {% if volume.status == 'active' %}
+                                                    <option value="{{ volume.volume_id }}">{{ volume.volume }}</option>
+                                                {% endif %}
                                             {% endfor %}
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="issue-number-article">Issue Number:</label>
-                                        <select id="issue-number-article" name="item_id" class="form-control">
-                                            {% for issue in issues %}
-                                                <option value="{{ issue.pk }}">Issue {{ issue.pk }}</option>
-                                            {% endfor %}
+                                        <label for="issue">Select Issue:</label>
+                                        <select class="form-control" name="issue_id" id="issueArticle">
+                                            <!-- Options for issues will be populated dynamically using JavaScript based on the selected volume -->
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="article">Article:</label>
-                                        <select id="article" name="item_id" class="form-control">
-                                            {% for article in articles %}
-                                                <option value="{{ article.pk }}">Article {{ article.pk }}</option>
-                                            {% endfor %}
+                                        <label for="article">Select Article:</label>
+                                        <select class="form-control" name="article_id" id="article">
+                                            <!-- Options for articles will be populated dynamically using JavaScript based on the selected volume and issue -->
                                         </select>
                                     </div>
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmationModal">Remove Article</button>
+                                    <button type="button" id="showConfirmationModalArticle" class="btn btn-danger">Remove Article</button> <!-- Updated button type to "button" -->
                                 </form>
+                                <!-- Confirmation Modal for Article -->
+                                <div class="modal fade" id="confirmationModalArticle" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabelArticle" aria-hidden="true">
+                                    <!-- Confirmation Modal Content -->
+                                </div>
                             </div>
                         </div>
+                        <script>
+                            // Populate issues dropdown based on selected volume (Issue tab)
+                            $('#volumeIssue').change(function() {
+                                var volume_id = $(this).val();
+                                $.ajax({
+                                    url: '/get_issues/' + volume_id + '/',
+                                    success: function(data) {
+                                        $('#issueIssue').html(data);
+                                    }
+                                });
+                            });
+                            
+
+                            // Populate issues dropdown based on selected volume (Article tab)
+                            $('#volumeArticle').change(function() {
+                                var volume_id = $(this).val();
+                                $.ajax({
+                                    url: '/get_issues/' + volume_id + '/',
+                                    success: function(data) {
+                                        $('#issueArticle').html(data);
+                                    }
+                                });
+                            });
+
+                            // Populate articles dropdown based on selected issue and volume (Article tab)
+                            $('#issueArticle').change(function() {
+                                var issue_id = $(this).val();
+                                $.ajax({
+                                    url: '/get_articles/' + issue_id + '/',
+                                    success: function(data) {
+                                        $('#article').html(data);
+                                    }
+                                });
+                            });
+
+                            // Show confirmation modal when Remove Article button is clicked (Article tab)
+                            $('#showConfirmationModalArticle').click(function() {
+                                $('#confirmationModalArticle').modal('show');
+                            });
+                        </script>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmationModalLabel">Confirmation</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to remove {{ item_type }} "{{ item_name }}"?
-                    {% if item_type == "volume" %}
-                        This action will also remove {{ issue_count }} issues and {{ article_count }} articles associated with it.
-                    {% elif item_type == "issue" %}
-                        This action will also remove {{ article_count }} articles associated with it.
-                    {% endif %}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <a href="#" class="btn btn-danger" id="confirmRemove">Remove</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-
-    <script>
-        $(document).ready(function(){
-            $('#confirmRemoveBtn').click(function(){
-                // Handle remove action here
-            });
-
-            $('#removeForm').submit(function(event){
-                event.preventDefault(); // Prevent form submission
-                var itemType = $('input[name="item_type"]').val(); // Get item type
-                var itemId = $('select[name="item_id"]').val(); // Get item ID
-                // AJAX request to fetch related items
-                $.ajax({
-                    type: 'GET',
-                    url: '/get_related_items/', // Your URL to fetch related items
-                    data: {item_type: itemType, item_id: itemId},
-                    dataType: 'json',
-                    success: function(response){
-                        if(response.success){
-                            var itemsList = $('#itemsToRemoveList');
-                            itemsList.empty(); // Clear existing items
-                            // Loop through related items and add to list
-                            $.each(response.items, function(index, item){
-                                itemsList.append('<li>' + item + '</li>');
-                            });
-                            $('#confirmationModal').modal('show'); // Show confirmation modal
-                        } else {
-                            // Handle error response
-                            console.log(response.message);
-                        }
-                    },
-                    error: function(xhr, status, error){
-                        // Handle AJAX error
-                        console.error(xhr.responseText);
-                    }
-                });
-            });
-        });
-    </script>
-    <script>
-        $('#removeButton').click(function() {
-            var item_id = $(this).data('id');
-            var item_name = $(this).data('name');
-            var item_type = $(this).data('type');
-            var issue_count = $(this).data('issue-count');
-            var article_count = $(this).data('article-count');
-    
-            $('#confirmationModal').modal('show');
-            $('#confirmationModal').find('.modal-body').html('Are you sure you want to remove ' + item_type + ' "' + item_name + '"?');
-            $('#confirmationModal').find('.modal-body').append('<br>');
-    
-            if (item_type == 'volume') {
-                $('#confirmationModal').find('.modal-body').append('This action will also remove ' + issue_count + ' issues and ' + article_count + ' articles associated with it.');
-            } else if (item_type == 'issue') {
-                $('#confirmationModal').find('.modal-body').append('This action will also remove ' + article_count + ' articles associated with it.');
-            }
-    
-            $('#confirmRemove').attr('href', '/remove_via/' + item_type + '/' + item_id + '/');
-        });
-    </script>
-    
-
-    <!-- -----------------------------------------------------===============================--------------------------------------------------------------------- -->
-
+    </div>  
     <!-- Bootstrap core JavaScript-->
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-
     <!-- Core plugin JavaScript-->
     <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
-
     <!-- Custom scripts for all pages-->
     <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
-
     <!-- Page level plugins -->
     <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
-
     <!-- Page level custom scripts -->
     <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
     <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
-
-
 </body>
 </html>
+

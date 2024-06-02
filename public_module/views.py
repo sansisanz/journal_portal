@@ -1,10 +1,13 @@
-from django.shortcuts import render,redirect
+import os
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render,redirect
 from django.db.models import Q
 import hashlib
 import random
+from django.db.models import F
 from django.core.mail import send_mail
 from django.contrib import messages
-from admin_module.models import article_table, author_table, ea_table, issue_table,volume_table,journal_table,dept_table,eb_table,notification_table,gl_table
+from admin_module.models import article_download, article_table, article_visit, author_table, ea_table, issue_table, journalpage_visit,volume_table,journal_table,dept_table,eb_table,notification_table,gl_table
 
 # Create your views here.
 def p_index(request):
@@ -30,15 +33,15 @@ def p_alljournals(request, journal_id):
     # Retrieve the selected journal
     selected_journal = journal_table.objects.get(journal_id=journal_id)
 
-    # Retrieve all volumes for the selected journal
-    volumes = volume_table.objects.filter(journal_id=journal_id)
+    # Retrieve all volumes for the selected journal that are active
+    volumes = volume_table.objects.filter(journal_id=journal_id, status='active')
 
     # Create a list to store volume and issue information
     volume_issues_list = []
 
     for volume in volumes:
-        # Retrieve issues for each volume and sort them by creation time (newest first)
-        issues = issue_table.objects.filter(volume_id=volume.volume_id).order_by('-created_at')
+        # Retrieve issues for each volume that are active and sort them by creation time (newest first)
+        issues = issue_table.objects.filter(volume_id=volume.volume_id, status='active').order_by('-created_at')
 
         # Count the number of issues for the volume
         issue_count = issues.count()
@@ -56,7 +59,9 @@ def p_alljournals(request, journal_id):
     # Sort the volume_issues_list by created_at in descending order
     volume_issues_list = sorted(volume_issues_list, key=lambda x: x['created_at'], reverse=True)
 
-    return render(request, 'p_alljournals.html', {'selected_journal': selected_journal, 'volume_issues_list': volume_issues_list, 'issue':issue})
+    return render(request, 'p_alljournals.html', {'selected_journal': selected_journal, 'volume_issues_list': volume_issues_list})
+
+
 
 
 def p_authorreg(request):
@@ -71,13 +76,6 @@ def p_userprofile(request):
 def public_navbar(request):
     return render(request, 'public_navbar.html')
 
-def p_home(request,id):
-    j_data = journal_table.objects.get(journal_id=id)
-    v_data = volume_table.objects.filter(journal_id=id).order_by('-volume_id').first()
-    p_data = eb_table.objects.filter(journal_id=id)
-    n_data = notification_table.objects.filter(journal_id=id)
-    return render(request, 'p_home.html',{'jdata':j_data,'vdata':v_data,'pdata':p_data,'ndata':n_data})
-
 def p_home(request, id):
     # Fetch the journal data
     j_data = journal_table.objects.get(journal_id=id)
@@ -89,11 +87,23 @@ def p_home(request, id):
     p_data = eb_table.objects.filter(journal_id=id)
     n_data = notification_table.objects.filter(journal_id=id)
     
+    # Increment the visit count for the journal page
+    visit_record, created = journalpage_visit.objects.get_or_create(
+        journal_id=j_data,  # Use the journal instance here
+        defaults={'count': 1, 'created_by': 'system', 'status': 'active'}
+    )
+    if not created:
+        visit_record.count = F('count') + 1
+        visit_record.save()
+        # Refresh the object to get the updated count
+        visit_record.refresh_from_db()
+    
     return render(request, 'p_home.html', {
         'jdata': j_data,
         'latest_issue': latest_issue,
         'pdata': p_data,
-        'ndata': n_data
+        'ndata': n_data,
+        'visit_count': visit_record.count  # Pass the visit count to the template
     })
 
 
@@ -222,13 +232,13 @@ def author_logout(request):
         pass
     return redirect("/p_index/#cta")
 
-        
+
 def issue_detail(request, issue_id):
     # Retrieve the selected issue
-    selected_issue = issue_table.objects.get(issue_id=issue_id)
+    selected_issue = get_object_or_404(issue_table, issue_id=issue_id)
 
-    # Retrieve articles associated with the selected issue
-    articles = article_table.objects.filter(issue_id=issue_id)
+    # Retrieve approved articles associated with the selected issue
+    articles = article_table.objects.filter(issue_id=issue_id, status='approved')
 
     # Create a list to store article information
     articles_list = []
@@ -239,12 +249,49 @@ def issue_detail(request, issue_id):
         authors = [author.strip() for author in authors if author.strip()]  # Remove empty author names
         authors_str = ' and '.join(authors[:-1]) + ', ' + authors[-1] if len(authors) > 1 else authors[0]
         articles_list.append({
+            'id': article.article_id,
             'title': article.article_title,
             'authors': authors_str
         })
 
     return render(request, 'issue_detail.html', {'selected_issue': selected_issue, 'articles_list': articles_list})
 
+def flipbook(request, article_id):
+    article = get_object_or_404(article_table, pk=article_id)
+    # Logic to render the flipbook view
+    return render(request, 'flipbook.html', {'article': article})
+
+
+def download_article(request, article_id):
+    article = get_object_or_404(article_table, pk=article_id)
+    file_path = article.article_file.path
+    file_name = os.path.basename(file_path)
     
+    # Increment the download count for the article
+    download_record, created = article_download.objects.get_or_create(
+        article_id=article,
+        defaults={'count': 1, 'created_by': 'system', 'status': 'active'}
+    )
+    if not created:
+        download_record.count = F('count') + 1
+        download_record.save()
     
+    with open(file_path, 'rb') as file:
+        response = HttpResponse(file.read(), content_type='application/octet-stream')
+        response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+        return response
     
+def read_article(request, article_id):
+    article = get_object_or_404(article_table, pk=article_id)
+    
+    # Increment the visit count for the article
+    visit_record, created = article_visit.objects.get_or_create(
+        article_id=article,
+        defaults={'count': 1, 'created_by': 'system', 'status': 'active'}
+    )
+    if not created:
+        visit_record.count = F('count') + 1
+        visit_record.save()
+    
+    # Redirect to the actual reading page (assuming /flipbook/<article_id>/)
+    return redirect(f'/flipbook/{article_id}/')    

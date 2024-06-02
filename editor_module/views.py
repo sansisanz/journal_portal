@@ -9,6 +9,7 @@ from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render,redirect
 from django.views.decorators.csrf import csrf_protect
 from django.urls import reverse
+from django.views.decorators.http import require_POST
 from admin_module.models import article_table, ea_table, dept_table, gl_table, journal_table, notification_table, volume_table, issue_table, eb_table
 # Create your views here.
 
@@ -101,7 +102,6 @@ def editor_assignedjournal(request):
     else:
         return redirect('/login')
     
-
 def add_vic(request, journal_id):
     if not request.session.has_key('empid'):
         return redirect('/login')
@@ -120,12 +120,20 @@ def add_vic(request, journal_id):
             journal = journal_table.objects.get(pk=journal_id)
 
             # Check if volume with the same name already exists
-            if volume_table.objects.filter(journal_id=journal, volume=volume_name).exists():
-                messages.warning(request, 'Volume with the same name already exists.', extra_tags='add_vol_alert')
-                return render(request, 'add_vic.html', {
-                    'journal_id': journal_id,
-                    'volumes': volume_table.objects.filter(journal_id=journal_id)
-                })
+            existing_volume = volume_table.objects.filter(journal_id=journal, volume=volume_name).first()
+            if existing_volume:
+                if existing_volume.status == 'active':
+                    messages.warning(request, 'Volume with the same name already exists.', extra_tags='add_vol_alert')
+                    return render(request, 'add_vic.html', {
+                        'journal_id': journal_id,
+                        'volumes': volume_table.objects.filter(journal_id=journal_id, status='active')
+                    })
+                else:
+                    # Update the existing volume to active status
+                    existing_volume.status = 'active'
+                    existing_volume.save()
+                    messages.success(request, 'Volume added successfully.', extra_tags='add_vol_success')
+                    return redirect('/add_vic/{}/'.format(journal_id))
 
             # Create a new volume entry for the journal
             new_volume = volume_table.objects.create(
@@ -145,12 +153,20 @@ def add_vic(request, journal_id):
             cover_image = request.FILES.get('cover_image')
 
             # Check if the issue already exists
-            if issue_table.objects.filter(volume_id=volume_id, issue_no=str(issue_number)).exists():
-                messages.warning(request, 'Issue already exists.', extra_tags='add_issue_alert')
-                return render(request, 'add_vic.html', {
-                    'journal_id': journal_id,
-                    'volumes': volume_table.objects.filter(journal_id=journal_id)
-                })
+            existing_issue = issue_table.objects.filter(volume_id=volume_id, issue_no=str(issue_number)).first()
+            if existing_issue:
+                if existing_issue.status == 'active':
+                    messages.warning(request, 'Issue already exists.', extra_tags='add_issue_alert')
+                    return render(request, 'add_vic.html', {
+                        'journal_id': journal_id,
+                        'volumes': volume_table.objects.filter(journal_id=journal_id, status='active')
+                    })
+                else:
+                    # Update the existing issue to active status
+                    existing_issue.status = 'active'
+                    existing_issue.save()
+                    messages.success(request, 'Issue added successfully.', extra_tags='add_issue_success')
+                    return redirect('/add_vic/{}/'.format(journal_id))
 
             # Create a new issue for the selected volume
             issue_table.objects.create(
@@ -167,9 +183,8 @@ def add_vic(request, journal_id):
     # On GET request, render the form with volume options
     return render(request, 'add_vic.html', {
         'journal_id': journal_id,
-        'volumes': volume_table.objects.filter(journal_id=journal_id)
+        'volumes': volume_table.objects.filter(journal_id=journal_id, status='active')
     })
-
 
 
 #---------------------------------------------------------------------------------------------------------------
@@ -496,7 +511,8 @@ def edit_volume(request, journal_id):
         return redirect('/edit_vic/{}/'.format(journal_id))
     else:
         return redirect('/login/')
-    
+
+    #------------------------------------------------------------------------------------------------------------------------------------------------------- 
 def remove(request, journal_id):
     if request.session.has_key('empid'):
         empid = request.session['empid']
@@ -505,59 +521,74 @@ def remove(request, journal_id):
         volumes = volume_table.objects.filter(journal_id=journal_id)
         issues = issue_table.objects.filter(volume_id__journal_id=journal_id)
         articles = article_table.objects.filter(issue_id__volume_id__journal_id=journal_id)
-        
+
+        # Fetch journal details
+        journal = get_object_or_404(journal_table, journal_id=journal_id)
+        guidelines = gl_table.objects.filter(journal_id=journal_id)
+
         return render(request, "remove.html", {
             "empid": empid,
             "volumes": volumes,
             "issues": issues,
             "articles": articles,
-            "journal_id": journal_id
+            "journal_id": journal_id,
+            "journal": journal,
+            "guidelines": guidelines
         })
-    else:
-        return redirect('/login/') 
-
-
-def remove(request, journal_id):
-    if request.session.has_key('empid'):
-        empid = request.session['empid']
-        
-        # Fetch volumes for the selected journal
-        volumes = volume_table.objects.filter(journal_id=journal_id)
-        volume_names = [volume.volume for volume in volumes]
-        
-        return render(request, "remove.html", {"empid": empid, "volumes": volumes, "journal_id": journal_id})
     else:
         return redirect('/login/')
 
-    
-def remove_via(request):
+def remove_volume(request, journal_id):
     if request.method == 'POST':
-        item_type = request.POST.get('item_type')
-        item_id = request.POST.get('item_id')
-        # Depending on the item type, perform the removal action
-        if item_type == 'volume':
-            # Remove the volume and its related issues and articles
-            volume = volume_table.objects.get(pk=item_id)
-
-            related_issues = issue_table.objects.filter(volume_id=volume.volume_id)
-            for issue in related_issues:
-                related_articles = article_table.objects.filter(issue_id=issue.issue_id)
-                related_articles.delete()  # Delete related articles
-            related_issues.delete()  # Delete related issues
-            volume.delete()  # Delete volume
-        elif item_type == 'issue':
-            # Remove the issue and its related articles
-            issue = issue_table.objects.get(pk=item_id)
-            related_articles = article_table.objects.filter(issue_id=issue.issue_id)
-            related_articles.delete()  # Delete related articles
-            issue.delete()  # Delete issue
-        elif item_type == 'article':
-            # Remove the article
-            article = article_table.objects.get(pk=item_id)
-            article.delete()  # Delete article
-        return JsonResponse({'success': True})
+        # Logic to handle form submission for volume removal
+        # Retrieve selected volume_id from POST data
+        volume_id = request.POST.get('volume_id')
+        
+        # Set volume and issues as inactive
+        volume = volume_table.objects.get(pk=volume_id)
+        volume.status = 'inactive'
+        volume.save()
+        
+        issues = issue_table.objects.filter(volume_id=volume_id)
+        for issue in issues:
+            issue.status = 'inactive'
+            issue.save()
+        
+        # Set articles status as 'removed'
+        articles = article_table.objects.filter(issue_id__volume_id=volume_id)
+        for article in articles:
+            article.status = 'removed'
+            article.save()
+        
+        # Redirect to remove view with journal_id
+        return redirect(f'/remove/{journal_id}/')
     else:
-        return render(request, "remove.html")    
+        # Handle GET request (display confirmation message or modal)
+        return render(request, 'confirmation_modal.html', {
+            'journal_id': journal_id,
+            # Pass any additional data needed for confirmation
+        })  
+    
+def remove_issue(request, journal_id):
+    if request.method == 'POST':
+        volume_id = request.POST.get('volume_id')
+        issue_id = request.POST.get('issue_id')
+
+        # Set issue status to inactive
+        issue = issue_table.objects.get(pk=issue_id)
+        issue.status = 'inactive'
+        issue.save()
+
+        # Set articles status to 'removed' for articles under the removed issue
+        articles = article_table.objects.filter(issue_id=issue_id)
+        for article in articles:
+            article.status = 'removed'
+            article.save()
+
+        return redirect(f'/remove/{journal_id}/')
+    else:
+        volumes = volume_table.objects.filter(journal_id=journal_id, status='active')
+        return render(request, 'remove_issue.html', {'volumes': volumes, 'journal_id': journal_id})
         
 #-------------------------------------------------------------------------------------------------------------------------------------    
 
