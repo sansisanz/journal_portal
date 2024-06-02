@@ -53,15 +53,57 @@
       border-radius: 20px;
       padding: 10px 30px;
       font-weight: 600;
-    }
-    .reg-btn{
-      margin-right: 150%;
-    }
-
-    .btn-primary{
       background-color: #d85407;
-      border-color: white;
+      border-color: #d85407;
       font-size: 1.3rem;
+      color: #fff;
+    }
+    .card {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .registration-form {
+      background: #fff;
+      padding: 30px;
+      border-radius: 20px;
+    }
+    .registration-form h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+    .registration-form p {
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+    .registration-form .form-group {
+      margin-bottom: 20px;
+    }
+    .registration-form label {
+      font-weight: 500;
+    }
+    .registration-form .btn-primary {
+      background-color: #d85407;
+      border-color: #d85407;
+      color: #fff;
+    }
+    .registration-form .btn-primary:hover {
+      background-color: #c43e00;
+      border-color: #c43e00;
+    }
+    .form-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+    .form-image {
+      flex: 1;
+      padding-right: 30px;
+    }
+    .form-image img {
+      max-width: 100%;
+      border-radius: 20px;
+    }
+    .form-content {
+      flex: 2;
     }
   </style>
 </head>
@@ -69,7 +111,7 @@
 <body>
 
   <!-- ======= Header ======= -->
-  <header id="header" class="fixed-top d-flex align-items-center ">
+  <header id="header" class="fixed-top d-flex align-items-center">
     <div class="container d-flex align-items-center justify-content-between">
       <div class="logo">
         <h1><a href="/p_index/">CU JOURNAL HUB</a></h1>
@@ -86,78 +128,109 @@
       <!-- ======= Author registration form ======= -->
       <section id="authorregistration" class="authorregistration bglight py-5">
         <div class="container">
-            <div class="section-title" data-aos="zoom-out">
-                <h2>AUTHOR REGISTRATION</h2>
-                <p>Sign Up to Submit Article</p>
-            </div>
+          <div class="section-title" data-aos="zoom-out">
+            <h2>AUTHOR REGISTRATION</h2>
+            <p>Sign Up to Submit Article</p>
+          </div>
 
-            <div class="row justify-content-center">
-              <div class="col-md-8">
-                  <div class="card">
-                      <div class="card-body">
-                          <form method="post" action="{% url 'author_registration' %}">
-                            {% csrf_token %}
-                              <div class="form-group">
-                                  <label for="author_type"><i class="bi bi-person"></i> Author Type</label>
-                                  <select class="form-control" id="author_type" name="author_type" required>
-                                      <option value="" disabled selected>Select Author Type</option>
-                                      <option value="calicut_university_teacher">Calicut University Teacher</option>
-                                      <option value="calicut_university_researcher">Calicut University Researcher</option>
-                                      <option value="teacher_affiliated_colleges">Teacher from affiliated colleges</option>
-                                      <option value="researcher_affiliated_colleges">Researcher from affiliated colleges</option>
-                                      <option value="other_teachers">Other Teachers</option>
-                                      <option value="other_researchers">Other Researchers</option>
-                                      <option value="others">Others</option>
-                                  </select>
-                              </div>
-                              <div class="form-group">
-                                  <label for="author_name"><i class="bi bi-person"></i> Name</label>
-                                  <input type="text" class="form-control" id="author_name" name="author_name" required>
-                              </div>
-                              <div class="form-group">
-                                <label for="author_email"><i class="bi bi-envelope"></i> Email address</label>
-                                <input type="email" class="form-control" id="author_email" name="author_email" required>
-                                <span class="text-danger font-weight-bold" >{{emailcheck}}</span>
-                              </div>
-                              <div class="form-group">
-                                <label for="author_mobile"><i class="bi bi-phone"></i> Mobile Number</label>
-                                <input type="tel" class="form-control" id="author_mobile" name="author_mobile" required>
-                                <span class="text-danger font-weight-bold" >{{mobilelen}}</span>
-                              </div>
-                              <div class="form-group">
-                                <label for="author_dob"><i class="bi bi-calendar"></i> Date of Birth</label>
-                                <input type="date" class="form-control" id="author_dob" name="author_dob" required>
-                              </div>
-                              <div class="form-group">
-                                <label for="author_address"><i class="bi bi-house"></i> Address</label>
-                                <textarea class="form-control" id="author_address" name="author_address" rows="3" required></textarea>
-                              </div>
-                              <div class="form-group">
-                                <label for="author_institute"><i class="bi bi-house"></i> Institution/Department</label>
-                                <input type="text" class="form-control" id="author_institute" name="author_institute" required>
-                              </div>
-                              <div class="form-group">
-                                <label for="author_password"><i class="bi bi-lock"></i> Password</label>
-                                <input type="password" class="form-control" id="author_password" name="author_password" required>
-                                <span class="text-danger font-weight-bold" >{{lenpassword}}</span>
-                              </div>
-                              <div class="form-group">
-                                <label for="author_confirm_password"><i class="bi bi-lock"></i> Confirm Password</label>
-                                <input type="password" class="form-control" id="author_confirm_password" name="author_confirm_password" required>
-                                <span class="text-danger font-weight-bold" >{{confirmpassword}}</span>
-                              </div>
-                              <button type="submit" class="btn btn-primary btn-block">Register</button>
-                          </form>
-                      </div>
+          <div class="row justify-content-center">
+            <div class="col-md-8">
+              <div class="card">
+                <div class="card-body registration-form">
+                  <div class="form-container">
+                    <div class="form-image">
+                      <img src="{% static 'img/reg.jpg' %}" alt="Registration">
+                    </div>
+                    <div class="form-content">
+                      <form method="post" action="{% url 'author_registration' %}">
+                        {% csrf_token %}
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="author_type"><i class="bi bi-person"></i> Author Type</label>
+                              <select class="form-control" id="author_type" name="author_type" required>
+                                <option value="" disabled selected>Select Author Type</option>
+                                <option value="calicut_university_teacher">Calicut University Teacher</option>
+                                <option value="calicut_university_researcher">Calicut University Researcher</option>
+                                <option value="teacher_affiliated_colleges">Teacher from affiliated colleges</option>
+                                <option value="researcher_affiliated_colleges">Researcher from affiliated colleges</option>
+                                <option value="other_teachers">Other Teachers</option>
+                                <option value="other_researchers">Other Researchers</option>
+                                <option value="others">Others</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="author_name"><i class="bi bi-person"></i> Name</label>
+                              <input type="text" class="form-control" id="author_name" name="author_name" required>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="author_email"><i class="bi bi-envelope"></i> Email address</label>
+                              <input type="email" class="form-control" id="author_email" name="author_email" required>
+                              <span class="text-danger font-weight-bold">{{emailcheck}}</span>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="author_mobile"><i class="bi bi-phone"></i> Mobile Number</label>
+                              <input type="tel" class="form-control" id="author_mobile" name="author_mobile" required>
+                              <span class="text-danger font-weight-bold">{{mobilelen}}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="author_dob"><i class="bi bi-calendar"></i> Date of Birth</label>
+                              <input type="date" class="form-control" id="author_dob" name="author_dob" required>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="author_address"><i class="bi bi-house"></i> Address</label>
+                              <textarea class="form-control" id="author_address" name="author_address" rows="3" required></textarea>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="author_institute"><i class="bi bi-house"></i> Institution/Department</label>
+                              <input type="text" class="form-control" id="author_institute" name="author_institute" required>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="author_password"><i class="bi bi-lock"></i> Password</label>
+                              <input type="password" class="form-control" id="author_password" name="author_password" required>
+                              <span class="text-danger font-weight-bold">{{lenpassword}}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="author_confirm_password"><i class="bi bi-lock"></i> Confirm Password</label>
+                              <input type="password" class="form-control" id="author_confirm_password" name="author_confirm_password" required>
+                              <span class="text-danger font-weight-bold">{{confirmpassword}}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Register</button>
+                      </form>
+                    </div>
                   </div>
+                </div>
               </div>
-          </div>          
+            </div>
+          </div>
+      </section>
     </section>
-    
-
-
-    </section>
-
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->

@@ -174,19 +174,19 @@
         <div class="row">
           {% for item in volume_issues_list %}
           <div class="col-lg-3 col-md-4 col-sm-6">
-            <div class="journal-item" data-aos="fade-up" data-aos-delay="100">
-              <a href="/issue_detail/{{ issue.issue_id }}/">
-                <div class="journal-img">
-                  <img src="{{ item.cover_image }}" class="img-fluid" alt="{{ item.volume }}">
-                </div>
-                <div class="journal-info">
-                  <h4><a href="/issue_detail/{{ issue.issue_id }}/">{{ item.volume }}{% if item.issue_no %} - Issue: {{ item.issue_no }}{% endif %}</a></h4>
-                </div>
-              </a>
-            </div>
+              <div class="journal-item" data-aos="fade-up" data-aos-delay="100">
+                  <a href="/issue_detail/{{ item.issue_id }}/">
+                      <div class="journal-img">
+                          <img src="{{ item.cover_image }}" class="img-fluid" alt="{{ item.volume }}">
+                      </div>
+                      <div class="journal-info">
+                          <h4><a href="/issue_detail/{{ item.issue_id }}/">{{ item.volume }}{% if item.issue_no %} - Issue: {{ item.issue_no }}{% endif %}</a></h4>
+                      </div>
+                  </a>
+              </div>
           </div>
           {% endfor %}
-        </div>
+      </div>
       </div>
     </section>
 

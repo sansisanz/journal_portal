@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Flipbook Viewer</title>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f0f0f0;
+    }
+
+    .sample-container-box {
+        width: 1175px; /* Fixed width */
+        height: 867px; /* Fixed height */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f0f0f0;
+        margin: auto;
+    }
+
+    .sample-container {
+        width: 100%; /* Full width of the box */
+        height: 100%; /* Full height of the box */
+        box-shadow: 0 0 10px rgba(0,0,0,0.5); /* Optional: add shadow for better visibility */
+    }
+</style>
+</head>
+<body>
+
+<div id="flipbook-container" data-pdf-url="{{ article.article_file.url }}">
+    <div class="sample-container-box">
+        <div class="sample-container"></div>
+    </div>
+</div>
+
+<script src="{% static 'js/three.min.js' %}"></script>
+<script src="{% static 'js/pdf.min.js' %}"></script>
+
+<script type="text/javascript">
+  window.PDFJS_LOCALE = {
+    pdfJsWorker: '{% static "js/pdf.worker.js" %}',
+    pdfJsCMapUrl: 'cmaps'
+  };
+</script>
+<script src="{% static 'js/3dflipbook.min.js' %}"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    var pdfUrl = $('#flipbook-container').data('pdf-url');
+    $('.sample-container').FlipBook({
+      pdf: pdfUrl,
+      template: {
+        html: "{% static 'templates/default-book-view.html' %}",
+        styles: [
+          "{% static 'css/font-awesome.min.css' %}",
+          "{% static 'css/short-black-book-view.css' %}"
+        ],
+        script: "{% static 'js/default-book-view.js' %}",
+        sounds: {
+          startFlip: "{% static 'sounds/start-flip.mp3' %}",
+          endFlip: "{% static 'sounds/end-flip.mp3' %}"
+        }
+      }
+    });
+  });
+</script>
+</body>
+</html>

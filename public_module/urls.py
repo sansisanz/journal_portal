@@ -22,5 +22,8 @@ urlpatterns = [
     path('author_logout/', views.author_logout),
     path('issue_detail/<int:issue_id>/', views.issue_detail),
     path('read_article/', views.read_article),
+    path('flipbook/<int:article_id>/', views.flipbook),
+    path('download_article/<int:article_id>/',views.download_article),
+    path('read_article/<int:article_id>/', views.read_article),
 
 ]
