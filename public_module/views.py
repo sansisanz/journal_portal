@@ -7,7 +7,7 @@ import random
 from django.db.models import F
 from django.core.mail import send_mail
 from django.contrib import messages
-from admin_module.models import article_download, article_table, article_visit, author_table, ea_table, issue_table, journalpage_visit,volume_table,journal_table,dept_table,eb_table,notification_table,gl_table
+from admin_module.models import  JournalPageVisit, article_table, author_table, ea_table, issue_table,volume_table,journal_table,dept_table,eb_table,notification_table,gl_table
 
 # Create your views here.
 def p_index(request):
@@ -76,9 +76,18 @@ def p_userprofile(request):
 def public_navbar(request):
     return render(request, 'public_navbar.html')
 
+def get_client_ip(request):
+    """Utility function to get the client's IP address from the request."""
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
 def p_home(request, id):
     # Fetch the journal data
-    j_data = journal_table.objects.get(journal_id=id)
+    j_data = get_object_or_404(journal_table, journal_id=id)
     
     # Fetch the latest issue for the journal
     latest_issue = issue_table.objects.filter(volume_id__journal_id=id).order_by('-issue_id').first()
@@ -87,25 +96,29 @@ def p_home(request, id):
     p_data = eb_table.objects.filter(journal_id=id)
     n_data = notification_table.objects.filter(journal_id=id)
     
-    # Increment the visit count for the journal page
-    visit_record, created = journalpage_visit.objects.get_or_create(
-        journal_id=j_data,  # Use the journal instance here
-        defaults={'count': 1, 'created_by': 'system', 'status': 'active'}
+    # Get the client's IP address
+    ip_address = get_client_ip(request)
+    
+    # Check if there's already a visit record for this IP address
+    visit_record, created = JournalPageVisit.objects.get_or_create(
+        journal_id=j_data,
+        ip_address=ip_address
     )
-    if not created:
-        visit_record.count = F('count') + 1
-        visit_record.save()
-        # Refresh the object to get the updated count
-        visit_record.refresh_from_db()
+    
+    if created:
+        # Increment the visit count for the journal if it's a new visit
+        j_data.visit_count = F('visit_count') + 1
+        j_data.save()
+        # Refresh the journal data to get the updated visit count
+        j_data.refresh_from_db()
     
     return render(request, 'p_home.html', {
         'jdata': j_data,
         'latest_issue': latest_issue,
         'pdata': p_data,
         'ndata': n_data,
-        'visit_count': visit_record.count  # Pass the visit count to the template
+        'visit_count': j_data.visit_count  # Pass the visit count to the template
     })
-
 
 def read(request):
     return render(request, 'read.html') 
@@ -280,7 +293,8 @@ def download_article(request, article_id):
         response = HttpResponse(file.read(), content_type='application/octet-stream')
         response['Content-Disposition'] = f'attachment; filename="{file_name}"'
         return response
-    
+
+
 def read_article(request, article_id):
     article = get_object_or_404(article_table, pk=article_id)
     
@@ -289,9 +303,9 @@ def read_article(request, article_id):
         article_id=article,
         defaults={'count': 1, 'created_by': 'system', 'status': 'active'}
     )
+    
     if not created:
         visit_record.count = F('count') + 1
         visit_record.save()
-    
-    # Redirect to the actual reading page (assuming /flipbook/<article_id>/)
-    return redirect(f'/flipbook/{article_id}/')    
+
+    return redirect(f'/flipbook/{article_id}/')

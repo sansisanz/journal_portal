@@ -28,5 +28,6 @@ urlpatterns = [
     path("remove_journal/<int:journal_id>/", views.remove_journal),
     path('confirm_delete_journal/<int:journal_id>/', views.confirm_delete_journal),
     path('remove_editor/', views.remove_editor),
-]
+
+]    
 
