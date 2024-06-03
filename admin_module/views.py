@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 import hashlib
-from admin_module.models import article_download, article_table, article_visit, ea_table, eb_table, gl_table, issue_table, journalpage_visit, notification_table, role_table, seat_table, designation_table, usertable, dept_table, journal_table, volume_table
+from admin_module.models import JournalPageVisit, article_table, ea_table, eb_table, gl_table, issue_table, notification_table, role_table, seat_table, designation_table, usertable, dept_table, journal_table, volume_table
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -30,13 +30,18 @@ def forgotpassword(request):
         return render(request, "forgotpassword.html", {"empid": empid})
     else:
         return redirect('/login')
+    
+    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 def visit_c(request):
     if request.session.has_key('empid'):
         empid = request.session['empid']
-        return render(request, "visit_c.html", {"empid": empid})
+        departments = dept_table.objects.all()
+        return render(request, "visit_c.html", {"empid": empid, 'departments': departments})
     else:
         return redirect('/login')  
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 def download_c(request):
     if request.session.has_key('empid'):

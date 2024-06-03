@@ -51,9 +51,6 @@
             
         <!-- Begin Page Content -->
         <div class="container-fluid">
-            <!-- Page Heading -->
-
-            <!-- Content Row -->
             <div class="container form-container">
                 <div class="card">
                     <div class="card-header py-3">
@@ -65,12 +62,18 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label for="department">Department:</label>
+                                        <select id="department" name="department" class="form-control">
+                                            <option disabled selected>Select a department</option>
+                                            {% for department in departments %}
+                                                <option value="{{ department.dept_id }}">{{ department.dept_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
                                         <label for="journalName">Journal Name:</label>
                                         <select id="journalName" name="journalName" class="form-control">
                                             <option disabled selected>Select a journal</option>
-                                            {% for journal in journals %}
-                                                <option value="{{ journal.journal_id }}">{{ journal.journal_name }}</option>
-                                            {% endfor %}
                                         </select>
                                     </div>
                                     <div class="form-group">
@@ -121,13 +124,29 @@
                     </div>
                 </div>
             </div>
-
         </div>
+        
             <!-- End of Page Wrapper -->
 
             <script src="{% static 'js/jquery.min.js' %}"></script>
             <script>
                 $(document).ready(function() {
+                    $('#department').change(function() {
+                        var departmentId = $(this).val();
+                        $.ajax({
+                            url: '{% url "ajax_load_journals" %}',
+                            data: {
+                                'department_id': departmentId
+                            },
+                            success: function(data) {
+                                $('#journalName').html('<option value="" disabled selected>Select a journal</option>');
+                                $.each(data, function(key, value) {
+                                    $('#journalName').append('<option value="' + value.journal_id + '">' + value.journal_name + '</option>');
+                                });
+                            }
+                        });
+                    });
+                    
                     $('#journalName').change(function() {
                         var journalId = $(this).val();
                         $.ajax({

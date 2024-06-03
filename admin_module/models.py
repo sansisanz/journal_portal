@@ -116,6 +116,7 @@ class journal_table(models.Model):
     status=models.CharField(max_length=25)
     email = models.CharField(max_length=90, default='')
     phone = models.CharField(max_length=20, default = '')
+    visit_count = models.IntegerField(default=0)
 
     class Meta:
         db_table="journal_table"
@@ -168,6 +169,8 @@ class article_table(models.Model):
     created_by=models.CharField(max_length=50)
     status=models.CharField(max_length=25)
     article_file = models.FileField(upload_to='articles/', default='')
+    visit_count = models.IntegerField(default=0) 
+    download_count = models.IntegerField(default=0)
 
     class Meta:
         db_table="article_table"
@@ -177,10 +180,10 @@ class article_table(models.Model):
 class eb_table(models.Model):
     board_id = models.BigAutoField(primary_key=True)
     journal_id = models.ForeignKey(journal_table,default="1",on_delete=models.SET_DEFAULT)
-    editor_name = models.CharField(max_length=25)
-    editor_address = models.CharField(max_length=25)
-    editor_email = models.CharField(max_length=25)
-    editor_mobile = models.CharField(max_length=25)
+    editor_name = models.CharField(max_length=50)
+    editor_address = models.CharField(max_length=100, default='')
+    editor_email = models.CharField(max_length=100, default='')
+    editor_mobile = models.CharField(max_length=20)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
     created_by=models.CharField(max_length=50)
@@ -221,49 +224,35 @@ class notification_table(models.Model):
     class Meta:
         db_table="notification_table"        
 
-
-#article_visit
-class article_visit(models.Model):
-    art_visit_id = models.BigAutoField(primary_key=True)
-    article_id = models.ForeignKey(article_table,default="1",on_delete=models.SET_DEFAULT)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
-    created_by=models.CharField(max_length=50)
-    status = models.CharField(max_length=25)
-    count = models.IntegerField()
-
-
-    class Meta:
-        db_table="article_visit"
-
-
-#journal page visit
-class journalpage_visit(models.Model):
+class JournalPageVisit(models.Model):
     journal_visit_id = models.BigAutoField(primary_key=True)
-    journal_id = models.ForeignKey(journal_table,default="1",on_delete=models.SET_DEFAULT)
-    count = models.IntegerField()
-    created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now_add=True)
-    created_by=models.CharField(max_length=50)
-    status=models.CharField(max_length=25)
-
+    journal_id = models.ForeignKey(journal_table, default=1, on_delete=models.SET_DEFAULT)
+    ip_address = models.GenericIPAddressField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table="journalpage_visit"
+        db_table = "journalpage_visit"
 
 
-#article_download
-class article_download(models.Model):
+class ArticleVisit(models.Model):
+    art_visit_id = models.BigAutoField(primary_key=True)
+    article_id = models.ForeignKey(article_table, default=1, on_delete=models.SET_DEFAULT)
+    ip_address = models.GenericIPAddressField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "article_visit"
+
+
+class ArticleDownload(models.Model):
     dld_id = models.BigAutoField(primary_key=True)
-    article_id = models.ForeignKey(article_table,default="1",on_delete=models.SET_DEFAULT)
-    count = models.IntegerField()
-    created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now_add=True)
-    created_by=models.CharField(max_length=50)
-    status=models.CharField(max_length=25)
+    article_id = models.ForeignKey(article_table, default=1, on_delete=models.SET_DEFAULT)
+    ip_address = models.GenericIPAddressField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table="article_download"
+        db_table = "article_download"
+
 
 #message_table
 class message_table(models.Model):

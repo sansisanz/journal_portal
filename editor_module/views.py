@@ -30,11 +30,11 @@ def editorialboard(request):
         return redirect('/login')
       
 def add_editorial_board_member(request):
-     if request.session.has_key('empid'):
+    if request.session.has_key('empid'):
         empid = request.session['empid']
         user_name = request.session['editor_name']
     
-     if request.method == 'POST':
+    if request.method == 'POST':
         journals = request.POST.get('journalname')
         editor_name = request.POST.get('full_name')
         editor_address = request.POST.get('office_address')
@@ -43,26 +43,39 @@ def add_editorial_board_member(request):
         photo = request.FILES.get('Upload Photo')
         created_by = user_name  # You need to set the creator value
 
-        editor = ea_table.objects.get(employee_id=empid)
-        editor_id = editor.ea_id
-        journal = journal_table.objects.get(journal_id=journals)
-
-        # Create an Editorial Board Member object
-        new_member = eb_table(
-            journal_id=journal,
+        # Check if a member with the same details already exists
+        existing_member = eb_table.objects.filter(
+            journal_id=journals,
             editor_name=editor_name,
             editor_address=editor_address,
             editor_email=editor_email,
-            editor_mobile=editor_mobile,
-            created_by=user_name,
-            status="Active",  # Set the default status
-            photo=photo
-        )
-        new_member.save()
-        
-        return redirect('/editorialboard/')  # Redirect to a success page after saving
-     else:
-        return render(request,'add_editorial_board_member.html')
+            editor_mobile=editor_mobile
+        ).exists()
+
+        if existing_member:
+            messages.warning(request, 'A member with the same details already exists.')
+            return redirect('/editorialboard/')  # Redirect to the same page
+        else:
+            editor = ea_table.objects.get(employee_id=empid)
+            editor_id = editor.ea_id
+            journal = journal_table.objects.get(journal_id=journals)
+
+            # Create an Editorial Board Member object
+            new_member = eb_table(
+                journal_id=journal,
+                editor_name=editor_name,
+                editor_address=editor_address,
+                editor_email=editor_email,
+                editor_mobile=editor_mobile,
+                created_by=user_name,
+                status="Active",  # Set the default status
+                photo=photo
+            )
+            new_member.save()
+            messages.success(request, 'New member added successfully.')
+            return redirect('/editorialboard/')  # Redirect to a success page after saving
+    else:
+        return render(request, 'editorialboard.html')
      
 
 
@@ -657,20 +670,75 @@ def add_contact(request):
     
 #-----------------------------------------------------------------------------------------------------
 
-def edit_journals(request,journal_id):
-    if request.session.has_key('empid'):
+def edit_journals(request, journal_id):
+    if 'empid' in request.session:
         empid = request.session['empid']
-        jdata = journal_table.objects.get(journal_id=journal_id)
+        jdata = get_object_or_404(journal_table, journal_id=journal_id)
         ebdata = eb_table.objects.filter(journal_id=journal_id)
         volumes = volume_table.objects.filter(journal_id=journal_id)
         notifications = notification_table.objects.filter(journal_id=journal_id)
-        contact = journal_table.objects.get(journal_id=journal_id)
-        gdata = gl_table.objects.filter(journal_id = journal_id)
-        return render(request, "edit_journals.html", {"empid": empid,"jdata":jdata,"ebdata":ebdata,"volumes":volumes,"notifications":notifications,"contact":contact,"gdata":gdata})
+        contact = get_object_or_404(journal_table, journal_id=journal_id)
+        gdata = gl_table.objects.filter(journal_id=journal_id)
+        return render(request, "edit_journals.html", {
+            "empid": empid,
+            "jdata": jdata,
+            "ebdata": ebdata,
+            "volumes": volumes,
+            "notifications": notifications,
+            "contact": contact,
+            "gdata": gdata,
+            "journal_id": journal_id
+        })
+    else:
+        return redirect('/login/')
+
+def edit_volumes(request, journal_id):
+    if 'empid' in request.session:
+        empid = request.session['empid']
+        journal = get_object_or_404(journal_table, journal_id=journal_id)
+        volumes = volume_table.objects.filter(journal_id=journal_id)
+        return render(request, "edit_volumes.html", {"empid": empid, "journal": journal, "volumes": volumes})
     else:
         return redirect('/login/')
     
+def edit_volume(request):
+    if request.method == 'POST':
+        volume_id = request.POST.get('volume_id')
+        volume_name = request.POST.get('volume_name')
+        try:
+            volume = volume_table.objects.get(volume_id=volume_id)
+            volume.volume = volume_name
+            volume.save()
+            return JsonResponse({'status': 'success'})
+        except volume_table.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Volume not found'}, status=404)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Method not allowed'}, status=405)
 
+def remove_volume(request):
+    if request.method == 'POST':
+        volume_id = request.POST.get('volume_id')
+        try:
+            volume = volume_table.objects.get(volume_id=volume_id)
+            volume.delete()
+            return JsonResponse({'status': 'success'})
+        except volume_table.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Volume not found'}, status=404)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Method not allowed'}, status=405)
+
+def remove_issue(request):
+    if request.method == 'POST':
+        volume_id = request.POST.get('volume_id')
+        issue_id = request.POST.get('issue_id')
+        try:
+            issue = issue_table.objects.get(volume_id=volume_id, issue_id=issue_id)
+            issue.delete()
+            return JsonResponse({'status': 'success'})
+        except issue_table.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Issue not found'}, status=404)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Method not allowed'}, status=405)
 #-------------------------------------------------------------------------------------------------------
 
 def contact_edit(request,journal_id):
@@ -727,5 +795,6 @@ def get_editor_details(request, editor_id):
         'photo': editor.photo.url if editor.photo else ''  # Assuming photo is a FileField or ImageField
     }
     return JsonResponse(editor_details)
+
 
     

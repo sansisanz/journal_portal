@@ -33,39 +33,59 @@
                 <h3 class="m-0 font-weight-bold text-primary">ADD EDITORS TO EDITORIAL BOARD</h3>
             </div><br>  
             <div class="card-body">
-            <form action="/add_editorial_board_member/" method="post" enctype="multipart/form-data" id="articleForm" class="border border-primary p-4">
+            <div class="card-body">
+            <form action="/add_editorial_board_member/" method="post" enctype="multipart/form-data" id="articleForm">
                 {% csrf_token %}
-                    <div class="form-group">
-                        <label class="required" for="journalSelect">Select Journal:</label>
-                        <select id="journalSelect" name="journalname" class="form-control" required>
-                            <option value="">Select Journal</option>
-                            {% for journal in journals %}
-                            <option value="{{ journal.journal_id }}">{{ journal.journal_name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="required" for="full_name">Full Name:</label>
-                        <input type="text" name="full_name" id="full_name" placeholder="Enter full name" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="required" for="office_address">Office Address:</label>
-                        <input type="text" name="office_address" id="office_address" placeholder="Enter office address" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="required" for="email_address">Email Address:</label>
-                        <input type="email" name="email_address" id="email_address" placeholder="Enter email address" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="required" for="phone_number">Phone Number:</label>
-                        <input type="text" name="phone_number" id="phone_number" placeholder="Enter phone number" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="required" for="Upload Photo">Upload Photo:</label>
-                        <input type="file" id="Upload Photo" name="Upload Photo" class="form-control" accept="image/*" required>
-                    </div><br>
-                    <center><button type="submit" class="submit-btn">ADD EDITOR</button> </center>
-                    </form>
+                
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                
+                <div class="form-group">
+                    <label class="required" for="journalSelect">Select Journal:</label>
+                    <select id="journalSelect" name="journalname" class="form-control" required>
+                        <option value="">Select Journal</option>
+                        {% for journal in journals %}
+                        <option value="{{ journal.journal_id }}">{{ journal.journal_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="required" for="full_name">Full Name:</label>
+                    <input type="text" name="full_name" id="full_name" class="form-control" placeholder="Enter full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="required" for="office_address">Office Address:</label>
+                    <input type="text" name="office_address" id="office_address" class="form-control" placeholder="Enter office address" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="required" for="email_address">Email Address:</label>
+                    <input type="email" name="email_address" id="email_address" class="form-control" placeholder="Enter email address" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="required" for="phone_number">Phone Number:</label>
+                    <input type="text" name="phone_number" id="phone_number" class="form-control" placeholder="Enter phone number" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="required" for="Upload Photo">Upload Photo:</label>
+                    <input type="file" id="Upload Photo" name="Upload Photo" class="form-control" accept="image/*" required>
+                </div><br>
+                
+                <center><button type="submit" class="submit-btn">ADD EDITOR</button> </center>
+            </form>
             </div>            
                 
     <!-- Bootstrap core JavaScript-->

@@ -25,5 +25,6 @@ urlpatterns = [
     path('flipbook/<int:article_id>/', views.flipbook),
     path('download_article/<int:article_id>/',views.download_article),
     path('read_article/<int:article_id>/', views.read_article),
+    path('get_client_ip/', views.get_client_ip),
 
 ]

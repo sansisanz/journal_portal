@@ -49,12 +49,11 @@
                     <div class="form-group col-md-6">
                       <label for="journalDepartment">Select Department:</label>
                       <select class="form-control" id="journalDepartment">
-                        <option value="">Select Department</option>
-                        <option value="computer_science">Department of Computer Science</option>
-                        <option value="electrical_engineering">Electrical Engineering</option>
-                        <option value="mechanical_engineering">Mechanical Engineering</option>
-                        <option value="civil_engineering">Civil Engineering</option>
-                      </select>
+                          <option value="">Select Department</option>
+                            {% for department in departments %}
+                                <option value="{{ department.dept_id }}">{{ department.dept_name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group col-md-6">
                       <label for="journalName">Select Journal:</label>
@@ -184,43 +183,6 @@
           }
         });
       </script>
-
-
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script>
-  // Function to handle changes in journal dropdowns
-  $('#journalDepartment, #journalName').change(function() {
-    var department = $('#journalDepartment').val();
-    var journal = $('#journalName').val();
-    if (department && journal) {
-      // Simulated visit count (replace with actual logic to fetch visit count)
-      var visitCount = Math.floor(Math.random() * 100); // Random number between 0 and 100
-      $('#journalVisitCountValue').text(visitCount);
-      $('#journalVisitCount').removeClass('d-none');
-    } else {
-      $('#journalVisitCount').addClass('d-none');
-    }
-  });
-
-  // Function to handle changes in article dropdowns
-  $('#articleDepartment, #articleJournal, #articleVolume, #articleIssue, #articleName').change(function() {
-    var department = $('#articleDepartment').val();
-    var journal = $('#articleJournal').val();
-    var volume = $('#articleVolume').val();
-    var issue = $('#articleIssue').val();
-    var article = $('#articleName').val();
-    if (department && journal && volume && issue && article) {
-      // Simulated visit count (replace with actual logic to fetch visit count)
-      var visitCount = Math.floor(Math.random() * 100); // Random number between 0 and 100
-      $('#articleVisitCountValue').text(visitCount);
-      $('#articleVisitCount').removeClass('d-none');
-    } else {
-      $('#articleVisitCount').addClass('d-none');
-    }
-  });
-</script>
-
-
    
     <!-- Bootstrap core JavaScript-->
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>

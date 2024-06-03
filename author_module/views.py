@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, render,redirect
-from admin_module.models import article_table, author_table, issue_table, journal_table, volume_table
+from admin_module.models import article_table, author_table, dept_table, issue_table, journal_table, volume_table
 import hashlib
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -73,10 +73,10 @@ def author_sidebar(request):
 def author_submitarticle(request):
     if request.session.has_key('author_email'):
         author_email = request.session['author_email']
-        journals = journal_table.objects.all()
-        return render(request, "submit-article.html", {"author_email": author_email, "journals": journals})
+        departments = dept_table.objects.all()
+        return render(request, "submit-article.html", {"author_email": author_email, "departments": departments})
     else:
-        return redirect('/p_index/#cta')    
+        return redirect('/p_index/#cta')   
 
 # Function to handle form submission
 def article_submission(request):
@@ -113,6 +113,11 @@ def article_submission(request):
         return redirect('submit_article')  # Redirect back to the form if not a POST request
     else:
         return redirect('/p_index/#cta')
+    
+def load_journals(request):
+    department_id = request.GET.get('department_id')
+    journals = journal_table.objects.filter(dept_id=department_id).all()
+    return JsonResponse(list(journals.values('journal_id', 'journal_name')), safe=False)
 
 def load_volumes(request):
     journal_id = request.GET.get('journal_id')
