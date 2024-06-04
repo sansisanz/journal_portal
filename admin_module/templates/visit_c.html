@@ -21,6 +21,8 @@
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-admin-2.css'%}" rel="stylesheet">
 
+    
+
 </head>
 
 <body id="page-top">
@@ -30,10 +32,13 @@
     <div class="container mt-5">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item">
-            <a class="nav-link active" id="journal-tab" data-toggle="tab" href="#journal" role="tab" aria-controls="journal" aria-selected="true">Journal Page</a>
+            <a class="nav-link active" id="journal-tab" data-toggle="tab" href="#journal" role="tab" aria-controls="journal" aria-selected="true">Journal Page Visits</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="article-tab" data-toggle="tab" href="#article" role="tab" aria-controls="article" aria-selected="false">Article</a>
+            <a class="nav-link" id="article-tab" data-toggle="tab" href="#article" role="tab" aria-controls="article" aria-selected="false">Article Visits</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="download-tab" data-toggle="tab" href="#download" role="tab" aria-controls="downloads" aria-selected="false">Article Downloads</a>
           </li>
         </ul>
         <div class="tab-content" id="myTabContent">
@@ -58,13 +63,9 @@
                     <div class="form-group col-md-6">
                       <label for="journalName">Select Journal:</label>
                       <select class="form-control" id="journalName">
-                        <option value="">Select Journal</option>
-                        <option value="journal_1">Internet of Things</option>
-                        <option value="journal_2">Journal 2</option>
-                        <option value="journal_3">Journal 3</option>
-                        <option value="journal_4">Journal 4</option>
+                          <option value="">Select Journal</option>
                       </select>
-                    </div>
+                  </div>
                   </div>
                 </form>
                 <div id="journalVisitCount" class="mt-3 card d-none">
@@ -86,103 +87,380 @@
                 </div><br>
                 <form id="articleForm">
                   <div class="form-row">
-                    <div class="form-group col-md-3">
-                      <label for="articleDepartment">Select Department:</label>
-                      <select class="form-control" id="articleDepartment">
-                        <option value="">Select Department</option>
-                        <option value="computer_science">Computer Science</option>
-                        <option value="electrical_engineering">Electrical Engineering</option>
-                        <option value="mechanical_engineering">Mechanical Engineering</option>
-                        <option value="civil_engineering">Civil Engineering</option>
-                      </select>
-                    </div>
-                    <div class="form-group col-md-3">
-                      <label for="articleJournal">Select Journal:</label>
-                      <select class="form-control" id="articleJournal">
-                        <option value="">Select Journal</option>
-                        <option value="journal_1">Journal 1</option>
-                        <option value="journal_2">Journal 2</option>
-                        <option value="journal_3">Journal 3</option>
-                        <option value="journal_4">Journal 4</option>
-                      </select>
-                    </div>
-                    <div class="form-group col-md-2">
-                      <label for="articleVolume">Select Volume:</label>
-                      <select class="form-control" id="articleVolume">
-                        <option value="">Select Volume</option>
-                        <option value="vol_1">Volume 1</option>
-                        <option value="vol_2">Volume 2</option>
-                        <option value="vol_3">Volume 3</option>
-                        <option value="vol_4">Volume 4</option>
-                      </select>
-                    </div>
-                    <div class="form-group col-md-2">
-                      <label for="articleIssue">Select Issue:</label>
-                      <select class="form-control" id="articleIssue">
-                        <option value="">Select Issue</option>
-                        <option value="issue_1">Issue 1</option>
-                        <option value="issue_2">Issue 2</option>
-                        <option value="issue_3">Issue 3</option>
-                        <option value="issue_4">Issue 4</option>
-                      </select>
-                    </div>
-                    <div class="form-group col-md-2">
-                      <label for="articleName">Select Article:</label>
-                      <select class="form-control" id="articleName">
-                        <option value="">Select Article</option>
-                        <option value="article_1">Article 1</option>
-                        <option value="article_2">Article 2</option>
-                        <option value="article_3">Article 3</option>
-                        <option value="article_4">Article 4</option>
-                      </select>
-                    </div>
+                      <div class="form-group col-md-3">
+                          <label for="articleDepartment">Select Department:</label>
+                          <select class="form-control" id="articleDepartment">
+                              <option value="">Select Department</option>
+                              {% for department in departments %}
+                                  <option value="{{ department.dept_id }}">{{ department.dept_name }}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                      <div class="form-group col-md-3">
+                          <label for="articleJournal">Select Journal:</label>
+                          <select class="form-control" id="articleJournal">
+                              <option value="">Select Journal</option>
+                          </select>
+                      </div>
+                      <div class="form-group col-md-2">
+                          <label for="articleVolume">Select Volume:</label>
+                          <select class="form-control" id="articleVolume">
+                              <option value="">Select Volume</option>
+                          </select>
+                      </div>
+                      <div class="form-group col-md-2">
+                          <label for="articleIssue">Select Issue:</label>
+                          <select class="form-control" id="articleIssue">
+                              <option value="">Select Issue</option>
+                          </select>
+                      </div>
+                      <div class="form-group col-md-2">
+                          <label for="articleName">Select Article:</label>
+                          <select class="form-control" id="articleName">
+                              <option value="">Select Article</option>
+                          </select>
+                      </div>
                   </div>
-                </form>
-                <div id="articleVisitCount" class="mt-3 card d-none">
+              </form>
+              <div id="articleVisitCount" class="mt-3 card d-none visit-count-card">
                   <div class="card-body">
-                    <h5 class="card-title">Article Visit Count</h5>
-                    <p class="card-text">Total visits: <span id="articleVisitCountValue">0</span></p>
+                      <h5 class="card-title">Article Visit Count</h5>
+                      <p class="card-text">Total visits: <span id="articleVisitCountValue">0</span></p>
                   </div>
+              </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Download Page Tab -->
+          <div class="tab-pane fade" id="download" role="tabpanel" aria-labelledby="download-tab">
+            <div class="card mt-3">
+              <div class="card-body">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">ARTICLE DOWNLOAD COUNTS</h6>
                 </div>
+
+                <form id="downloadForm">
+                  <div class="form-row">
+                      <div class="form-group col-md-3">
+                          <label for="downloadDepartment">Select Department:</label>
+                          <select class="form-control" id="downloadDepartment">
+                              <option value="">Select Department</option>
+                              {% for department in departments %}
+                                  <option value="{{ department.dept_id }}">{{ department.dept_name }}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                      <div class="form-group col-md-3">
+                          <label for="downloadJournal">Select Journal:</label>
+                          <select class="form-control" id="downloadJournal">
+                              <option value="">Select Journal</option>
+                          </select>
+                      </div>
+                      <div class="form-group col-md-2">
+                          <label for="downloadVolume">Select Volume:</label>
+                          <select class="form-control" id="downloadVolume">
+                              <option value="">Select Volume</option>
+                          </select>
+                      </div>
+                      <div class="form-group col-md-2">
+                          <label for="downloadIssue">Select Issue:</label>
+                          <select class="form-control" id="downloadIssue">
+                              <option value="">Select Issue</option>
+                          </select>
+                      </div>
+                      <div class="form-group col-md-2">
+                          <label for="downloadArticle">Select Article:</label>
+                          <select class="form-control" id="downloadArticle">
+                              <option value="">Select Article</option>
+                          </select>
+                      </div>
+                  </div>
+              </form>
+              <div id="downloadCount" class="mt-3 card d-none">
+                  <div class="card-body">
+                      <h5 class="card-title">Article Download Count</h5>
+                      <p class="card-text">Total downloads: <span id="downloadCountValue">0</span></p>
+                  </div>
+              </div>
               </div>
             </div>
           </div>
         </div>
       </div>
       
-      <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+      <script src="{% static 'js/jquery.min.js' %}"></script>
       <script>
-        // Function to handle changes in journal dropdowns
-        $('#journalDepartment, #journalName').change(function() {
-          var department = $('#journalDepartment').val();
-          var journal = $('#journalName').val();
-          if (department && journal) {
-            // Simulated visit count (replace with actual logic to fetch visit count)
-            var visitCount = Math.floor(Math.random() * 100); // Random number between 0 and 100
-            $('#journalVisitCountValue').text(visitCount);
-            $('#journalVisitCount').removeClass('d-none');
-          } else {
-            $('#journalVisitCount').addClass('d-none');
-          }
-        });
+        $(document).ready(function() {
+          $('#journalDepartment').change(function() {
+              var departmentId = $(this).val();
+              if (departmentId) {
+                  $.ajax({
+                      url: '/get_journals_by_dept/',
+                      data: {
+                          'dept_id': departmentId
+                      },
+                      success: function(data) {
+                          var journalSelect = $('#journalName');
+                          journalSelect.empty();
+                          journalSelect.append('<option value="">Select Journal</option>');
+                          $.each(data, function(index, journal) {
+                              journalSelect.append('<option value="' + journal.journal_id + '" data-visit-count="' + journal.visit_count + '">' + journal.journal_name + '</option>');
+                          });
+                      },
+                      error: function(xhr, status, error) {
+                          console.error("Error fetching journals: ", error);
+                      }
+                  });
+              } else {
+                  $('#journalName').empty();
+                  $('#journalName').append('<option value="">Select Journal</option>');
+              }
+          });
       
-        // Function to handle changes in article dropdowns
-        $('#articleDepartment, #articleJournal, #articleVolume, #articleIssue, #articleName').change(function() {
-          var department = $('#articleDepartment').val();
-          var journal = $('#articleJournal').val();
-          var volume = $('#articleVolume').val();
-          var issue = $('#articleIssue').val();
-          var article = $('#articleName').val();
-          if (department && journal && volume && issue && article) {
-            // Simulated visit count (replace with actual logic to fetch visit count)
-            var visitCount = Math.floor(Math.random() * 100); // Random number between 0 and 100
-            $('#articleVisitCountValue').text(visitCount);
-            $('#articleVisitCount').removeClass('d-none');
+          $('#journalName').change(function() {
+              var selectedJournal = $(this).find('option:selected');
+              var visitCount = selectedJournal.data('visit-count');
+              if (visitCount !== undefined) {
+                  $('#journalVisitCountValue').text(visitCount);
+                  $('#journalVisitCount').removeClass('d-none');
+              } else {
+                  $('#journalVisitCount').addClass('d-none');
+              }
+          });
+      });
+  </script>   
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <script>
+      $(document).ready(function() {
+          $('#articleDepartment').change(function() {
+              var departmentId = $(this).val();
+              if (departmentId) {
+                  $.ajax({
+                      url: '/get_journals_by_department/',
+                      data: {'dept_id': departmentId},
+                      success: function(data) {
+                          var journalSelect = $('#articleJournal');
+                          journalSelect.empty();
+                          journalSelect.append('<option value="">Select Journal</option>');
+                          $.each(data, function(index, journal) {
+                              journalSelect.append('<option value="' + journal.journal_id + '">' + journal.journal_name + '</option>');
+                          });
+                      },
+                      error: function(xhr, status, error) {
+                          console.error("Error fetching journals: ", error);
+                      }
+                  });
+              } else {
+                  $('#articleJournal').empty();
+                  $('#articleJournal').append('<option value="">Select Journal</option>');
+              }
+          });
+
+          $('#articleJournal').change(function() {
+              var journalId = $(this).val();
+              if (journalId) {
+                  $.ajax({
+                      url: '/get_volumes_by_journal/',
+                      data: {'journal_id': journalId},
+                      success: function(data) {
+                          var volumeSelect = $('#articleVolume');
+                          volumeSelect.empty();
+                          volumeSelect.append('<option value="">Select Volume</option>');
+                          $.each(data, function(index, volume) {
+                              volumeSelect.append('<option value="' + volume.volume_id + '">' + volume.volume + '</option>');
+                          });
+                      },
+                      error: function(xhr, status, error) {
+                          console.error("Error fetching volumes: ", error);
+                      }
+                  });
+              } else {
+                  $('#articleVolume').empty();
+                  $('#articleVolume').append('<option value="">Select Volume</option>');
+              }
+          });
+
+          $('#articleVolume').change(function() {
+              var volumeId = $(this).val();
+              if (volumeId) {
+                  $.ajax({
+                      url: '/get_issues_by_volume/',
+                      data: {'volume_id': volumeId},
+                      success: function(data) {
+                          var issueSelect = $('#articleIssue');
+                          issueSelect.empty();
+                          issueSelect.append('<option value="">Select Issue</option>');
+                          $.each(data, function(index, issue) {
+                              issueSelect.append('<option value="' + issue.issue_id + '">' + issue.issue_no + '</option>');
+                          });
+                      },
+                      error: function(xhr, status, error) {
+                          console.error("Error fetching issues: ", error);
+                      }
+                  });
+              } else {
+                  $('#articleIssue').empty();
+                  $('#articleIssue').append('<option value="">Select Issue</option>');
+              }
+          });
+
+          $('#articleIssue').change(function() {
+              var issueId = $(this).val();
+              if (issueId) {
+                  $.ajax({
+                      url: '/get_articles_by_issue/',
+                      data: {'issue_id': issueId},
+                      success: function(data) {
+                          var articleSelect = $('#articleName');
+                          articleSelect.empty();
+                          articleSelect.append('<option value="">Select Article</option>');
+                          $.each(data, function(index, article) {
+                              articleSelect.append('<option value="' + article.article_id + '" data-visit-count="' + article.visit_count + '">' + article.article_title + '</option>');
+                          });
+                      },
+                      error: function(xhr, status, error) {
+                          console.error("Error fetching articles: ", error);
+                      }
+                  });
+              } else {
+                  $('#articleName').empty();
+                  $('#articleName').append('<option value="">Select Article</option>');
+              }
+          });
+
+          $('#articleName').change(function() {
+              var selectedArticle = $(this).find('option:selected');
+              var visitCount = selectedArticle.data('visit-count');
+              if (visitCount !== undefined) {
+                  $('#articleVisitCountValue').text(visitCount);
+                  $('#articleVisitCount').removeClass('d-none');
+              } else {
+                  $('#articleVisitCount').addClass('d-none');
+              }
+          });
+      });
+  </script>
+   <script>
+    $(document).ready(function() {
+      // Download Page Tab functionality
+      $('#downloadDepartment').change(function() {
+          var departmentId = $(this).val();
+          if (departmentId) {
+              $.ajax({
+                  url: '/get_journals_by_dept/',
+                  data: {
+                      'dept_id': departmentId
+                  },
+                  success: function(data) {
+                      var journalSelect = $('#downloadJournal');
+                      journalSelect.empty();
+                      journalSelect.append('<option value="">Select Journal</option>');
+                      $.each(data, function(index, journal) {
+                          journalSelect.append('<option value="' + journal.journal_id + '">' + journal.journal_name + '</option>');
+                      });
+                  },
+                  error: function(xhr, status, error) {
+                      console.error("Error fetching journals: ", error);
+                  }
+              });
           } else {
-            $('#articleVisitCount').addClass('d-none');
+              $('#downloadJournal').empty();
+              $('#downloadJournal').append('<option value="">Select Journal</option>');
           }
-        });
-      </script>
+      });
+
+      $('#downloadJournal').change(function() {
+          var journalId = $(this).val();
+          if (journalId) {
+              $.ajax({
+                  url: '/get_volumes_by_journal/',
+                  data: {
+                      'journal_id': journalId
+                  },
+                  success: function(data) {
+                      var volumeSelect = $('#downloadVolume');
+                      volumeSelect.empty();
+                      volumeSelect.append('<option value="">Select Volume</option>');
+                      $.each(data, function(index, volume) {
+                          volumeSelect.append('<option value="' + volume.volume_id + '">' + volume.volume + '</option>');
+                      });
+                  },
+                  error: function(xhr, status, error) {
+                      console.error("Error fetching volumes: ", error);
+                  }
+              });
+          } else {
+              $('#downloadVolume').empty();
+              $('#downloadVolume').append('<option value="">Select Volume</option>');
+          }
+      });
+
+      $('#downloadVolume').change(function() {
+          var volumeId = $(this).val();
+          if (volumeId) {
+              $.ajax({
+                  url: '/get_issues_by_volume/',
+                  data: {
+                      'volume_id': volumeId
+                  },
+                  success: function(data) {
+                      var issueSelect = $('#downloadIssue');
+                      issueSelect.empty();
+                      issueSelect.append('<option value="">Select Issue</option>');
+                      $.each(data, function(index, issue) {
+                          issueSelect.append('<option value="' + issue.issue_id + '">' + issue.issue_no + '</option>');
+                      });
+                  },
+                  error: function(xhr, status, error) {
+                      console.error("Error fetching issues: ", error);
+                  }
+              });
+          } else {
+              $('#downloadIssue').empty();
+              $('#downloadIssue').append('<option value="">Select Issue</option>');
+          }
+      });
+
+      $('#downloadIssue').change(function() {
+          var issueId = $(this).val();
+          if (issueId) {
+              $.ajax({
+                  url: '/get_articles_by_issue/',
+                  data: {
+                      'issue_id': issueId
+                  },
+                  success: function(data) {
+                      var articleSelect = $('#downloadArticle');
+                      articleSelect.empty();
+                      articleSelect.append('<option value="">Select Article</option>');
+                      $.each(data, function(index, article) {
+                          articleSelect.append('<option value="' + article.article_id + '" data-download-count="' + article.download_count + '">' + article.article_title + '</option>');
+                      });
+                  },
+                  error: function(xhr, status, error) {
+                      console.error("Error fetching articles: ", error);
+                  }
+              });
+          } else {
+              $('#downloadArticle').empty();
+              $('#downloadArticle').append('<option value="">Select Article</option>');
+          }
+      });
+
+      $('#downloadArticle').change(function() {
+          var selectedArticle = $(this).find('option:selected');
+          var downloadCount = selectedArticle.data('download-count');
+          if (downloadCount !== undefined) {
+              $('#downloadCountValue').text(downloadCount);
+              $('#downloadCount').removeClass('d-none');
+          } else {
+              $('#downloadCount').addClass('d-none');
+          }
+      });
+    });
+  </script>
+      
    
     <!-- Bootstrap core JavaScript-->
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>

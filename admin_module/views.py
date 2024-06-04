@@ -1,3 +1,4 @@
+import logging
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -41,14 +42,47 @@ def visit_c(request):
     else:
         return redirect('/login')  
 
+
+logger = logging.getLogger(__name__)
+
+def get_journals_by_dept(request):
+    dept_id = request.GET.get('dept_id')
+    if not dept_id:
+        return JsonResponse({'error': 'Department ID not provided'}, status=400)
+    
+    try:
+        dept_id = int(dept_id)
+        journals = journal_table.objects.filter(dept_id=dept_id)
+        journal_list = list(journals.values('journal_id', 'journal_name', 'visit_count'))
+        return JsonResponse(journal_list, safe=False)
+    except ValueError:
+        return JsonResponse({'error': 'Invalid Department ID'}, status=400)
+    except Exception as e:
+        logger.error(f"Error fetching journals for department ID {dept_id}: {e}")
+        return JsonResponse({'error': str(e)}, status=500)
+    
+def get_journals_by_department(request):
+    dept_id = request.GET.get('dept_id')
+    journals = journal_table.objects.filter(dept_id=dept_id).values('journal_id', 'journal_name')
+    return JsonResponse(list(journals), safe=False)
+
+def get_volumes_by_journal(request):
+    journal_id = request.GET.get('journal_id')
+    volumes = volume_table.objects.filter(journal_id=journal_id).values('volume_id', 'volume')
+    return JsonResponse(list(volumes), safe=False)
+
+def get_issues_by_volume(request):
+    volume_id = request.GET.get('volume_id')
+    issues = issue_table.objects.filter(volume_id=volume_id).values('issue_id', 'issue_no')
+    return JsonResponse(list(issues), safe=False)
+
+def get_articles_by_issue(request):
+    issue_id = request.GET.get('issue_id')
+    articles = article_table.objects.filter(issue_id=issue_id).values('article_id', 'article_title', 'visit_count', 'download_count')
+    return JsonResponse(list(articles), safe=False)
+        
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-def download_c(request):
-    if request.session.has_key('empid'):
-        empid = request.session['empid']
-        return render(request, "download_c.html", {"empid": empid})
-    else:
-        return redirect('/login') 
 
 def userlist(request):
     if request.session.has_key('empid'):

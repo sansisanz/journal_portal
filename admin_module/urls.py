@@ -7,7 +7,6 @@ urlpatterns = [
     path("index/", views.index),
     path("forgotpassword/", views.forgotpassword),
     path("visit_c/", views.visit_c),
-    path("download_c/", views.download_c),
     path("userlist/", views.userlist),
     path("adminprofile/", views.adminprofile),
     path("adminresetpassword/", views.adminresetpassword),
@@ -28,6 +27,11 @@ urlpatterns = [
     path("remove_journal/<int:journal_id>/", views.remove_journal),
     path('confirm_delete_journal/<int:journal_id>/', views.confirm_delete_journal),
     path('remove_editor/', views.remove_editor),
+    path('get_journals_by_dept/', views.get_journals_by_dept),
+    path('get_journals_by_department/', views.get_journals_by_department),
+    path('get_volumes_by_journal/', views.get_volumes_by_journal),
+    path('get_issues_by_volume/', views.get_issues_by_volume),
+    path('get_articles_by_issue/', views.get_articles_by_issue),
 
 ]    
 
