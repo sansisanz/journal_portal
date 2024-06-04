@@ -7,7 +7,7 @@ import random
 from django.db.models import F
 from django.core.mail import send_mail
 from django.contrib import messages
-from admin_module.models import  JournalPageVisit, article_table, author_table, ea_table, issue_table,volume_table,journal_table,dept_table,eb_table,notification_table,gl_table
+from admin_module.models import  ArticleDownload, ArticleVisit, JournalPageVisit, article_table, author_table, ea_table, issue_table,volume_table,journal_table,dept_table,eb_table,notification_table,gl_table
 
 # Create your views here.
 def p_index(request):
@@ -245,67 +245,59 @@ def author_logout(request):
         pass
     return redirect("/p_index/#cta")
 
-
+#----------------------------------------------------------------------------------------------------------------------------------#
 def issue_detail(request, issue_id):
-    # Retrieve the selected issue
     selected_issue = get_object_or_404(issue_table, issue_id=issue_id)
-
-    # Retrieve approved articles associated with the selected issue
     articles = article_table.objects.filter(issue_id=issue_id, status='approved')
-
-    # Create a list to store article information
+    
     articles_list = []
-
-    # Iterate over articles and format author names
     for article in articles:
         authors = [article.author1, article.author2, article.author3]
-        authors = [author.strip() for author in authors if author.strip()]  # Remove empty author names
-        authors_str = ' and '.join(authors[:-1]) + ', ' + authors[-1] if len(authors) > 1 else authors[0]
+        authors = [author.strip() for author in authors if author.strip()]
+        authors_str = ', '.join(authors[:-1]) + ' and ' + authors[-1] if len(authors) > 1 else authors[0]
         articles_list.append({
             'id': article.article_id,
             'title': article.article_title,
             'authors': authors_str
         })
-
+    
     return render(request, 'issue_detail.html', {'selected_issue': selected_issue, 'articles_list': articles_list})
 
 def flipbook(request, article_id):
     article = get_object_or_404(article_table, pk=article_id)
-    # Logic to render the flipbook view
+    # Increment the visit count for the article directly in the article_table
+    article_table.objects.filter(article_id=article_id).update(visit_count=F('visit_count') + 1)
+    
+    # Save the IP address in ArticleVisit
+    ArticleVisit.objects.create(article_id=article, ip_address=request.META['REMOTE_ADDR'])
     return render(request, 'flipbook.html', {'article': article})
-
 
 def download_article(request, article_id):
     article = get_object_or_404(article_table, pk=article_id)
     file_path = article.article_file.path
     file_name = os.path.basename(file_path)
-    
+
     # Increment the download count for the article
-    download_record, created = article_download.objects.get_or_create(
-        article_id=article,
-        defaults={'count': 1, 'created_by': 'system', 'status': 'active'}
-    )
-    if not created:
-        download_record.count = F('count') + 1
-        download_record.save()
+    article.download_count = F('download_count') + 1
+    article.save()
+    
+    # Save the IP address in ArticleDownload
+    ArticleDownload.objects.create(article_id=article, ip_address=request.META['REMOTE_ADDR'])
     
     with open(file_path, 'rb') as file:
         response = HttpResponse(file.read(), content_type='application/octet-stream')
         response['Content-Disposition'] = f'attachment; filename="{file_name}"'
         return response
 
-
 def read_article(request, article_id):
     article = get_object_or_404(article_table, pk=article_id)
     
-    # Increment the visit count for the article
-    visit_record, created = article_visit.objects.get_or_create(
-        article_id=article,
-        defaults={'count': 1, 'created_by': 'system', 'status': 'active'}
-    )
+    # Increment the visit count for the article directly in the article_table
+    article_table.objects.filter(article_id=article_id).update(visit_count=F('visit_count') + 1)
     
-    if not created:
-        visit_record.count = F('count') + 1
-        visit_record.save()
-
+    # Save the IP address in ArticleVisit
+    ArticleVisit.objects.create(article_id=article, ip_address=request.META['REMOTE_ADDR'])
+    
     return redirect(f'/flipbook/{article_id}/')
+
+#----------------------------------------------------------------------------------------------------------------------------------#

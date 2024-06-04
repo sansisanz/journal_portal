@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Charts</title>
+    <title>JP Admin Panel</title>
 
     <!-- Custom fonts for this template-->
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
@@ -19,126 +19,144 @@
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="{% static 'css/sb-editor.css' %}" rel="stylesheet">
-    <link href="{% static 'css/guidelines.css' %}" rel="stylesheet">
-    <link href="{% static 'css/guidelines.js' %}" rel="stylesheet">
-    <script src="{% static 'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js' %}"></script>
+    <link href="{% static 'css/sb-admin-2.css'%}" rel="stylesheet">
 
-  
-
-<style>
-    .container-fluid {
-        padding: 20px;
-    }
-    </style>
+    
 
 </head>
 
 <body id="page-top">
 
-{% include 'editor_sidebar.html' %}
+    {% include 'editor_sidebar.html' %}
 
-<div class="2h2" style="margin-left: 5%;">
-    <h2 style="color: #4E73DF;"><b>VISIT COUNTS </b></h2><br>
-</div> 
-
-<div class="container">
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" id="journalPage-tab" data-toggle="tab" href="#journalPage" role="tab" aria-controls="journalPage" aria-selected="true">Journal Page</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="article-tab" data-toggle="tab" href="#article" role="tab" aria-controls="article" aria-selected="false">Article</a>
-        </li>
-    </ul>
-    <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="journalPage" role="tabpanel" aria-labelledby="journalPage-tab">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Select Journal</h5><br>
-                    <!-- Dropdown for selecting journal -->
-                    <select class="custom-select mb-3" id="journalSelectJournalPage">
-                        <option selected>Select Journal</option>
-                        <option value="journal1">Journal 1</option>
-                        <option value="journal2">Journal 2</option>
-                        <option value="journal3">Journal 3</option>
-                        <option value="journal4">Journal 4</option>
-                    </select>                        
-                    <h5 class="card-title">Total Visit Count</h5>
-                    <p class="card-text">Total visits for selected journal will be displayed here.</p>
+    <div class="container mt-5">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="journal-tab" data-toggle="tab" href="#journal" role="tab" aria-controls="journal" aria-selected="true">Journal Page Visits</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="article-tab" data-toggle="tab" href="#article" role="tab" aria-controls="article" aria-selected="false">Article Visits</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="download-tab" data-toggle="tab" href="#download" role="tab" aria-controls="downloads" aria-selected="false">Article Downloads</a>
+          </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+          <!-- Journal Page Tab -->
+          <div class="tab-pane fade show active" id="journal" role="tabpanel" aria-labelledby="journal-tab">
+            <div class="card mt-3">
+              <div class="card-body">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">JOURNAL PAGE VISIT COUNTS</h6>
+                </div><br>
+                
+                <div id="journalVisitCount" class="mt-3 card d-none">
+                  <div class="card-body">
+                    <h5 class="card-title">Journal Page Visit Count</h5>
+                    <p class="card-text">Total visits: <span id="journalVisitCountValue">0</span></p>
+                  </div>
                 </div>
+              </div>
             </div>
-        </div>
-        <div class="tab-pane fade" id="article" role="tabpanel" aria-labelledby="article-tab">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Select Journal, Volume, Issue, and Article</h5>
-                    <!-- Dropdowns for selecting journal, volume, issue, and article -->
-                    <select class="custom-select mb-3" id="journalSelectArticle">
-                        <option selected>Select Journal</option>
-                        <option value="journal1">Journal 1</option>
-                        <option value="journal2">Journal 2</option>
-                        <option value="journal3">Journal 3</option>
-                        <option value="journal4">Journal 4</option>
-                    </select>
-                    <select class="custom-select mb-3" id="volumeSelectArticle">
-                        <option selected>Select Volume</option>
-                        <option value="volume1">Volume 1</option>
-                        <option value="volume2">Volume 2</option>
-                        <option value="volume3">Volume 3</option>
-                        <option value="volume4">Volume 4</option>
-                    </select>
-                    <select class="custom-select mb-3" id="issueSelectArticle">
-                        <option selected>Select Issue</option>
-                        <option value="issue1">Issue 1</option>
-                        <option value="issue2">Issue 2</option>
-                        <option value="issue3">Issue 3</option>
-                        <option value="issue4">Issue 4</option>
-                    </select>
-                    <select class="custom-select mb-3" id="articleSelectArticle">
-                        <option selected>Select Article</option>
-                        <option value="article1">Article 1</option>
-                        <option value="article2">Article 2</option>
-                        <option value="article3">Article 3</option>
-                        <option value="article4">Article 4</option>
-                    </select> <br>                       
-                    <h5 class="card-title">Total Visit Count</h5>
-                    <p class="card-text">Total visits for selected article will be displayed here.</p>
-                </div>
+          </div>
+          
+          <!-- Article Tab -->
+          <div class="tab-pane fade" id="article" role="tabpanel" aria-labelledby="article-tab">
+            <div class="card mt-3">
+              <div class="card-body">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">ARTICLE VISIT COUNTS</h6>
+                </div><br>
+                <form id="articleForm">
+                  <div class="form-row">
+                      <div class="form-group col-md-3">
+                          <label for="articleJournal">Select Journal:</label>
+                          <select class="form-control" id="articleJournal">
+                              <option value="">Select Journal</option>
+                          </select>
+                      </div>
+                      <div class="form-group col-md-2">
+                          <label for="articleVolume">Select Volume:</label>
+                          <select class="form-control" id="articleVolume">
+                              <option value="">Select Volume</option>
+                          </select>
+                      </div>
+                      <div class="form-group col-md-2">
+                          <label for="articleIssue">Select Issue:</label>
+                          <select class="form-control" id="articleIssue">
+                              <option value="">Select Issue</option>
+                          </select>
+                      </div>
+                      <div class="form-group col-md-2">
+                          <label for="articleName">Select Article:</label>
+                          <select class="form-control" id="articleName">
+                              <option value="">Select Article</option>
+                          </select>
+                      </div>
+                  </div>
+              </form>
+              <div id="articleVisitCount" class="mt-3 card d-none visit-count-card">
+                  <div class="card-body">
+                      <h5 class="card-title">Article Visit Count</h5>
+                      <p class="card-text">Total visits: <span id="articleVisitCountValue">0</span></p>
+                  </div>
+              </div>
+              </div>
             </div>
-        </div>
-    </div>
-</div>
+          </div>
 
-
-
-    
-
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
+          <!-- Download Page Tab -->
+          <div class="tab-pane fade" id="download" role="tabpanel" aria-labelledby="download-tab">
+            <div class="card mt-3">
+              <div class="card-body">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">ARTICLE DOWNLOAD COUNTS</h6>
                 </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="/editor_login/">Logout</a>
-                </div>
+
+                <form id="downloadForm">
+                  <div class="form-row">
+                      <div class="form-group col-md-3">
+                          <label for="downloadJournal">Select Journal:</label>
+                          <select class="form-control" id="downloadJournal">
+                              <option value="">Select Journal</option>
+                          </select>
+                      </div>
+                      <div class="form-group col-md-2">
+                          <label for="downloadVolume">Select Volume:</label>
+                          <select class="form-control" id="downloadVolume">
+                              <option value="">Select Volume</option>
+                          </select>
+                      </div>
+                      <div class="form-group col-md-2">
+                          <label for="downloadIssue">Select Issue:</label>
+                          <select class="form-control" id="downloadIssue">
+                              <option value="">Select Issue</option>
+                          </select>
+                      </div>
+                      <div class="form-group col-md-2">
+                          <label for="downloadArticle">Select Article:</label>
+                          <select class="form-control" id="downloadArticle">
+                              <option value="">Select Article</option>
+                          </select>
+                      </div>
+                  </div>
+              </form>
+              <div id="downloadCount" class="mt-3 card d-none">
+                  <div class="card-body">
+                      <h5 class="card-title">Article Download Count</h5>
+                      <p class="card-text">Total downloads: <span id="downloadCountValue">0</span></p>
+                  </div>
+              </div>
+              </div>
             </div>
+          </div>
         </div>
-    </div>
-    
-
+      </div>
+      
+   
     <!-- Bootstrap core JavaScript-->
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static 'js/demo/guidelines.js' %}"></script>
 
     <!-- Core plugin JavaScript-->
     <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
@@ -152,8 +170,7 @@
     <!-- Page level custom scripts -->
     <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
     <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
-    <script src="{% static 'js/demo/chart-bar-demo.js' %}"></script>
 
 </body>
 
-</html>
+</html>    
