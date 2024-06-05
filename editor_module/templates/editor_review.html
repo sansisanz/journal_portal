@@ -17,13 +17,72 @@
 
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-editor.css' %}" rel="stylesheet">
+
+    <style>
+        .card-header {
+            background-color: #4e73df;
+            color: white;
+        }
+        .card-body {
+            background-color: #f8f9fc;
+        }
+        .form-control {
+            margin-bottom: 1rem;
+        }
+        .btn-primary {
+            background-color: #4e73df;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #2e59d9;
+        }
+        .container-fluid {
+            margin-top: 2rem;
+        }
+        .article-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .author-info {
+            font-size: 1rem;
+            color: #858796;
+        }
+    </style>
 </head>
 
 <body id="page-top">
     {% include 'editor_sidebar.html' %}
 
     <div class="container-fluid">
-        
+        <h1 class="h3 mb-2 text-gray-800">Accepted Articles</h1>
+
+        {% if messages %}
+            <div class="alert alert-success" role="alert">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% for article in articles %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4 style="color: #2e59d9;">{{ article.article_title }}</h4>
+            </div>
+            <div class="card-body">
+                <p>Author: {{ article.author1 }}{{ article.author2|yesno:", " }}{{ article.author3|yesno:", " }}</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="article_id" value="{{ article.article_id }}">
+                    <div class="form-group">
+                        <label for="review">Review:</label>
+                        <textarea class="form-control" name="review" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
     </div>
 
     <!-- Scroll to Top Button-->

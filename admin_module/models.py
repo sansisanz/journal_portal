@@ -174,6 +174,7 @@ class article_table(models.Model):
     article_file = models.FileField(upload_to='articles/', default='')
     visit_count = models.IntegerField(default=0) 
     download_count = models.IntegerField(default=0)
+    ea_id = models.ForeignKey(ea_table,default="1",on_delete=models.SET_DEFAULT)
 
     class Meta:
         db_table="article_table"

@@ -14,66 +14,56 @@
 
     <!-- Custom fonts for this template-->
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-editor.css' %}" rel="stylesheet">
 
     <style>
-
         .form-box {
-          background-color: #fff;
-          border: 1px solid #ced4da;
-          border-radius: 10px;
-          padding: 20px;
-          margin-bottom: 70%;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 70%;
         }
 
-         /* Option Box */
-         .option-box {
+        .option-box {
             background-color: rgb(255, 255, 255);
             border-radius: 5px;
             margin-bottom: 20px;
             padding: 15px;
         }
 
-        /* Option Heading */
         .option-heading {
-            /* color: #851dda; */
             color: #c4a1e0;
             font-weight: bold;
             margin-bottom: 10px;
             text-align: center;
         }
 
-        /* Form Control Colors */
         .form-control {
             color: #000000;
             border-color: #000000;
         }
 
-        /* Checkbox and Radio Button Styling */
         .form-check-input[type="checkbox"],
         .form-check-input[type="radio"] {
             margin-top: 5px;
         }
 
-        /* Success Message */
         .alert-success {
             background-color: #dff0d8;
             border-color: #d0e9c6;
             color: #3c763d;
         }
         
-        .guide{
-            background-color:  #dff0d8;
+        .guide {
+            background-color: #dff0d8;
             padding: 2rem;
             border-radius: 10px;
-            border-color: #c4a1e0 ;
+            border-color: #c4a1e0;
         }
-
     </style>
 
 </head>
@@ -84,207 +74,231 @@
 
     <div class="container">
         <div class="row">
-          <div class="col-md-10 offset-md-1"> <!-- Centering the form for medium and large screens -->
-            <div class="form-box">
-                <div class="card-header py-3">
-                    <h3 class="m-0 font-weight-bold text-primary">Edit Journals and Details</h3>
-                </div><br>  
-                <!-- Nav tabs -->
-                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    <li class="nav-item">
-                    <a class="nav-link active" id="volumes-tab" data-toggle="tab" href="#volumes" role="tab" aria-controls="volumes" aria-selected="true">Volumes</a>
-                    </li>
-                    <li class="nav-item">
-                    <a class="nav-link" id="details-tab" data-toggle="tab" href="#details" role="tab" aria-controls="details" aria-selected="false">Details</a>
-                    </li>
-                    <li class="nav-item">
-                    <a class="nav-link" id="editorial-board-tab" data-toggle="tab" href="#editorial-board" role="tab" aria-controls="editorial-board" aria-selected="false">Editorial Board</a>
-                    </li>
-                    <li class="nav-item">
-                    <a class="nav-link" id="notifications-tab" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="false">Notifications</a>
-                    </li>
-                    <li class="nav-item">
-                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
-                    </li>
-                </ul>
-            
-                <!-- Tab panes -->
-                <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade show active" id="volumes" role="tabpanel" aria-labelledby="volumes-tab">
-                        {% if messages %}
-                        <div class="mt-3">
-                            {% for message in messages %}
-                                <div class="alert alert-success">{{ message }}</div>
-                            {% endfor %}
+            <div class="col-md-10 offset-md-1"> <!-- Centering the form for medium and large screens -->
+                <div class="form-box">
+                    <div class="card-header py-3">
+                        <h3 class="m-0 font-weight-bold text-primary">Edit Journals and Details</h3>
+                    </div><br>  
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="volumes-tab" data-toggle="tab" href="#volumes" role="tab" aria-controls="volumes" aria-selected="true">Volumes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="issues-tab" data-toggle="tab" href="#issues" role="tab" aria-controls="issues" aria-selected="false">Issues</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="details-tab" data-toggle="tab" href="#details" role="tab" aria-controls="details" aria-selected="false">Details</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="editorial-board-tab" data-toggle="tab" href="#editorial-board" role="tab" aria-controls="editorial-board" aria-selected="false">Editorial Board</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="notifications-tab" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="false">Notifications</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
+                        </li>
+                    </ul>
+                
+                    <!-- Tab panes -->
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="volumes" role="tabpanel" aria-labelledby="volumes-tab">
+                            {% if messages %}
+                                <div class="mt-3">
+                                    {% for message in messages %}
+                                        <div class="alert alert-success">{{ message }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            
+                            <form action="/edit_volume/volume_id/" method="post" enctype="multipart/form-data" id="editArticleForm" class="border border-primary p-4">
+                                {% csrf_token %}
+                                
+                                <!-- Select Volume -->
+                                <div class="form-group option-box">
+                                    <label class="option-heading" for="volume">Select Volume:</label>
+                                    <select class="form-control" name="volume" id="volume" required>
+                                        <option value="">Select a Volume</option>
+                                        {% for volume in volumes %}
+                                            <option value="{{ volume.volume_id }}">{{ volume.volume }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                
+                                <!-- Volume Name Input -->
+                                <div class="form-group mt-3" id="volumeNameContainer" style="display: none;">
+                                    <label for="volumeName">Volume Name:</label>
+                                    <input type="text" class="form-control" id="volumeName" name="volume_name" required>
+                                    <input type="hidden" id="volumeId" name="volume_id">
+                                </div>
+                                
+                                <div class="text">
+                                    <button type="submit" class="btn btn-success btn-block mt-3" id="submitVic">Submit</button>
+                                </div>
+                            </form>
                         </div>
-                        {% endif %}
-                
-                        <form action="/edit_volume/{{ journal_id }}/" method="post" enctype="multipart/form-data" id="editArticleForm" class="border border-primary p-4">
-                            {% csrf_token %}
-                            
-                            <!-- Select Volume -->
-                            <div class="form-group option-box">
-                                <label class="option-heading" for="volume">Select Volume:</label>
-                                <select class="form-control" name="volume" id="volume" required>
-                                    <option value="">Select a Volume</option>
-                                    {% for volume in volumes %}
-                                        <option value="{{ volume.volume_id }}">{{ volume.volume }}</option>
+                        
+                        <script>
+                            document.getElementById('volume').addEventListener('change', function() {
+                                var volumeId = this.value;
+                                if (volumeId) {
+                                    fetch(`/edit_volume/${volumeId}/`, {
+                                        headers: {
+                                            'X-Requested-With': 'XMLHttpRequest'
+                                        }
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        document.getElementById('volumeNameContainer').style.display = 'block';
+                                        document.getElementById('volumeName').value = data.volume_name;
+                                        document.getElementById('volumeId').value = volumeId;
+                                    });
+                                } else {
+                                    document.getElementById('volumeNameContainer').style.display = 'none';
+                                }
+                            });
+                        </script>
+
+                        <div class="tab-pane fade" id="issues" role="tabpanel" aria-labelledby="issues-tab">
+                            <form action="/edit_issue/" method="post" enctype="multipart/form-data" id="editIssueForm" class="border border-primary p-4">
+                                {% csrf_token %}
+                                
+                                <!-- Select Volume -->
+                                <div class="form-group option-box">
+                                    <label class="option-heading" for="issueVolume">Select Volume:</label>
+                                    <select class="form-control" name="issueVolume" id="issueVolume" required>
+                                        <option value="">Select a Volume</option>
+                                        {% for volume in volumes %}
+                                            <option value="{{ volume.volume_id }}">{{ volume.volume }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                
+                                <!-- Select Issue -->
+                                <div class="form-group option-box">
+                                    <label class="option-heading" for="issue">Select Issue:</label>
+                                    <select class="form-control" name="issue" id="issue" required>
+                                        <option value="">Select an Issue</option>
+                                        <!-- Issue options will be populated dynamically -->
+                                    </select>
+                                </div>
+                                
+                                <!-- Issue Cover Photo -->
+                                <div class="form-group">
+                                    <label for="issueCoverPhoto">Change Cover Photo:</label>
+                                    <input type="file" class="form-control-file" id="issueCoverPhoto" name="issue_cover_photo" required>
+                                </div>
+                                
+                                <div class="text">
+                                    <button type="submit" class="btn btn-success btn-block mt-3" id="submitIssue">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="tab-pane fade" id="details" role="tabpanel" aria-labelledby="details-tab">
+                            <form action="/details_edit/{{ jdata.journal_id }}/" method="post" enctype="multipart/form-data" id="editArticleForm" class="border border-primary p-4">
+                                {% csrf_token %}                                                           
+                                <div class="form-group">
+                                    <label for="aimsScope">Aims & Scope:</label>
+                                    <textarea class="form-control" name="aimsScope" id="aimsScope"  placeholder="Write aims and scope here...">{{ jdata.journal_aim }}</textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="guidelines">Guidelines:</label>
+                                    {% for i in gdata %}
+                                    <div class="form-group row guide">
+                                        <div class="col-sm-4">
+                                            <label for="totalContents">Heading:</label>
+                                            <input type="text" id="heading" name="heading" class="form-control" value="{{ i.heading }}">
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <label for="totalContents">Content:</label>
+                                            <input type="text" id="Content" name="Content" class="form-control" value="{{ i.content }}">
+                                        </div>
+                                    </div>
                                     {% endfor %}
-                                </select>
-                            </div>
-                
-                            <!-- Update Volume Name -->
-                            <div class="form-check option-box">
-                                <input class="form-check-input" type="checkbox" id="updateVolume" name="updateVolume" onclick="toggleVisibility('updateVolumeForm')">
-                                <label class="form-check-label option-heading" for="updateVolume">Update Volume Name</label>
-                                <div id="updateVolumeForm" class="form-group" style="display:none;">
-                                    <label for="volumeName">Edit Volume Name:</label>
-                                    <input type="text" class="form-control" id="volumeName" name="volumeName">
-                                </div>
-                            </div>
-                            
-                            <!-- Update Cover Photo -->
-                            <div class="form-check option-box">
-                                <input class="form-check-input" type="checkbox" id="updateCoverPhoto" name="updateCoverPhoto" onclick="toggleVisibility('updateCoverPhotoForm')">
-                                <label class="form-check-label option-heading" for="updateCoverPhoto">Update Cover Photo</label>
-                                <div id="updateCoverPhotoForm" class="form-group" style="display:none;">
-                                    <label for="coverPhoto">Upload New Cover Photo:</label>
-                                    <input type="file" class="form-control-file" id="coverPhoto" name="coverPhoto">
-                                </div>
-                            </div>
-                            
-                            <!-- Add More Issues -->
-                            <div class="form-check option-box">
-                                <input class="form-check-input" type="checkbox" id="addMoreIssues" name="addMoreIssues" onclick="toggleVisibility('addMoreIssuesForm')">
-                                <label class="form-check-label option-heading" for="addMoreIssues">Add More Issues</label>
-                                <div id="addMoreIssuesForm" class="form-group" style="display:none;">
-                                    <label for="issueNumber">Number of New Issues:</label>
-                                    <input type="number" class="form-control" id="issueNumber" name="issueNumber" min="1">
-                                </div>
-                            </div>
-                
-                            <div class="text">
-                                <button type="submit" class="btn btn-success btn-block mt-3" id="submitVic">Submit</button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="tab-pane fade" id="details" role="tabpanel" aria-labelledby="details-tab">
-                        <form action="/details_edit/{{ jdata.journal_id }}/" method="post" enctype="multipart/form-data" id="editArticleForm" class="border border-primary p-4">
-                        {% csrf_token %}                                                           
-                            <div class="form-group">
-                                <label for="aimsScope">Aims & Scope:</label>
-                                <textarea class="form-control" name="aimsScope" id="aimsScope"  placeholder="Write aims and scope here...">{{ jdata.journal_aim }}</textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="guidelines">Guidelines:</label>
-                                {% for i in gdata %}
-                                <div class=" form-group row guide">
-                                <div class="col-sm-4">
-                                    <label for="totalContents">heading:</label>
-                                    <input type="text" id="heading" name="heading" class="form-control" value="{{ i.heading }}">
-                                </div>
-                                <div class="col-sm-8">
-                                    <label for="totalContents"> Content:</label>
-                                    <input type="text" id="Content" name="Content" class="form-control" value="{{ i.content }}">
-                                </div>
+                                    <div id="textBoxesContainer"></div>
                                 </div>
 
-                                {% endfor %}
-                                <div id="textBoxesContainer"></div>
-                            </div>
+                                <div class="form-group">
+                                    <label for="ethics">Ethics:</label>
+                                    <textarea class="form-control" name="ethics" id="ethics" placeholder="Write ethics here...">{{jdata.journal_ethics}}</textarea>
+                                </div>
 
-                            <div class="form-group">
-                                <label for="ethics">Ethics:</label>
-                                <textarea class="form-control" name="ethics" id="ethics" placeholder="Write ethics here...">{{jdata.journal_ethics}}</textarea>
-                            </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary">Update</button>
+                                </div>
+                            </form>
+                        </div>
 
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-primary">Update</button>
-                            </div>
-                        </form>
-                    </div>
+                        <div class="tab-pane fade" id="editorial-board" role="tabpanel" aria-labelledby="editorial-board-tab">
+                            <form action="/edit_editorial_board_member/{{ member_id }}/" method="post" enctype="multipart/form-data" id="editArticleForm" class="border border-primary p-4">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label class="required" for="journalSelect">Select Editor:</label>
+                                    <select id="ebSelect" name="editorname" class="form-control" required>
+                                        {% for i in ebdata %}
+                                        <option value="{{i.board_id}}">{{i.editor_name}}</option>
+                                        {% endfor %}
+                                    </select><br>
+                                    <label for="editor_name">Full Name: </label>
+                                    <input type="text" id="editor_name" name="editor_name" class="form-control"><br>
+                                    <label for="editor_address">Office Address: </label>
+                                    <input type="text" id="editor_address" name="editor_address" class="form-control"><br>
+                                    <label for="editor_email">Email: </label>
+                                    <input type="email" id="editor_email" name="editor_email" class="form-control"><br>
+                                    <label for="editor_mobile">Mobile: </label>
+                                    <input type="text" id="editor_mobile" name="editor_mobile" class="form-control"><br>
+                                    <img id="editor_photo" src="" alt="Editor Photo" width="120px" height="160px">
 
+                                    <div id="eboard"></div>
+                                </div>                            
+                                <br>
+                                <center><button type="submit" class="submit-btn">Update</button></center>
+                            </form>                        
+                        </div>
 
-                    <div class="tab-pane fade" id="editorial-board" role="tabpanel" aria-labelledby="editorial-board-tab">
-                        <form action="/edit_editorial_board_member/{{ member_id }}/" method="post" enctype="multipart/form-data" id="editArticleForm" class="border border-primary p-4">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <label class="required" for="journalSelect">Select Editor:</label>
-                                <select id="ebSelect" name="editorname" class="form-control" required>
-                                    {% for i in ebdata %}
+                        <div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
+                            <form action="/edit_notification/{{ notification_id }}/" method="post" enctype="multipart/form-data" id="editArticleForm" class="border border-primary p-4 rounded">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label class="required" for="journalSelect">Select Notification:</label>
+                                    <select id="notificationSelect" name="notification" class="form-control" required>
+                                        {% for notification in notifications %}
+                                        <option value="{{ notification.notification_id }}">{{ notification.notification }}</option>
+                                        {% endfor %}                               
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="next_volume">Link:</label>
+                                    <input type="text" id="next_volume" name="next_volume" class="form-control" placeholder="Enter link" value="{{ existing_link }}">
+                                </div>
+                                <div class="text-center">
+                                    <input type="submit" value="Update" class="btn btn-primary">
+                                </div>
+                            </form>                        
+                        </div>
 
-
-                                    <!-- <option>Select Editor</option> -->
-
-                                    <option value="{{i.board_id}}">{{i.editor_name}}</option>
-                                    {% endfor %}
-
-                                </select><br>
-                                <label for="editor_name">Full Name: </label>
-                                <input type="text" id="editor_name" name="editor_name" class="form-control" ><br>
-                                <label for="editor_address">Office Address: </label>
-                                <input type="text" id="editor_address" name="editor_address" class="form-control" ><br>
-                                <label for="editor_email">Email: </label>
-                                <input type="email" id="editor_email" name="editor_email" class="form-control" ><br>
-                                <label for="editor_mobile">Mobile: </label>
-                                <input type="text" id="editor_mobile" name="editor_mobile" class="form-control" ><br>
-                                <img id="editor_photo" src="" alt="Editor Photo" width="120px" height="160px">
-
-
-                                <div id="eboard"></div>
-                            </div>                            
-                            <br>
-                            <center><button type="submit" class="submit-btn">Update</button></center>
-                        </form>                        
-                    </div>
-
-
-                    <div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
-                        <form action="/edit_notification/{{ notification_id }}/" method="post" enctype="multipart/form-data" id="editArticleForm" class="border border-primary p-4 rounded">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <label class="required" for="journalSelect">Select notification:</label>
-                                <select id="notificationSelect" name="notification" class="form-control" required>
-                                    {% for notification in notifications %}
-                                    <option value="{{ notification.notification_id }}">{{ notification.notification }}</option>
-                                    {% endfor %}                               
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="next_volume">Link:</label>
-                                <input type="text" id="next_volume" name="next_volume" class="form-control" placeholder="Enter link" value="{{ existing_link }}">
-                            </div>
-                            <div class="text-center">
-                                <input type="submit" value="Update" class="btn btn-primary">
-                            </div>
-                        </form>                        
-                    </div>
-
-
-
-                    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                        <form action="/contact_edit/{{ jdata.journal_id }}/" method="post" enctype="multipart/form-data" id="editArticleForm" class="border border-primary p-4 rounded">
-                            {% csrf_token %}
-                            <div class="form-group mt-3">
-                            <label for="ContactMobile">Mobile</label>
-                            <input type="text" class="form-control" id="contactName" value="{{contact.phone}}" placeholder="Enter your name" name = "contact">
-                            </div>
-                            <div class="form-group">
-                            <label for="contactEmail">Email address</label>
-                            <input type="email" class="form-control" id="contactEmail" value="{{contact.email}}" placeholder="Enter your email" name = "mail">
-                            </div>                            
-                            <button type="submit" class="btn btn-primary">Edit</button>
-                        </form>
+                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                            <form action="/contact_edit/{{ jdata.journal_id }}/" method="post" enctype="multipart/form-data" id="editArticleForm" class="border border-primary p-4 rounded">
+                                {% csrf_token %}
+                                <div class="form-group mt-3">
+                                    <label for="ContactMobile">Mobile</label>
+                                    <input type="text" class="form-control" id="contactName" value="{{contact.phone}}" placeholder="Enter your name" name="contact">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contactEmail">Email address</label>
+                                    <input type="email" class="form-control" id="contactEmail" value="{{contact.email}}" placeholder="Enter your email" name="mail">
+                                </div>                            
+                                <button type="submit" class="btn btn-primary">Edit</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div></div>
+            </div>
         </div>
     </div>
-
-
-
-
 
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -312,41 +326,35 @@
         function populateNotificationDetails(notificationDetails) {
             if (notificationDetails) {
                 document.getElementById('next_volume').value = notificationDetails.link;
-                // Populate other fields as needed
             } else {
-                // Clear form fields if no data is available
                 document.getElementById('next_volume').value = '';
-                // Clear other fields as needed
             }
         }
     </script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function(){
-        $('#ebSelect').change(function(){
-            var selectedEditorId = $(this).val();
-            $.ajax({
-                url: '/get_editor_details/' + selectedEditorId + '/', // Endpoint to fetch editor details
-                type: 'GET',
-                success: function(response){
-                    // Assuming response is a JSON object containing editor details
-                    $('#editor_name').val(response.editor_name);
-                    $('#editor_address').val(response.editor_address);
-                    $('#editor_email').val(response.editor_email);
-                    $('#editor_mobile').val(response.editor_mobile);
-                    // You might need to handle the photo separately if it's not in base64 format or a URL
-                    $('#editor_photo').attr('src', response.photo); // Assuming editor_photo is the ID of the <img> tag for the photo
-                },
-                error: function(xhr, status, error){
-                    console.error(error);
-                }
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#ebSelect').change(function(){
+                var selectedEditorId = $(this).val();
+                $.ajax({
+                    url: '/get_editor_details/' + selectedEditorId + '/',
+                    type: 'GET',
+                    success: function(response){
+                        $('#editor_name').val(response.editor_name);
+                        $('#editor_address').val(response.editor_address);
+                        $('#editor_email').val(response.editor_email);
+                        $('#editor_mobile').val(response.editor_mobile);
+                        $('#editor_photo').attr('src', response.photo);
+                    },
+                    error: function(xhr, status, error){
+                        console.error(error);
+                    }
+                });
             });
         });
-    });
-</script>
+    </script>
 
-    
     <!-- Bootstrap core JavaScript-->
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
