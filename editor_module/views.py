@@ -5,12 +5,13 @@ from weasyprint import HTML, html
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.contrib import messages
+from django.core.mail import send_mail
 from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render,redirect
 from django.views.decorators.csrf import csrf_protect
 from django.urls import reverse
 from django.views.decorators.http import require_POST
-from admin_module.models import article_table, ea_table, dept_table, gl_table, journal_table, notification_table, volume_table, issue_table, eb_table
+from admin_module.models import ArticleDownload, ArticleVisit, JournalPageVisit, article_table, ea_table, dept_table, gl_table, journal_table, notification_table, review_table, volume_table, issue_table, eb_table
 # Create your views here.
 
 def editor_article(request):
@@ -18,7 +19,7 @@ def editor_article(request):
         empid = request.session['empid']
         return render(request, "article.html", {"empid": empid})
     else:
-        return redirect('/login')
+        return redirect('/login/')
 
 def editorialboard(request):
     if request.session.has_key('empid'):
@@ -27,7 +28,7 @@ def editorialboard(request):
         journals = journal_table.objects.filter(editor__employee_id=empid)
         return render(request, "editorialboard.html", {"empid": empid, "journals": journals})
     else:
-        return redirect('/login')
+        return redirect('/login/')
       
 def add_editorial_board_member(request):
     if request.session.has_key('empid'):
@@ -84,7 +85,7 @@ def editor_forgotpassword(request):
         empid = request.session['empid']
         return render(request, "forgot-password.html", {"empid": empid})
     else:
-        return redirect('/login')
+        return redirect('/login/')
 
 def editor_index(request):
     if request.session.has_key('empid'):
@@ -394,6 +395,20 @@ def reject_article(request, article_id):
     
     return redirect('/view_articles/')
 
+def accept_article(request, article_id):
+    article = get_object_or_404(article_table, pk=article_id)
+    
+    if article.status == 'pending approval':
+        article.status = 'accepted'
+        article.save()
+        messages.success(request, 'The article has been accepted for peer review.')
+    elif article.status == 'accepted':
+        messages.warning(request, 'The article has already been accepted.')
+    else:
+        messages.warning(request, 'The article cannot be accepted.')
+    
+    return redirect('/view_articles/')
+
 #---------------------------------------------------------------------------------------------------------------    
 
 def journaldetails(request):
@@ -611,22 +626,58 @@ def edit(request):
         return render(request, "edit.html", {"empid": empid})
     else:
         return redirect('/login')
+#--------------------------------------------------------------------------------
 
 def e_visits(request):
-    
     if request.session.has_key('empid'):
         empid = request.session['empid']
-        return render(request, "e_visits.html", {"empid": empid})
+        # Get the logged-in editor
+        editor = ea_table.objects.get(employee_id=empid)
+        
+        # Get the journals associated with the editor
+        journals = journal_table.objects.filter(editor=editor)
+        return render(request, "e_visits.html", {"empid": empid, "journals": journals})
     else:
-        return redirect('/login')
+        return redirect('/login')    
 
-def e_downloads(request):
-    
+def get_journals_by_editor(request):
     if request.session.has_key('empid'):
         empid = request.session['empid']
-        return render(request, "e_downloads.html", {"empid": empid})
-    else:
-        return redirect('/login')
+        editor = ea_table.objects.get(employee_id=empid)
+        journals = journal_table.objects.filter(editor=editor).values('journal_id', 'journal_name')
+        return JsonResponse(list(journals), safe=False)
+    return JsonResponse([], safe=False)
+
+def get_volumes_by_journal(request):
+    journal_id = request.GET.get('journal_id')
+    volumes = volume_table.objects.filter(journal_id=journal_id).values('volume_id', 'volume')
+    return JsonResponse(list(volumes), safe=False)
+
+def get_issues_by_volume(request):
+    volume_id = request.GET.get('volume_id')
+    issues = issue_table.objects.filter(volume_id=volume_id).values('issue_id', 'issue_no')
+    return JsonResponse(list(issues), safe=False)
+
+def get_articles_by_issue(request):
+    issue_id = request.GET.get('issue_id')
+    articles = article_table.objects.filter(issue_id=issue_id).values('article_id', 'article_title', 'download_count')
+    return JsonResponse(list(articles), safe=False)
+        
+def get_journal_visit_count(request):
+    journal_id = request.GET.get('journal_id')
+    visit_count = JournalPageVisit.objects.filter(journal_id=journal_id).count()
+    return JsonResponse({'visit_count': visit_count})
+
+def get_article_visit_count(request):
+    article_id = request.GET.get('article_id')
+    visit_count = ArticleVisit.objects.filter(article_id=article_id).count()
+    return JsonResponse({'visit_count': visit_count})
+
+def get_article_download_count(request):
+    article_id = request.GET.get('article_id')
+    download_count = ArticleDownload.objects.filter(article_id=article_id).count()
+    return JsonResponse({'download_count': download_count})
+
 
 #---------------------------------------------------------------------------------------------------------------
 
@@ -679,6 +730,7 @@ def edit_journals(request, journal_id):
         notifications = notification_table.objects.filter(journal_id=journal_id)
         contact = get_object_or_404(journal_table, journal_id=journal_id)
         gdata = gl_table.objects.filter(journal_id=journal_id)
+
         return render(request, "edit_journals.html", {
             "empid": empid,
             "jdata": jdata,
@@ -692,53 +744,20 @@ def edit_journals(request, journal_id):
     else:
         return redirect('/login/')
 
-def edit_volumes(request, journal_id):
-    if 'empid' in request.session:
-        empid = request.session['empid']
-        journal = get_object_or_404(journal_table, journal_id=journal_id)
-        volumes = volume_table.objects.filter(journal_id=journal_id)
-        return render(request, "edit_volumes.html", {"empid": empid, "journal": journal, "volumes": volumes})
-    else:
-        return redirect('/login/')
+def update_volume_name(request, volume_id):
+    if request.method == 'POST':
+        volume_id = request.POST.get('volume_id')
+        new_volume_name = request.POST.get('volume_name')
+        volume = get_object_or_404(volume_table, volume_id=volume_id)
+        volume.volume = new_volume_name
+        volume.save()
+        messages = ["Volume name updated successfully."]
+        return redirect(f'/edit_journal/{volume.journal_id}/')
     
-def edit_volume(request):
-    if request.method == 'POST':
-        volume_id = request.POST.get('volume_id')
-        volume_name = request.POST.get('volume_name')
-        try:
-            volume = volume_table.objects.get(volume_id=volume_id)
-            volume.volume = volume_name
-            volume.save()
-            return JsonResponse({'status': 'success'})
-        except volume_table.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Volume not found'}, status=404)
-    else:
-        return JsonResponse({'status': 'error', 'message': 'Method not allowed'}, status=405)
-
-def remove_volume(request):
-    if request.method == 'POST':
-        volume_id = request.POST.get('volume_id')
-        try:
-            volume = volume_table.objects.get(volume_id=volume_id)
-            volume.delete()
-            return JsonResponse({'status': 'success'})
-        except volume_table.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Volume not found'}, status=404)
-    else:
-        return JsonResponse({'status': 'error', 'message': 'Method not allowed'}, status=405)
-
-def remove_issue(request):
-    if request.method == 'POST':
-        volume_id = request.POST.get('volume_id')
-        issue_id = request.POST.get('issue_id')
-        try:
-            issue = issue_table.objects.get(volume_id=volume_id, issue_id=issue_id)
-            issue.delete()
-            return JsonResponse({'status': 'success'})
-        except issue_table.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Issue not found'}, status=404)
-    else:
-        return JsonResponse({'status': 'error', 'message': 'Method not allowed'}, status=405)
+    if request.method == 'GET' and request.is_ajax():
+        volume = get_object_or_404(volume_table, volume_id=volume_id)
+        return JsonResponse({'volume_name': volume.volume})
+    
 #-------------------------------------------------------------------------------------------------------
 
 def contact_edit(request,journal_id):
@@ -795,6 +814,47 @@ def get_editor_details(request, editor_id):
         'photo': editor.photo.url if editor.photo else ''  # Assuming photo is a FileField or ImageField
     }
     return JsonResponse(editor_details)
+
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+def editor_review(request):
+    if request.session.has_key('empid'):
+        empid = request.session['empid']
+        
+        # Fetch the editor object
+        editor = ea_table.objects.get(employee_id=empid)
+        
+        # Fetch journals assigned to the editor
+        journals = journal_table.objects.filter(editor=editor)
+        
+        # Fetch articles with status 'accepted' from those journals
+        articles = article_table.objects.filter(issue_id__volume_id__journal_id__in=journals, status='accepted')
+
+        if request.method == "POST":
+            article_id = request.POST.get('article_id')
+            review_text = request.POST.get('review')
+            if article_id and review_text:
+                article = article_table.objects.get(article_id=article_id)
+                review = review_table(article_id=article, editor_id=editor, review=review_text, status='active')
+                review.save()
+
+                # Fetch author details
+                author = article.author_id
+
+                # Send email to the author
+                send_mail(
+                    'Your Article Review',
+                    f'Dear {author.author_name},\n\nYour article "{article.article_title}" has received a review:\n\n"{review_text}"\n\nBest regards,\nEditorial Team',
+                    'your-email@example.com',
+                    [author.author_email],
+                    fail_silently=False,
+                )
+
+                # Add success message
+                messages.success(request, 'Review submitted successfully and email sent to the author.')
+
+        return render(request, "editor_review.html", {'articles': articles})
+        
+    return redirect('/login/')
 
 
     

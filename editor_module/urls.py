@@ -21,7 +21,6 @@ urlpatterns = [
     path("upddetails/", views.upddetails),
     path("edit/", views.edit),
     path("e_visits/", views.e_visits),
-    path("e_downloads/", views.e_downloads),
     path('editor_contact/', views.editor_contact),
     path('notify/', views.notify),
     path('add_contact/', views.add_contact),
@@ -29,6 +28,7 @@ urlpatterns = [
     path('view_article/<int:article_id>/', views.view_article),
     path('approve_article/<int:article_id>/', views.approve_article),
     path('reject_article/<int:article_id>/', views.reject_article),
+    path('accept_article/<int:article_id>/', views.accept_article),
     path('edit_vic/<int:journal_id>/', views.edit_vic),
     path('edit_volume/<int:journal_id>/', views.edit_volume),
     path('contact_edit/<int:journal_id>/', views.contact_edit),
@@ -39,12 +39,15 @@ urlpatterns = [
     #path('remove_volume/<int:journal_id>/', views.remove_volume, name='remove_volume'),
     #path('remove_issue/<int:journal_id>/', views.remove_issue),
     path('edit_journals/<int:journal_id>', views.edit_journals),
-    path('edit_volumes/<int:journal_id>', views.edit_volumes),
-    path('edit_volume/', views.edit_volume),
-    path('remove_volume/', views.remove_volume),
-    path('remove_issue/', views.remove_issue),
-
+    path('editor_review/', views.editor_review),
+    path('get_journals_by_editor/', views.get_journals_by_editor),
+    path('get_volumes_by_journal/', views.get_volumes_by_journal),
+    path('get_issues_by_volume/', views.get_issues_by_volume),
+    path('get_articles_by_issue/', views.get_articles_by_issue),
+    path('get_journal_visit_count/', views.get_journal_visit_count),
+    path('get_article_visit_count/', views.get_articles_by_issue),
+    path('get_article_download_count/', views.get_articles_by_issue),
+    path('update_volume_name/', views.update_volume_name),
     
-
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

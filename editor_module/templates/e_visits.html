@@ -21,7 +21,20 @@
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-admin-2.css'%}" rel="stylesheet">
 
-    
+    <style>
+        /* Custom CSS */
+        .visit-count-box {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #f8f9fc;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .visit-count-box p {
+            margin-bottom: 0;
+        }
+    </style>
 
 </head>
 
@@ -31,146 +44,173 @@
 
     <div class="container mt-5">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
-          <li class="nav-item">
-            <a class="nav-link active" id="journal-tab" data-toggle="tab" href="#journal" role="tab" aria-controls="journal" aria-selected="true">Journal Page Visits</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" id="article-tab" data-toggle="tab" href="#article" role="tab" aria-controls="article" aria-selected="false">Article Visits</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" id="download-tab" data-toggle="tab" href="#download" role="tab" aria-controls="downloads" aria-selected="false">Article Downloads</a>
-          </li>
+            <li class="nav-item">
+                <a class="nav-link active" id="journal-tab" data-toggle="tab" href="#journal" role="tab"
+                    aria-controls="journal" aria-selected="true">Journal Page Visits</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="article-tab" data-toggle="tab" href="#article" role="tab"
+                    aria-controls="article" aria-selected="false">Article Visits</a>
+            </li>
         </ul>
         <div class="tab-content" id="myTabContent">
-          <!-- Journal Page Tab -->
-          <div class="tab-pane fade show active" id="journal" role="tabpanel" aria-labelledby="journal-tab">
-            <div class="card mt-3">
-              <div class="card-body">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">JOURNAL PAGE VISIT COUNTS</h6>
-                </div><br>
-                
-                <div id="journalVisitCount" class="mt-3 card d-none">
-                  <div class="card-body">
-                    <h5 class="card-title">Journal Page Visit Count</h5>
-                    <p class="card-text">Total visits: <span id="journalVisitCountValue">0</span></p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Article Tab -->
-          <div class="tab-pane fade" id="article" role="tabpanel" aria-labelledby="article-tab">
-            <div class="card mt-3">
-              <div class="card-body">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">ARTICLE VISIT COUNTS</h6>
-                </div><br>
-                <form id="articleForm">
-                  <div class="form-row">
-                      <div class="form-group col-md-3">
-                          <label for="articleJournal">Select Journal:</label>
-                          <select class="form-control" id="articleJournal">
-                              <option value="">Select Journal</option>
-                          </select>
-                      </div>
-                      <div class="form-group col-md-2">
-                          <label for="articleVolume">Select Volume:</label>
-                          <select class="form-control" id="articleVolume">
-                              <option value="">Select Volume</option>
-                          </select>
-                      </div>
-                      <div class="form-group col-md-2">
-                          <label for="articleIssue">Select Issue:</label>
-                          <select class="form-control" id="articleIssue">
-                              <option value="">Select Issue</option>
-                          </select>
-                      </div>
-                      <div class="form-group col-md-2">
-                          <label for="articleName">Select Article:</label>
-                          <select class="form-control" id="articleName">
-                              <option value="">Select Article</option>
-                          </select>
-                      </div>
-                  </div>
-              </form>
-              <div id="articleVisitCount" class="mt-3 card d-none visit-count-card">
-                  <div class="card-body">
-                      <h5 class="card-title">Article Visit Count</h5>
-                      <p class="card-text">Total visits: <span id="articleVisitCountValue">0</span></p>
-                  </div>
-              </div>
-              </div>
-            </div>
-          </div>
+            <!-- Journal Page Tab -->
+            <div class="tab-pane fade show active" id="journal" role="tabpanel" aria-labelledby="journal-tab">
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">JOURNAL PAGE VISIT COUNTS</h6>
+                        </div>
 
-          <!-- Download Page Tab -->
-          <div class="tab-pane fade" id="download" role="tabpanel" aria-labelledby="download-tab">
-            <div class="card mt-3">
-              <div class="card-body">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">ARTICLE DOWNLOAD COUNTS</h6>
+                        <form id="journalForm">
+                            <div class="form-group">
+                                <label for="journalSelect">Select Journal:</label>
+                                <select class="form-control" id="journalSelect">
+                                    <option value="">Select Journal</option>
+                                    {% for journal in journals %}
+                                    <option value="{{ journal.journal_id }}">{{ journal.journal_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </form>
+                        <div id="journalVisitCount" class="mt-3 card d-none">
+                            <div class="card-body">
+                                <h5 class="card-title">Journal Page Visit Count</h5>
+                                <div class="visit-count-box">
+                                    <p class="card-text">Total visits: <span id="journalVisitCountValue">0</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <form id="downloadForm">
-                  <div class="form-row">
-                      <div class="form-group col-md-3">
-                          <label for="downloadJournal">Select Journal:</label>
-                          <select class="form-control" id="downloadJournal">
-                              <option value="">Select Journal</option>
-                          </select>
-                      </div>
-                      <div class="form-group col-md-2">
-                          <label for="downloadVolume">Select Volume:</label>
-                          <select class="form-control" id="downloadVolume">
-                              <option value="">Select Volume</option>
-                          </select>
-                      </div>
-                      <div class="form-group col-md-2">
-                          <label for="downloadIssue">Select Issue:</label>
-                          <select class="form-control" id="downloadIssue">
-                              <option value="">Select Issue</option>
-                          </select>
-                      </div>
-                      <div class="form-group col-md-2">
-                          <label for="downloadArticle">Select Article:</label>
-                          <select class="form-control" id="downloadArticle">
-                              <option value="">Select Article</option>
-                          </select>
-                      </div>
-                  </div>
-              </form>
-              <div id="downloadCount" class="mt-3 card d-none">
-                  <div class="card-body">
-                      <h5 class="card-title">Article Download Count</h5>
-                      <p class="card-text">Total downloads: <span id="downloadCountValue">0</span></p>
-                  </div>
-              </div>
-              </div>
             </div>
-          </div>
+
+            <!-- Article Tab -->
+            <div class="tab-pane fade" id="article" role="tabpanel" aria-labelledby="article-tab">
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">ARTICLE VISIT AND DOWNLOAD COUNTS</h6>
+                        </div><br>
+                        <form id="articleForm">
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label for="articleJournal">Select Journal:</label>
+                                    <select class="form-control" id="articleJournal">
+                                        <option value="">Select Journal</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="articleVolume">Select Volume:</label>
+                                    <select class="form-control" id="articleVolume">
+                                        <option value="">Select Volume</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="articleIssue">Select Issue:</label>
+                                    <select class="form-control" id="articleIssue">
+                                        <option value="">Select Issue</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="articleName">Select Article:</label>
+                                    <select class="form-control" id="articleName">
+                                        <option value="">Select Article</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                        <div id="articleVisitCount" class="mt-3 card d-none visit-count-card">
+                            <div class="card-body">
+                                <h5 class="card-title">Article Visit Count</h5>
+                                <div class="visit-count-box">
+                                    <p class="card-text">Total visits: <span id="articleVisitCountValue">0</span></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="downloadCount" class="mt-3 card d-none visit-count-card">
+                            <div class="card-body">
+                                <h5 class="card-title">Article Download Count</h5>
+                                <div class="visit-count-box">
+                                    <p class="card-text">Total downloads: <span id="downloadCountValue">0</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      
-   
-    <!-- Bootstrap core JavaScript-->
+    </div>
+
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-
-    <!-- Core plugin JavaScript-->
     <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
-
-    <!-- Custom scripts for all pages-->
     <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
 
-    <!-- Page level plugins -->
-    <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            // Journal Page Tab functionality
+            $('#journalSelect').change(function () {
+                var journalId = $(this).val();
+                if (journalId) {
+                    $.ajax({
+                        url: '/get_journal_visit_count/',
+                        data: {
+                            'journal_id': journalId
+                        },
+                        success: function (data) {
+                            $('#journalVisitCountValue').text(data.visit_count);
+                            $('#journalVisitCount').removeClass('d-none');
+                        },
+                        error: function (xhr, status, error) {
+                          console.error("Error fetching journal visit count: ", error);
+                        }
+                    });
+                } else {
+                    $('#journalVisitCount').addClass('d-none');
+                }
+            });
 
-    <!-- Page level custom scripts -->
-    <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
-    <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+            // Article Tab functionality
+            $('#articleName').change(function () {
+                var articleId = $(this).val();
+                if (articleId) {
+                    $.ajax({
+                        url: '/get_article_visit_count/',
+                        data: {
+                            'article_id': articleId
+                        },
+                        success: function (data) {
+                            $('#articleVisitCountValue').text(data.visit_count);
+                            $('#articleVisitCount').removeClass('d-none');
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error fetching article visit count: ", error);
+                        }
+                    });
+
+                    $.ajax({
+                        url: '/get_article_download_count/',
+                        data: {
+                            'article_id': articleId
+                        },
+                        success: function (data) {
+                            $('#downloadCountValue').text(data.download_count);
+                            $('#downloadCount').removeClass('d-none');
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error fetching article download count: ", error);
+                        }
+                    });
+                } else {
+                    $('#articleVisitCount').addClass('d-none');
+                    $('#downloadCount').addClass('d-none');
+                }
+            });
+        });
+    </script>
 
 </body>
 
-</html>    
+</html>
+

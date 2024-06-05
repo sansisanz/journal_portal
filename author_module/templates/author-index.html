@@ -37,6 +37,8 @@
                             <span class="badge badge-success">Approved</span>
                         {% elif article.status == "rejected" %}
                             <span class="badge badge-danger">Rejected</span>
+                        {% elif article.status == "accepted" %}
+                            <span class="badge badge-warning">Accepted for Peer Review</span>
                         {% else %}
                             <span class="badge badge-info">Pending Approval</span>
                         {% endif %}
