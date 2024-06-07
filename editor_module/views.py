@@ -14,7 +14,7 @@ from django.urls import reverse
 from django.db import transaction
 from django.db.models import Count
 from django.views.decorators.http import require_POST
-from admin_module.models import ArticleDownload, ArticleVisit, JournalPageVisit, article_table, ea_table, dept_table, gl_table, journal_table, notification_table, review_table, volume_table, issue_table, eb_table
+from admin_module.models import ArticleDownload, ArticleVisit, JournalPageVisit, article_table, author_table, ea_table, dept_table, gl_table, journal_table, notification_table, review_table, volume_table, issue_table, eb_table
 # Create your views here.
 
 def editor_article(request):
@@ -889,3 +889,47 @@ def editor_review(request):
 
 
     
+def editor_submitarticle(request):
+    if request.session.has_key('empid'):
+        ea_email = request.session['empid']
+        departments = dept_table.objects.all()
+        return render(request, "editor_submitarticle.html", {"ea_email": ea_email, "departments": departments})
+    else:
+        return redirect('/p_index/#cta') 
+
+def earticle_submission(request):
+    if request.session.has_key('author_email'):
+        if request.method == "POST":
+            journal_id = request.POST.get('journalName')
+            volume_id = request.POST.get('volume')
+            issue_id = request.POST.get('issueNumber')
+            article_title = request.POST.get('articleTitle')
+            article_file = request.FILES.get('articleFile')
+            author_count = int(request.POST.get('authorCount'))
+            authors = [request.POST.get(f'author{i+1}') for i in range(author_count)]
+
+            # Get the logged-in author
+            empid = request.session.get('empid')
+            editor = get_object_or_404(ea_table, employee_id=empid)
+            author = get_object_or_404(author_table, author_id=100)
+
+            # Save article details
+            article = article_table(
+                issue_id=get_object_or_404(issue_table, pk=issue_id),
+                ea_id=editor,
+                article_title=article_title,
+                created_by=editor.ea_name,
+                status='approved',
+                author_id = author,
+                author1=authors[0] if author_count >= 1 else '',
+                author2=authors[1] if author_count >= 2 else '',
+                author3=authors[2] if author_count >= 3 else '',
+                article_file=article_file  # Save the uploaded file
+            )
+            article.save()
+            messages.success(request,'succesfully uploaded')
+            return redirect('/editor_submitarticle/')  # Redirect to a success page
+
+        return redirect('submit_article')  # Redirect back to the form if not a POST request
+    else:
+        return redirect('/p_index/#cta')  

@@ -42,9 +42,6 @@ urlpatterns = [
     path('get_article_download_count/', views.get_articles_by_issue),
     path('update_volume_name/', views.update_volume_name),
     path('remove_volume/', views.remove_volume),
-    #path('get_issues/', views.get_issues),
-    #path('update_issue/', views.update_issue),
-    #path('remove_issue/', views.remove_issue),
     path('manage_volume/<int:journal_id>/', views.manage_volume),
     path('manage_aim/<int:journal_id>/', views.manage_aim),
     path('manage_gl/<int:journal_id>/', views.manage_gl),
@@ -57,6 +54,7 @@ urlpatterns = [
     path('manage_contact/<int:journal_id>/', views.manage_contact),
     path('update_contact/', views.update_contact),
     path('remove_contact/', views.remove_contact),
-
+    path("editor_submitarticle/", views.editor_submitarticle),
+    path('earticle_submission/', views.earticle_submission, name='earticle_submission'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
