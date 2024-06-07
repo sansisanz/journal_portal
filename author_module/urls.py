@@ -15,6 +15,8 @@ urlpatterns = [
     path('ajax/load-volumes/', views.load_volumes, name='ajax_load_volumes'),
     path('ajax/load-issues/', views.load_issues, name='ajax_load_issues'),
     path('ajax_load_journals/', views.load_journals, name='ajax_load_journals'),
+    path('author_review/', views.author_review),
+     path('review/', views.view_review),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

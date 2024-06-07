@@ -85,7 +85,7 @@ DATABASES = {
         'USER': 'cujournal',
         'PASSWORD': 'Journal@123',
         'HOST': 'localhost',
-        'PORT': '',
+        'PORT': '8080',
 
     }
 }

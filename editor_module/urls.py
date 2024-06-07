@@ -48,6 +48,7 @@ urlpatterns = [
     path('get_article_visit_count/', views.get_articles_by_issue),
     path('get_article_download_count/', views.get_articles_by_issue),
     path('update_volume_name/', views.update_volume_name),
-    
+    path("editor_submitarticle/", views.editor_submitarticle),
+    path('earticle_submission/', views.earticle_submission, name='earticle_submission'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
