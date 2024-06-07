@@ -1,7 +1,8 @@
 from django.shortcuts import get_object_or_404, render,redirect
-from admin_module.models import article_table, author_table, dept_table, issue_table, journal_table, volume_table
+from admin_module.models import article_table, author_table, dept_table, issue_table, journal_table, review_table, volume_table
 import hashlib
-from django.http import JsonResponse
+from django.db.models import Q
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
 from django.utils.dateformat import DateFormat
@@ -128,3 +129,26 @@ def load_issues(request):
     volume_id = request.GET.get('volume_id')
     issues = issue_table.objects.filter(volume_id=volume_id).all()
     return JsonResponse(list(issues.values('issue_id', 'issue_no')), safe=False)
+
+def author_review(request):
+    if request.session.has_key('author_email'):
+        author_email = request.session['author_email']
+        return render(request, "review.html", {"author_email": author_email})
+    else:
+        return redirect('/p_index/#cta')
+    
+def view_review(request):
+    if request.session.has_key('author_email'):
+        author_email = request.session['author_email']
+        author = author_table.objects.get(author_email=author_email)
+        articles = article_table.objects.filter(author_id=author.author_id)
+        article_ids = articles.values_list('article_id', flat=True)
+        
+        # Retrieve the review objects from the database using the article_ids
+        reviews = review_table.objects.filter(article_id__in=article_ids)
+        
+        # Pass the reviews queryset to the template for rendering
+        return render(request, 'view_review.html', {'reviews': reviews})
+    else:
+        # Handle the case when the author is not logged in
+        return HttpResponse("You must be logged in as an author to view reviews.")
