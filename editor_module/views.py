@@ -1,15 +1,18 @@
-import json
-import os
+import os, logging, json
+from venv import logger
 from PyPDF2 import PdfMerger
+from django.views.decorators.csrf import csrf_exempt
 from weasyprint import HTML, html
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import send_mail
-from django.http import FileResponse, HttpResponse, JsonResponse
+from django.http import FileResponse, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render,redirect
 from django.views.decorators.csrf import csrf_protect
 from django.urls import reverse
+from django.db import transaction
+from django.db.models import Count
 from django.views.decorators.http import require_POST
 from admin_module.models import ArticleDownload, ArticleVisit, JournalPageVisit, article_table, author_table, ea_table, dept_table, gl_table, journal_table, notification_table, review_table, volume_table, issue_table, eb_table
 # Create your views here.
@@ -116,90 +119,6 @@ def editor_assignedjournal(request):
     else:
         return redirect('/login')
     
-def add_vic(request, journal_id):
-    if not request.session.has_key('empid'):
-        return redirect('/login')
-
-    empid = request.session['empid']
-    user_name = request.session['editor_name']
-
-    if request.method == 'POST':
-        form_type = request.POST.get('form_type')
-
-        if form_type == 'add_vol':
-            # Retrieve form data for adding volume
-            volume_name = request.POST.get('volume')
-
-            # Get the journal corresponding to the provided journal_id
-            journal = journal_table.objects.get(pk=journal_id)
-
-            # Check if volume with the same name already exists
-            existing_volume = volume_table.objects.filter(journal_id=journal, volume=volume_name).first()
-            if existing_volume:
-                if existing_volume.status == 'active':
-                    messages.warning(request, 'Volume with the same name already exists.', extra_tags='add_vol_alert')
-                    return render(request, 'add_vic.html', {
-                        'journal_id': journal_id,
-                        'volumes': volume_table.objects.filter(journal_id=journal_id, status='active')
-                    })
-                else:
-                    # Update the existing volume to active status
-                    existing_volume.status = 'active'
-                    existing_volume.save()
-                    messages.success(request, 'Volume added successfully.', extra_tags='add_vol_success')
-                    return redirect('/add_vic/{}/'.format(journal_id))
-
-            # Create a new volume entry for the journal
-            new_volume = volume_table.objects.create(
-                journal_id=journal,
-                volume=volume_name,
-                created_by=user_name,
-                status='active'
-            )
-
-            messages.success(request, 'Volume added successfully.', extra_tags='add_vol_success')
-            return redirect('/add_vic/{}/'.format(journal_id))   # Change this to your success URL
-
-        elif form_type == 'add_issue':
-            # Retrieve form data for adding issue
-            volume_id = request.POST.get('volume_id')
-            issue_number = int(request.POST.get('issue_number'))
-            cover_image = request.FILES.get('cover_image')
-
-            # Check if the issue already exists
-            existing_issue = issue_table.objects.filter(volume_id=volume_id, issue_no=str(issue_number)).first()
-            if existing_issue:
-                if existing_issue.status == 'active':
-                    messages.warning(request, 'Issue already exists.', extra_tags='add_issue_alert')
-                    return render(request, 'add_vic.html', {
-                        'journal_id': journal_id,
-                        'volumes': volume_table.objects.filter(journal_id=journal_id, status='active')
-                    })
-                else:
-                    # Update the existing issue to active status
-                    existing_issue.status = 'active'
-                    existing_issue.save()
-                    messages.success(request, 'Issue added successfully.', extra_tags='add_issue_success')
-                    return redirect('/add_vic/{}/'.format(journal_id))
-
-            # Create a new issue for the selected volume
-            issue_table.objects.create(
-                volume_id=volume_table.objects.get(pk=volume_id),
-                issue_no=str(issue_number),
-                cover_image=cover_image,
-                created_by=user_name,
-                status='active'
-            )
-
-            messages.success(request, 'Issue added successfully.', extra_tags='add_issue_success')
-            return redirect('/add_vic/{}/'.format(journal_id))  # Change this to your success URL
-
-    # On GET request, render the form with volume options
-    return render(request, 'add_vic.html', {
-        'journal_id': journal_id,
-        'volumes': volume_table.objects.filter(journal_id=journal_id, status='active')
-    })
-
 
 #---------------------------------------------------------------------------------------------------------------
 
@@ -453,181 +372,6 @@ def journal_details(request):
  
 #---------------------------------------------------------------------------------------------------------------
 
-def upddetails(request):
-    if request.session.has_key('empid'):
-        empid = request.session['empid']
-        
-        # Fetch journals assigned to the logged-in user
-        journals = journal_table.objects.filter(editor__employee_id=empid)
-
-        # Prepare the data for the template
-        journal_data = []
-        for journal in journals:
-            volumes = volume_table.objects.filter(journal_id=journal.journal_id)
-            total_volumes = volumes.count()
-            total_issues = issue_table.objects.filter(volume_id__in=volumes).count()
-            total_articles = article_table.objects.filter(issue_id__in=issue_table.objects.filter(volume_id__in=volumes)).count()
-            
-            journal_data.append({
-                'journal_id': journal.journal_id,
-                'journal_name': journal.journal_name,
-                'total_volumes': total_volumes,
-                'total_issues': total_issues,
-                'total_articles': total_articles
-            })
-
-        return render(request, "upddetails.html", {"empid": empid, "journal_data": journal_data})
-    else:
-        return redirect('/login/')
-
-def edit_vic(request, journal_id):
-    if request.session.has_key('empid'):
-        empid = request.session['empid']
-        
-        # Fetch volumes for the selected journal
-        volumes = volume_table.objects.filter(journal_id=journal_id)
-        
-        return render(request, "edit_vic.html", {"empid": empid, "volumes": volumes, "journal_id": journal_id})
-    else:
-        return redirect('/login/')
-
-def edit_volume(request, journal_id):
-    if request.session.has_key('empid'):
-        empid = request.session['empid']
-        editor = ea_table.objects.get(employee_id=request.session['empid'])
-        editor_name = editor.ea_name
-
-        if request.method == 'POST':
-            volume_id = request.POST.get('volume')
-            volume = get_object_or_404(volume_table, volume_id=volume_id)
-
-            # Update Volume Name
-            if request.POST.get('updateVolume') == 'on':
-                volume_name = request.POST.get('volumeName')
-                if volume_name:
-                    volume.volume = volume_name
-                    volume.save()
-                    messages.success(request, 'Volume name updated successfully.')
-
-            # Update Cover Photo
-            if request.POST.get('updateCoverPhoto') == 'on':
-                if 'coverPhoto' in request.FILES:
-                    cover_photo = request.FILES['coverPhoto']
-                    volume.cover_image = cover_photo
-                    volume.save()
-                    messages.success(request, 'Cover photo updated successfully.')
-
-            # Add More Issues
-            if request.POST.get('addMoreIssues') == 'on':
-                more_issues = request.POST.get('issueNumber')
-                if more_issues:
-                    more_issues = int(more_issues)
-                    last_issue = issue_table.objects.filter(volume_id=volume).order_by('issue_no').last()
-                    start_issue_no = int(last_issue.issue_no) + 1 if last_issue else 1
-
-
-                    for i in range(more_issues):
-                        new_issue = issue_table(
-                            volume_id=volume,
-                            issue_no=start_issue_no + i,
-                            created_by=editor_name,
-                            status='active'
-                        )
-                        new_issue.save()
-                    messages.success(request, f'{more_issues} issues added successfully.')
-
-        return redirect('/edit_vic/{}/'.format(journal_id))
-    else:
-        return redirect('/login/')
-
-    #------------------------------------------------------------------------------------------------------------------------------------------------------- 
-def remove(request, journal_id):
-    if request.session.has_key('empid'):
-        empid = request.session['empid']
-        
-        # Fetch volumes, issues, and articles for the selected journal
-        volumes = volume_table.objects.filter(journal_id=journal_id)
-        issues = issue_table.objects.filter(volume_id__journal_id=journal_id)
-        articles = article_table.objects.filter(issue_id__volume_id__journal_id=journal_id)
-
-        # Fetch journal details
-        journal = get_object_or_404(journal_table, journal_id=journal_id)
-        guidelines = gl_table.objects.filter(journal_id=journal_id)
-
-        return render(request, "remove.html", {
-            "empid": empid,
-            "volumes": volumes,
-            "issues": issues,
-            "articles": articles,
-            "journal_id": journal_id,
-            "journal": journal,
-            "guidelines": guidelines
-        })
-    else:
-        return redirect('/login/')
-
-def remove_volume(request, journal_id):
-    if request.method == 'POST':
-        # Logic to handle form submission for volume removal
-        # Retrieve selected volume_id from POST data
-        volume_id = request.POST.get('volume_id')
-        
-        # Set volume and issues as inactive
-        volume = volume_table.objects.get(pk=volume_id)
-        volume.status = 'inactive'
-        volume.save()
-        
-        issues = issue_table.objects.filter(volume_id=volume_id)
-        for issue in issues:
-            issue.status = 'inactive'
-            issue.save()
-        
-        # Set articles status as 'removed'
-        articles = article_table.objects.filter(issue_id__volume_id=volume_id)
-        for article in articles:
-            article.status = 'removed'
-            article.save()
-        
-        # Redirect to remove view with journal_id
-        return redirect(f'/remove/{journal_id}/')
-    else:
-        # Handle GET request (display confirmation message or modal)
-        return render(request, 'confirmation_modal.html', {
-            'journal_id': journal_id,
-            # Pass any additional data needed for confirmation
-        })  
-    
-def remove_issue(request, journal_id):
-    if request.method == 'POST':
-        volume_id = request.POST.get('volume_id')
-        issue_id = request.POST.get('issue_id')
-
-        # Set issue status to inactive
-        issue = issue_table.objects.get(pk=issue_id)
-        issue.status = 'inactive'
-        issue.save()
-
-        # Set articles status to 'removed' for articles under the removed issue
-        articles = article_table.objects.filter(issue_id=issue_id)
-        for article in articles:
-            article.status = 'removed'
-            article.save()
-
-        return redirect(f'/remove/{journal_id}/')
-    else:
-        volumes = volume_table.objects.filter(journal_id=journal_id, status='active')
-        return render(request, 'remove_issue.html', {'volumes': volumes, 'journal_id': journal_id})
-        
-#-------------------------------------------------------------------------------------------------------------------------------------    
-
-def edit(request):
-    if request.session.has_key('empid'):
-        empid = request.session['empid']
-        return render(request, "edit.html", {"empid": empid})
-    else:
-        return redirect('/login')
-#--------------------------------------------------------------------------------
-
 def e_visits(request):
     if request.session.has_key('empid'):
         empid = request.session['empid']
@@ -678,7 +422,6 @@ def get_article_download_count(request):
     download_count = ArticleDownload.objects.filter(article_id=article_id).count()
     return JsonResponse({'download_count': download_count})
 
-
 #---------------------------------------------------------------------------------------------------------------
 
 def editor_contact(request):
@@ -721,43 +464,331 @@ def add_contact(request):
     
 #-----------------------------------------------------------------------------------------------------
 
+def upddetails(request):
+    if request.session.has_key('empid'):
+        empid = request.session['empid']
+        
+        # Fetch journals assigned to the logged-in user
+        journals = journal_table.objects.filter(editor__employee_id=empid)
+
+        # Prepare the data for the template
+        journal_data = []
+        for journal in journals:
+            volumes = volume_table.objects.filter(journal_id=journal.journal_id)
+            total_volumes = volumes.count()
+            total_issues = issue_table.objects.filter(volume_id__in=volumes).count()
+            total_articles = article_table.objects.filter(issue_id__in=issue_table.objects.filter(volume_id__in=volumes)).count()
+            
+            journal_data.append({
+                'journal_id': journal.journal_id,
+                'journal_name': journal.journal_name,
+                'total_volumes': total_volumes,
+                'total_issues': total_issues,
+                'total_articles': total_articles
+            })
+
+        return render(request, "upddetails.html", {"empid": empid, "journal_data": journal_data})
+    else:
+        return redirect('/login/')    
+     
 def edit_journals(request, journal_id):
     if 'empid' in request.session:
         empid = request.session['empid']
         jdata = get_object_or_404(journal_table, journal_id=journal_id)
-        ebdata = eb_table.objects.filter(journal_id=journal_id)
-        volumes = volume_table.objects.filter(journal_id=journal_id)
-        notifications = notification_table.objects.filter(journal_id=journal_id)
-        contact = get_object_or_404(journal_table, journal_id=journal_id)
-        gdata = gl_table.objects.filter(journal_id=journal_id)
-
+                
         return render(request, "edit_journals.html", {
             "empid": empid,
-            "jdata": jdata,
-            "ebdata": ebdata,
+            "journal_id": journal_id,
+        })
+    else:
+        return redirect('/login/')    
+#_____________________________________________________________________________________________________________________________________________
+    
+def manage_volume(request, journal_id):
+    if 'empid' in request.session:
+        empid = request.session['empid']
+        journal = get_object_or_404(journal_table, journal_id=journal_id)
+        # Here you can retrieve all volumes related to the journal
+        volumes = journal.volume_table_set.all()
+        return render(request, "manage_volume.html", {
+            "empid": empid,
+            "journal_id": journal_id,
             "volumes": volumes,
-            "notifications": notifications,
-            "contact": contact,
-            "gdata": gdata,
-            "journal_id": journal_id
         })
     else:
         return redirect('/login/')
-
-def update_volume_name(request, volume_id):
-    if request.method == 'POST':
+    
+def update_volume_name(request):
+    if request.method == 'POST' and request.is_ajax():
         volume_id = request.POST.get('volume_id')
         new_volume_name = request.POST.get('volume_name')
         volume = get_object_or_404(volume_table, volume_id=volume_id)
         volume.volume = new_volume_name
         volume.save()
-        messages = ["Volume name updated successfully."]
-        return redirect(f'/edit_journal/{volume.journal_id}/')
+        return JsonResponse({'message': 'Volume name updated successfully'})
+    return JsonResponse({'error': 'Invalid request'})
+
+
+def remove_volume(request):
+    if request.method == 'POST' and request.is_ajax():
+        volume_id = request.POST.get('volume_id')
+        try:
+            with transaction.atomic():
+                volume = get_object_or_404(volume_table, volume_id=volume_id)
+                
+                # Set the volume to inactive
+                volume.status = 'inactive'
+                volume.save()
+
+                # Set all related issues to inactive
+                issues = issue_table.objects.filter(volume_id=volume_id)
+                for issue in issues:
+                    issue.status = 'inactive'
+                    issue.save()
+
+                # Set all related articles to inactive
+                articles = article_table.objects.filter(issue_id__volume_id=volume_id)
+                for article in articles:
+                    article.status = 'inactive'
+                    article.save()
+
+            return JsonResponse({'message': 'Volume and related items set to inactive successfully'})
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
+    return JsonResponse({'error': 'Invalid request'})   
+
+
+#_____________________________________________________________________________________________________________________________________________
+
+
+def manage_isssues(request, journal_id):
+    if 'empid' in request.session:
+        empid = request.session['empid']
+        jdata = get_object_or_404(journal_table, journal_id=journal_id)
+                
+        return render(request, "manage_volume.html", {
+            "empid": empid,
+            "journal_id": journal_id,
+        })
+    else:
+        return redirect('/login/') 
+#_____________________________________________________________________________________________________________________________________________    
+
+def manage_aim(request, journal_id):
+    if 'empid' in request.session:
+        empid = request.session['empid']
+        journal = get_object_or_404(journal_table, journal_id=journal_id)
+        success_message = ""
+        error_message = ""
+
+        if request.method == "POST":
+            action = request.POST.get('action')
+            if action == 'remove':
+                journal.journal_aim = ''
+                journal.save()
+                success_message = "Aim has been successfully removed."
+            elif action == 'save':
+                new_aim = request.POST.get('journal_aim')
+                if new_aim:
+                    journal.journal_aim = new_aim
+                    journal.save()
+                    success_message = "Aim has been successfully updated."
+                else:
+                    error_message = "Aim cannot be empty when saving."
+
+        return render(request, "manage_aim.html", {
+            "empid": empid,
+            "journal_id": journal_id,
+            "journal_aim": journal.journal_aim,
+            "success_message": success_message,
+            "error_message": error_message,
+        })
+    else:
+        return redirect('/login/')
+
     
-    if request.method == 'GET' and request.is_ajax():
-        volume = get_object_or_404(volume_table, volume_id=volume_id)
-        return JsonResponse({'volume_name': volume.volume})
+#_____________________________________________________________________________________________________________________________________________   
+
+@csrf_exempt
+def update_row(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        row_id = data.get('id')
+        heading = data.get('heading')
+        content = data.get('content')
+
+        try:
+            guideline = get_object_or_404(gl_table, gl_id=row_id)
+            guideline.heading = heading
+            guideline.content = content
+            guideline.save()
+            return JsonResponse({'success': True})
+        except gl_table.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Row does not exist'})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request'})
+
+@csrf_exempt
+def remove_row(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        row_id = data.get('id')
+
+        try:
+            guideline = get_object_or_404(gl_table, gl_id=row_id)
+            guideline.status = 'inactive'
+            guideline.save()
+            return JsonResponse({'success': True})
+        except gl_table.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Row does not exist'})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request'})
+
+def manage_gl(request, journal_id):
+    if 'empid' in request.session:
+        empid = request.session['empid']
+        journal = get_object_or_404(journal_table, journal_id=journal_id)
+        guidelines = gl_table.objects.filter(journal_id=journal_id, status='active')
+        return render(request, 'manage_gl.html', {'guidelines': guidelines})
+    else:
+        return redirect('/login/')    
+
+#_____________________________________________________________________________________________________________________________________________    
+
+def manage_ethics(request, journal_id):
+    if 'empid' in request.session:
+        empid = request.session['empid']
+        journal = get_object_or_404(journal_table, journal_id=journal_id)
+        success_message = ""
+        error_message = ""
+
+        if request.method == "POST":
+            action = request.POST.get('action')
+            if action == 'remove':
+                journal.journal_ethics = ''
+                journal.save()
+                success_message = "Ethics have been successfully removed."
+            elif action == 'save':
+                new_ethics = request.POST.get('journal_ethics')
+                if new_ethics:
+                    journal.journal_ethics = new_ethics
+                    journal.save()
+                    success_message = "Ethics have been successfully updated."
+                else:
+                    error_message = "Ethics cannot be empty when saving."
+
+        return render(request, "manage_ethics.html", {
+            "empid": empid,
+            "journal_id": journal_id,
+            "journal_ethics": journal.journal_ethics,
+            "success_message": success_message,
+            "error_message": error_message,
+        })
+    else:
+        return redirect('/login/')
+#_____________________________________________________________________________________________________________________________________________    
+@csrf_exempt
+def update_eb_member(request):
+    if request.method == 'POST':
+        id = request.POST.get('id')
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        mobile = request.POST.get('mobile')
+        address = request.POST.get('address')
+        photo = request.FILES.get('photo')
+
+        try:
+            member = get_object_or_404(eb_table, board_id=id)
+            member.editor_name = name
+            member.editor_email = email
+            member.editor_mobile = mobile
+            member.editor_address = address
+            if photo:
+                member.photo = photo
+            member.save()
+            return JsonResponse({'success': True})
+        except eb_table.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Member does not exist'})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request'})
+
+@csrf_exempt
+def remove_eb_member(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        id = data.get('id')
+
+        try:
+            member = get_object_or_404(eb_table, board_id=id)
+            member.status = 'inactive'
+            member.save()
+            return JsonResponse({'success': True})
+        except eb_table.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Member does not exist'})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request'})
+
+def manage_eb(request, journal_id):
+    if 'empid' in request.session:
+        empid = request.session['empid']
+        journal = get_object_or_404(journal_table, journal_id=journal_id)
+        members = eb_table.objects.filter(journal_id=journal_id, status='active')
+        return render(request, "manage_eb.html", {
+            "empid": empid,
+            "journal_id": journal_id,
+            "members": members
+        })
+    else:
+        return redirect('/login/')
+#_____________________________________________________________________________________________________________________________________________   
+
+def manage_contact(request, journal_id):
+    if 'empid' in request.session:
+        empid = request.session['empid']
+        jdata = get_object_or_404(journal_table, journal_id=journal_id)
+        contacts = journal_table.objects.filter(journal_id=journal_id)
+        return render(request, "manage_contact.html", {
+            "empid": empid,
+            "journal_id": journal_id,
+            "contacts": contacts
+        })
+    else:
+        return redirect('/login/')
     
+def update_contact(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        id = data.get('id')
+        name = data.get('name')
+        mobile = data.get('mobile')
+        email = data.get('email')
+
+        try:
+            journal = get_object_or_404(journal_table, journal_id=id)
+            journal.phone = mobile
+            journal.email = email
+            journal.save()
+            return JsonResponse({'success': True})
+        except journal_table.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Journal does not exist'})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request'})
+
+def remove_contact(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        id = data.get('id')
+
+        try:
+            journal = get_object_or_404(journal_table, journal_id=id)
+            journal.delete()
+            return JsonResponse({'success': True})
+        except journal_table.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Journal does not exist'})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request'}) 
+
+   
 #-------------------------------------------------------------------------------------------------------
 
 def contact_edit(request,journal_id):

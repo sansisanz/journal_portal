@@ -1,0 +1,232 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>JP Editor</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="{% static 'css/sb-editor.css' %}" rel="stylesheet">
+
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1em;
+            font-family: 'Nunito', sans-serif;
+            min-width: 400px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+        table thead tr {
+            background-color: #009879;
+            color: #ffffff;
+            text-align: left;
+        }
+        table th,
+        table td {
+            padding: 12px 15px;
+            border: 1px solid #dddddd;
+        }
+        table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+        table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+        table tbody tr:last-of-type {
+            border-bottom: 2px solid #009879;
+        }
+        table tbody tr.active-row {
+            font-weight: bold;
+            color: #009879;
+        }
+        td[contenteditable="true"] {
+            background-color: #f9f9f9;
+            border: 1px solid #dddddd;
+        }
+        .btn {
+            padding: 5px 10px;
+            font-size: 0.9em;
+        }
+        .photo-cell img {
+            max-width: 100px;
+            max-height: 100px;
+            display: block;
+        }
+        .photo-upload {
+            display: none;
+        }
+    </style>
+</head>
+
+<body id="page-top">
+    {% include 'editor_sidebar.html' %}
+
+    <div class="container-fluid">
+        <table id="editableTable" class="table">
+            <thead>
+                <tr>
+                    <th>SI No</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>Address</th>
+                    <th>Photo</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in members %}
+                <tr data-id="{{ member.board_id }}">
+                    <td>{{ forloop.counter }}</td>
+                    <td contenteditable="false">{{ member.editor_name }}</td>
+                    <td contenteditable="false">{{ member.editor_email }}</td>
+                    <td contenteditable="false">{{ member.editor_mobile }}</td>
+                    <td contenteditable="false">{{ member.editor_address }}</td>
+                    <td class="photo-cell">
+                        <img src="{{ member.photo.url }}" alt="Photo">
+                        <input type="file" class="photo-upload">
+                    </td>
+                    <td>
+                        <button onclick="editRow(this)" class="btn btn-primary">Edit</button>
+                        <button onclick="removeRow(this)" class="btn btn-danger">Remove</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+
+    <!-- Page level plugins -->
+    <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
+
+    <script>
+        // Function to edit a row
+        function editRow(button) {
+            // Get the row element
+            var row = button.closest('tr');
+            // Enable editing for cells
+            var cells = row.querySelectorAll('td[contenteditable="false"]');
+            cells.forEach(cell => cell.setAttribute('contenteditable', 'true'));
+    
+            // Show the file input for photo upload
+            row.querySelector('.photo-upload').style.display = 'block';
+    
+            // Change button text and attributes for update action
+            button.textContent = 'Update';
+            button.classList.remove('btn-primary');
+            button.classList.add('btn-success');
+            button.setAttribute('onclick', 'updateRow(this)');
+        }
+    
+        // Function to update a row
+        function updateRow(button) {
+            // Get the row element
+            var row = button.closest('tr');
+            // Get data attributes
+            var id = row.getAttribute('data-id');
+            var name = row.cells[1].innerText;
+            var email = row.cells[2].innerText;
+            var mobile = row.cells[3].innerText;
+            var address = row.cells[4].innerText;
+            var photo = row.querySelector('.photo-upload').files[0];
+    
+            // Create form data
+            var formData = new FormData();
+            formData.append('id', id);
+            formData.append('name', name);
+            formData.append('email', email);
+            formData.append('mobile', mobile);
+            formData.append('address', address);
+            if (photo) {
+                formData.append('photo', photo);
+            }
+    
+            // Send POST request to update endpoint
+            fetch('/update_eb_member/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Handle response
+                if (data.success) {
+                    alert('Row updated successfully');
+                    // Disable editing for cells
+                    var cells = row.querySelectorAll('td[contenteditable="true"]');
+                    cells.forEach(cell => cell.setAttribute('contenteditable', 'false'));
+    
+                    // Hide file input for photo upload
+                    row.querySelector('.photo-upload').style.display = 'none';
+    
+                    // Change button text and attributes for edit action
+                    button.textContent = 'Edit';
+                    button.classList.remove('btn-success');
+                    button.classList.add('btn-primary');
+                    button.setAttribute('onclick', 'editRow(this)');
+                } else {
+                    alert('Failed to update row');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    
+        // Function to remove a row
+        function removeRow(button) {
+            // Get the row element
+            var row = button.closest('tr');
+            // Get the data-id attribute (board_id)
+            var id = row.getAttribute('data-id');
+    
+            // Send POST request to remove endpoint
+            fetch('/remove_eb_member/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ 'id': id })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Handle response
+                if (data.success) {
+                    // Remove the row from the table
+                    row.remove();
+                } else {
+                    alert('Failed to remove row');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+
+</body>
+
+</html>

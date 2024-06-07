@@ -1,0 +1,180 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>JP Editor</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="{% static 'css/sb-editor.css' %}" rel="stylesheet">
+
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1em;
+            font-family: 'Nunito', sans-serif;
+            min-width: 400px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+        table thead tr {
+            background-color: #009879;
+            color: #ffffff;
+            text-align: left;
+        }
+        table th,
+        table td {
+            padding: 12px 15px;
+            border: 1px solid #dddddd;
+        }
+        table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+        table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+        table tbody tr:last-of-type {
+            border-bottom: 2px solid #009879;
+        }
+        table tbody tr.active-row {
+            font-weight: bold;
+            color: #009879;
+        }
+        td[contenteditable="true"] {
+            background-color: #f9f9f9;
+            border: 1px solid #dddddd;
+        }
+        .btn {
+            padding: 5px 10px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+
+<body id="page-top">
+    {% include 'editor_sidebar.html' %}
+
+    <div class="container-fluid">
+        <table id="editableTable" class="table">
+            <thead>
+                <tr>
+                    <th>SI No</th>
+                    <th>Heading</th>
+                    <th>Content</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for guideline in guidelines %}
+                <tr data-id="{{ guideline.gl_id }}">
+                    <td>{{ forloop.counter }}</td>
+                    <td contenteditable="false">{{ guideline.heading }}</td>
+                    <td contenteditable="false">{{ guideline.content }}</td>
+                    <td>
+                        <button onclick="editRow(this)" class="btn btn-primary">Edit</button>
+                        <button onclick="removeRow(this)" class="btn btn-danger">Remove</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+
+    <!-- Page level plugins -->
+    <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
+
+    <script>
+        function editRow(button) {
+            var row = button.closest('tr');
+            var cells = row.querySelectorAll('td[contenteditable="false"]');
+            cells.forEach(cell => cell.setAttribute('contenteditable', 'true'));
+
+            button.textContent = 'Update';
+            button.classList.remove('btn-primary');
+            button.classList.add('btn-success');
+            button.setAttribute('onclick', 'updateRow(this)');
+        }
+
+        function updateRow(button) {
+            var row = button.closest('tr');
+            var id = row.getAttribute('data-id');
+            var heading = row.cells[1].innerText;
+            var content = row.cells[2].innerText;
+
+            fetch('/update_row/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    'id': id,
+                    'heading': heading,
+                    'content': content
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Row updated successfully');
+                    var cells = row.querySelectorAll('td[contenteditable="true"]');
+                    cells.forEach(cell => cell.setAttribute('contenteditable', 'false'));
+
+                    button.textContent = 'Edit';
+                    button.classList.remove('btn-success');
+                    button.classList.add('btn-primary');
+                    button.setAttribute('onclick', 'editRow(this)');
+                } else {
+                    alert('Failed to update row');
+                }
+            });
+        }
+
+        function removeRow(button) {
+            var row = button.closest('tr');
+            var id = row.getAttribute('data-id');
+
+            fetch('/remove_row/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ 'id': id })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    row.remove();
+                } else {
+                    alert('Failed to remove row');
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
