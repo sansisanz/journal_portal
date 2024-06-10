@@ -408,50 +408,25 @@
         </div>
     
         <div class="row portfolio-container" data-aos="fade-up">
-    
-          <div class="col-lg-4 col-md-6 portfolio-item">
-            <div class="portfolio-img">
-              <a href="/p_journals/">
-                <img src="{% static 'img/jcp.jpg' %}" class="img-fluid" alt="Journal 1 Cover">
-              </a>
+          {% for issue in issues_data %}
+            <div class="col-lg-4 col-md-6 portfolio-item">
+              <div class="portfolio-img">
+                <a href="/p_home/{{ issue.journal_id }}/">
+                  <img src="{{ issue.cover_image }}" class="img-fluid" alt="Journal Cover">
+                </a>
+              </div>
+              <div class="portfolio-info">
+                <h4>{{ issue.journal_name }}</h4>
+                <p>Vol. {{ issue.volume }}, Issue {{ issue.issue_no }} (Published on {{ issue.published_date|date:"F j, Y" }})</p>
+                <a href="/p_home/{{ issue.journal_id }}/" class="details-link">View Details</a>
+              </div>
             </div>
-            <div class="portfolio-info">
-              <h4>Journal 1</h4>
-              <p>Vol. X, Issue Y (Published on Z)</p>
-              <a href="/p_journals/" class="details-link">View Details</a>
-            </div>
-          </div>
-    
-          <div class="col-lg-4 col-md-6 portfolio-item">
-            <div class="portfolio-img">
-              <a href="/p_journals/">
-                <img src="{% static 'img/jcp1.jpg' %}" class="img-fluid" alt="Journal 2 Cover">
-              </a>
-            </div>
-            <div class="portfolio-info">
-              <h4>Journal 2</h4>
-              <p>Vol. X, Issue Y (Published on Z)</p>
-              <a href="/p_journals/" class="details-link">View Details</a>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item">
-            <div class="portfolio-img">
-              <a href="/p_journals/">
-                <img src="{% static 'img/jcp2.jpg' %}" class="img-fluid" alt="Journal 3 Cover">
-              </a>
-            </div>
-            <div class="portfolio-info">
-              <h4>Journal 3</h4>
-              <p>Vol. X, Issue Y (Published on Z)</p>
-              <a href="/p_journals/" class="details-link">View Details</a>
-            </div>
-          </div>
-    
-          </div>
+          {% endfor %}
+        </div>
     
       </div>
     </section>
+    
     
 
     <!-- End Latest Issues Section -->

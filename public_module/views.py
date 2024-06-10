@@ -10,8 +10,38 @@ from django.contrib import messages
 from admin_module.models import  ArticleDownload, ArticleVisit, JournalPageVisit, article_table, author_table, ea_table, issue_table,volume_table,journal_table,dept_table,eb_table,notification_table,gl_table
 
 # Create your views here.
+
+#--------------------   p_index    ---------------------------------------------------------------------------------------------------------------------
 def p_index(request):
-    return render(request, 'p_index.html')
+    latest_issues = (
+        issue_table.objects.filter(status='open')
+        .order_by('-created_at')[:3]
+    )
+    
+    # Preparing data to be passed to the template
+    issues_data = []
+    for issue in latest_issues:
+        volume = volume_table.objects.get(volume_id=issue.volume_id.volume_id)
+        journal = journal_table.objects.get(journal_id=volume.journal_id.journal_id)
+        issues_data.append({
+            'journal_name': journal.journal_name,
+            'volume': volume.volume,
+            'issue_no': issue.issue_no,
+            'published_date': issue.created_at,
+            'cover_image': issue.cover_image.url,
+            'journal_id': journal.journal_id,
+        })
+    
+    context = {'issues_data': issues_data}
+    return render(request, 'p_index.html', context)
+
+
+def p_journals(request):
+    j_data = journal_table.objects.all()
+
+    return render(request, 'p_journals.html',{'jdata':j_data})
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------
 
 def p_ethics(request,id):
     e_data = journal_table.objects.get(journal_id=id)
@@ -21,27 +51,21 @@ def p_guidelines(request,id):
     g_data = gl_table.objects.filter(journal_id=id)
     return render(request, 'p_guidelines.html',{'gdata':g_data,})
 
-def p_j(request):
-    return render(request, 'p_j.html')
-
-def p_journals(request):
-    j_data = journal_table.objects.all()
-
-    return render(request, 'p_journals.html',{'jdata':j_data})
+#---------------------------------------------------------------------------------------------------------------------------------------------------
 
 def p_alljournals(request, journal_id):
     # Retrieve the selected journal
     selected_journal = journal_table.objects.get(journal_id=journal_id)
 
     # Retrieve all volumes for the selected journal that are active
-    volumes = volume_table.objects.filter(journal_id=journal_id, status='active')
+    volumes = volume_table.objects.filter(journal_id=journal_id, status__in=['open', 'closed'])
 
     # Create a list to store volume and issue information
     volume_issues_list = []
 
     for volume in volumes:
-        # Retrieve issues for each volume that are active and sort them by creation time (newest first)
-        issues = issue_table.objects.filter(volume_id=volume.volume_id, status='active').order_by('-created_at')
+        # Retrieve issues for each volume that are either 'open' or 'closed'
+        issues = issue_table.objects.filter(volume_id=volume.volume_id, status__in=['open', 'closed']).order_by('-created_at')
 
         # Count the number of issues for the volume
         issue_count = issues.count()
@@ -62,28 +86,7 @@ def p_alljournals(request, journal_id):
     return render(request, 'p_alljournals.html', {'selected_journal': selected_journal, 'volume_issues_list': volume_issues_list})
 
 
-
-
-def p_authorreg(request):
-    return render(request, 'p_authorreg.html')
-
-def p_userreg(request):
-    return render(request, 'p_userreg.html')
-
-def p_userprofile(request):
-    return render(request, 'p_userprofile.html')
-
-def public_navbar(request):
-    return render(request, 'public_navbar.html')
-
-def get_client_ip(request):
-    """Utility function to get the client's IP address from the request."""
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
+#---------------------------------------------------------------------------------------------------------------------------------------------------
 
 def p_home(request, id):
     # Fetch the journal data
@@ -119,6 +122,31 @@ def p_home(request, id):
         'ndata': n_data,
         'visit_count': j_data.visit_count  # Pass the visit count to the template
     })
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------
+
+def p_authorreg(request):
+    return render(request, 'p_authorreg.html')
+
+def p_userreg(request):
+    return render(request, 'p_userreg.html')
+
+def p_userprofile(request):
+    return render(request, 'p_userprofile.html')
+
+def public_navbar(request):
+    return render(request, 'public_navbar.html')
+
+def get_client_ip(request):
+    """Utility function to get the client's IP address from the request."""
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+
 
 def read(request):
     return render(request, 'read.html') 

@@ -3,54 +3,27 @@
 <html lang="en">
 
 <head>
-
+    <!-- Meta tags and CSS links -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-
     <title>JP Admin Panel</title>
-
-    <!-- Custom fonts for this template-->
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-
-    <!-- Custom styles for this template-->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <link href="{% static 'css/sb-admin-2.css'%}" rel="stylesheet">
-
-    <style>
-        /* Custom CSS */
-        .visit-count-box {
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
-            background-color: #f8f9fc;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .visit-count-box p {
-            margin-bottom: 0;
-        }
-    </style>
-
 </head>
 
 <body id="page-top">
-
     {% include 'editor_sidebar.html' %}
-
     <div class="container mt-5">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="journal-tab" data-toggle="tab" href="#journal" role="tab"
-                    aria-controls="journal" aria-selected="true">Journal Page Visits</a>
+                <a class="nav-link active" id="journal-tab" data-toggle="tab" href="#journal" role="tab" aria-controls="journal" aria-selected="true">Journal Page Visits</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="article-tab" data-toggle="tab" href="#article" role="tab"
-                    aria-controls="article" aria-selected="false">Article Visits</a>
+                <a class="nav-link" id="article-tab" data-toggle="tab" href="#article" role="tab" aria-controls="article" aria-selected="false">Article Visits</a>
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
@@ -61,7 +34,6 @@
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">JOURNAL PAGE VISIT COUNTS</h6>
                         </div>
-
                         <form id="journalForm">
                             <div class="form-group">
                                 <label for="journalSelect">Select Journal:</label>
@@ -98,23 +70,26 @@
                                     <label for="articleJournal">Select Journal:</label>
                                     <select class="form-control" id="articleJournal">
                                         <option value="">Select Journal</option>
+                                        {% for journal in journals %}
+                                        <option value="{{ journal.journal_id }}">{{ journal.journal_name }}</option>
+                                        {% endfor %}
                                     </select>
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="articleVolume">Select Volume:</label>
-                                    <select class="form-control" id="articleVolume">
+                                    <select class="form-control" id="articleVolume" disabled>
                                         <option value="">Select Volume</option>
                                     </select>
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="articleIssue">Select Issue:</label>
-                                    <select class="form-control" id="articleIssue">
+                                    <select class="form-control" id="articleIssue" disabled>
                                         <option value="">Select Issue</option>
                                     </select>
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="articleName">Select Article:</label>
-                                    <select class="form-control" id="articleName">
+                                    <select class="form-control" id="articleName" disabled>
                                         <option value="">Select Article</option>
                                     </select>
                                 </div>
@@ -155,15 +130,13 @@
                 if (journalId) {
                     $.ajax({
                         url: '/get_journal_visit_count/',
-                        data: {
-                            'journal_id': journalId
-                        },
+                        data: { 'journal_id': journalId },
                         success: function (data) {
                             $('#journalVisitCountValue').text(data.visit_count);
                             $('#journalVisitCount').removeClass('d-none');
                         },
                         error: function (xhr, status, error) {
-                          console.error("Error fetching journal visit count: ", error);
+                            console.error("Error fetching journal visit count: ", error);
                         }
                     });
                 } else {
@@ -172,14 +145,80 @@
             });
 
             // Article Tab functionality
+            $('#articleJournal').change(function () {
+                var journalId = $(this).val();
+                if (journalId) {
+                    $.ajax({
+                        url: '/get_volumes_by_journal/',
+                        data: { 'journal_id': journalId },
+                        success: function (data) {
+                            $('#articleVolume').empty().append('<option value="">Select Volume</option>');
+                            $.each(data, function (index, item) {
+                                $('#articleVolume').append('<option value="' + item.volume_id + '">' + item.volume + '</option>');
+                            });
+                            $('#articleVolume').prop('disabled', false);
+                            $('#articleIssue, #articleName').prop('disabled', true).empty().append('<option value="">Select</option>');
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error fetching volumes: ", error);
+                        }
+                    });
+                } else {
+                    $('#articleVolume, #articleIssue, #articleName').prop('disabled', true).empty().append('<option value="">Select</option>');
+                }
+            });
+
+            $('#articleVolume').change(function () {
+                var volumeId = $(this).val();
+                if (volumeId) {
+                    $.ajax({
+                        url: '/get_issues_by_volume/',
+                        data: { 'volume_id': volumeId },
+                        success: function (data) {
+                            $('#articleIssue').empty().append('<option value="">Select Issue</option>');
+                            $.each(data, function (index, item) {
+                                $('#articleIssue').append('<option value="' + item.issue_id + '">' + item.issue_no + '</option>');
+                            });
+                            $('#articleIssue').prop('disabled', false);
+                            $('#articleName').prop('disabled', true).empty().append('<option value="">Select Article</option>');
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error fetching issues: ", error);
+                        }
+                    });
+                } else {
+                    $('#articleIssue, #articleName').prop('disabled', true).empty().append('<option value="">Select</option>');
+                }
+            });
+
+            $('#articleIssue').change(function () {
+                var issueId = $(this).val();
+                if (issueId) {
+                    $.ajax({
+                        url: '/get_articles_by_issue/',
+                        data: { 'issue_id': issueId },
+                        success: function (data) {
+                            $('#articleName').empty().append('<option value="">Select Article</option>');
+                            $.each(data, function (index, item) {
+                                $('#articleName').append('<option value="' + item.article_id + '">' + item.article_title + '</option>');
+                            });
+                            $('#articleName').prop('disabled', false);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error fetching articles: ", error);
+                        }
+                    });
+                } else {
+                    $('#articleName').prop('disabled', true).empty().append('<option value="">Select</option>');
+                }
+            });
+
             $('#articleName').change(function () {
                 var articleId = $(this).val();
                 if (articleId) {
                     $.ajax({
                         url: '/get_article_visit_count/',
-                        data: {
-                            'article_id': articleId
-                        },
+                        data: { 'article_id': articleId },
                         success: function (data) {
                             $('#articleVisitCountValue').text(data.visit_count);
                             $('#articleVisitCount').removeClass('d-none');
@@ -191,9 +230,7 @@
 
                     $.ajax({
                         url: '/get_article_download_count/',
-                        data: {
-                            'article_id': articleId
-                        },
+                        data: { 'article_id': articleId },
                         success: function (data) {
                             $('#downloadCountValue').text(data.download_count);
                             $('#downloadCount').removeClass('d-none');
@@ -203,14 +240,10 @@
                         }
                     });
                 } else {
-                    $('#articleVisitCount').addClass('d-none');
-                    $('#downloadCount').addClass('d-none');
+                    $('#articleVisitCount, #downloadCount').addClass('d-none');
                 }
             });
         });
     </script>
-
 </body>
-
 </html>
-

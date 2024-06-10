@@ -12,7 +12,7 @@
     <title>CUJH Author Panel</title>
 
     <!-- Custom fonts for this template -->
-    <link href=".{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
 
@@ -20,23 +20,24 @@
     <link href="{% static 'css/sb-author-2.css' %}" rel="stylesheet">
 
     <style>
-                .btn-primary {
-            background-color:#4e73df;
-            border-color:#4e73df;
-            }
+        .btn-primary {
+            background-color: #4e73df;
+            border-color: #4e73df;
+        }
 
-            .btn-primary:hover {
+        .btn-primary:hover {
             color: #fff;
-            background-color:#2e59d9;
-            border-color:#2653d4;
-            }
+            background-color: #2e59d9;
+            border-color: #2653d4;
+        }
 
-            .btn-primary:focus, .btn-primary.focus {
+        .btn-primary:focus,
+        .btn-primary.focus {
             color: #fff;
-            background-color:#2e59d9;
-            border-color:#2653d4;
+            background-color: #2e59d9;
+            border-color: #2653d4;
             box-shadow: 0 0 0 0.2rem rgba(105, 136, 228, 0.5);
-            }   
+        }
     </style>
 
 </head>
@@ -45,82 +46,71 @@
 
     {% include 'authorsidebar.html' %}
 
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
 
-                    <!-- Profile Section -->
-                    <div class="row">
-                        <div class="col-lg-3"></div>
-                        <div class="col-lg-6">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">User Profile</h6>
-                                </div>
-                                <div class="card-body">
-                                    <form id="profileForm">
-                                        <div class="form-group">
-                                            <label for="profileName">Name</label>
-                                            <input type="text" class="form-control" id="profileName" value="John Doe"
-                                                readonly>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="profileEmail">Email</label>
-                                            <input type="email" class="form-control" id="profileEmail"
-                                                value="johndoe@example.com" readonly>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="profileAddress">Address</label>
-                                            <textarea class="form-control" id="profileAddress" rows="3"
-                                                readonly>123 Street, City, Country</textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="profileMobile">Mobile</label>
-                                            <input type="tel" class="form-control" id="profileMobile"
-                                                value="123 456 7890" readonly>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="profileDOB">Date of Birth</label>
-                                            <input type="text" class="form-control" id="profileDOB"
-                                                value="January 1, 1990" readonly>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="profileInstitute">Institue</label>
-                                            <input type="text" class="form-control" id="profileAffiliation"
-                                                value="University College" readonly>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="profileDepartment">Department</label>
-                                            <input type="text" class="form-control" id="profileInstitute"
-                                                value="Department of Science" readonly>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="profileDesignation">Designation</label>
-                                            <input type="text" class="form-control" id="profileInstitute"
-                                                value="Research scholar" readonly>
-                                        </div>
-                                        <button type="button" class="btn btn-primary btn-block"
-                                            onclick="editProfile()">Edit Profile</button>
-                                        <button type="submit" class="btn btn-success btn-block mt-2 d-none"
-                                            id="saveProfileBtn">Save Changes</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
+        <!-- Profile Section -->
+        <div class="row">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-6">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">User Profile</h6>
                     </div>
-                    <!-- End of Profile Section -->
-
+                    <div class="card-body">
+                        <!-- Display messages -->
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-success">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        <form id="profileForm" method="post" action="/update_profile/">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="profileName">Name</label>
+                                <input type="text" class="form-control" id="profileName"
+                                    value="{{ author.author_name }}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="profileEmail">Email</label>
+                                <input type="email" class="form-control" id="profileEmail"
+                                    value="{{ author.author_email }}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="profileAddress">Address</label>
+                                <textarea class="form-control" id="profileAddress" rows="3"
+                                    readonly>{{ author.author_address }}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="profileMobile">Mobile</label>
+                                <input type="tel" class="form-control" id="profileMobile"
+                                    value="{{ author.author_mobile }}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="profileDOB">Date of Birth</label>
+                                <input type="text" class="form-control" id="profileDOB"
+                                    value="{{ author.author_dob }}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="profileInstitute">Institute</label>
+                                <input type="text" class="form-control" id="profileInstitute"
+                                    value="{{ author.author_institute }}" readonly>
+                            </div>
+                            <button type="button" class="btn btn-primary btn-block"
+                                onclick="editProfile()">Edit Profile</button>
+                            <button type="submit" class="btn btn-success btn-block mt-2 d-none"
+                                id="saveProfileBtn">Save Changes</button>
+                        </form>
+                    </div>
                 </div>
-                <!-- /.container-fluid -->
-
             </div>
-            <!-- End of Main Content -->
-
-
         </div>
-        <!-- End of Content Wrapper -->
+        <!-- End of Profile Section -->
 
     </div>
-    <!-- End of Page Wrapper -->
+    <!-- /.container-fluid -->
 
     <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
@@ -174,11 +164,7 @@
         // Submit profile changes
         $('#profileForm').submit(function (event) {
             event.preventDefault(); // Prevent form submission
-
-            // Here you can implement the logic to save the updated profile details
-            // For demonstration purposes, this alerts the user that changes are saved
-            alert('Profile changes saved successfully!');
-            
+           
             // Disable input fields and hide Save Changes button after saving
             $('input, textarea').prop('readonly', true);
             $('#saveProfileBtn').addClass('d-none'); // Hide the Save Changes button
@@ -188,3 +174,4 @@
 </body>
 
 </html>
+

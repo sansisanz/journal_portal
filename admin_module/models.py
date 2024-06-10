@@ -11,7 +11,6 @@ class author_table(models.Model):
     author_dob = models.DateField()
     author_address = models.CharField(max_length=250)
     author_institute = models.CharField(max_length=100)
-    author_designation = models.CharField(max_length=50)
     author_password = models.CharField(max_length=90)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
@@ -95,7 +94,8 @@ class designation_table(models.Model):
 class usertable(models.Model):
     usertable_id = models.BigAutoField(primary_key=True)
     ea_id = models.ForeignKey(ea_table,default="1",on_delete=models.SET_DEFAULT)
-    seat_id = models.ForeignKey(seat_table,default="1",on_delete=models.SET_DEFAULT)    
+    seat_id = models.ForeignKey(seat_table,default="1",on_delete=models.SET_DEFAULT) 
+    status = models.CharField(max_length=50, default="active")   
 
     class Meta:
         db_table="usertable"                
@@ -164,8 +164,8 @@ class article_table(models.Model):
     issue_id = models.ForeignKey(issue_table,default="1",on_delete=models.SET_DEFAULT)
     author_id = models.ForeignKey(author_table,default="1",on_delete=models.SET_DEFAULT,blank=True)
     author1 = models.CharField(max_length=90, default='1')
-    author2 = models.CharField(max_length=90, default='1')
-    author3 = models.CharField(max_length=90, default='1')
+    author2 = models.CharField(max_length=90, blank=True, null=True)
+    author3 = models.CharField(max_length=90, blank=True, null=True)
     article_title = models.CharField(max_length=90)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
@@ -219,7 +219,7 @@ class notification_table(models.Model):
     notification_id = models.BigAutoField(primary_key=True)
     journal_id = models.ForeignKey(journal_table,default="1",on_delete=models.SET_DEFAULT)
     notification = models.CharField(max_length=100)
-    link = models.CharField(max_length=100)
+    link = models.CharField(max_length=255)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
     created_by=models.CharField(max_length=50)

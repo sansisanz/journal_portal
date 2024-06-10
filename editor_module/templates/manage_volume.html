@@ -43,8 +43,8 @@
                                 {% for volume in volumes %}
                                 <tr>
                                     <td>{{ volume.volume }}</td>
-                                    <td>{{ volume.issue_table_set.count }}</td>
-                                    <td>{{ volume.issue_table_set.article_table_set.count }}</td>
+                                    <td>{{ volume.num_issues }}</td>
+                                    <td>{{ volume.article_count }}</td>
                                     <td>
                                         <button class="btn btn-success edit-button" data-volume-id="{{ volume.volume_id }}">Edit</button>
                                         <button class="btn btn-danger remove-button" data-volume-id="{{ volume.volume_id }}">Remove</button>
@@ -107,6 +107,7 @@
         </div>
     </div>
 
+
     <!-- Bootstrap core JavaScript-->
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
@@ -128,6 +129,7 @@
     <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
 
     <script>
+
         $(document).ready(function () {
             // Edit Volume Modal
             $('.edit-button').click(function () {
@@ -154,12 +156,12 @@
                         error: function (xhr, status, error) {
                             // Handle error
                             alert('An error occurred while updating the volume name. Please try again later.');
-                        console.error(error);
+                            console.error(error);
                         }
                     });
                 });
             });
-
+        
             // Remove Volume Modal
             $('.remove-button').click(function () {
                 var volumeId = $(this).data('volume-id');
@@ -189,5 +191,11 @@
                 });
             });
         });
-    </script>
+        
+        </script>
+        
+        </body>
+        
+        </html>
+        
 

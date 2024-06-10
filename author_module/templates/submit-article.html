@@ -1,212 +1,188 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-    <head>
+    <title>Submit Articles</title>
 
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="">
-        <meta name="author" content="">
+    <!-- Custom fonts for this template-->
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
-        <title>Submit Articles</title>
+    <!-- Custom styles for this template-->
+    <link href="{% static 'css/sb-author-2.css' %}" rel="stylesheet">
 
-        <!-- Custom fonts for this template-->
-        <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
-        <link
-            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-            rel="stylesheet">
+    <style>
+        .btn-primary {
+            background-color: #4e73df;
+            border-color: #4e73df;
+        }
+        .btn-primary:hover {
+            color: #fff;
+            background-color: #2e59d9;
+            border-color: #2653d4;
+        }
+        .btn-primary:focus, .btn-primary.focus {
+            color: #fff;
+            background-color: #2e59d9;
+            border-color: #2653d4;
+            box-shadow: 0 0 0 0.2rem rgba(105, 136, 228, 0.5);
+        }
+    </style>
 
-        <!-- Custom styles for this template-->
-        <link href="{% static 'css/sb-author-2.css' %}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body id="page-top">
 
-        <style>
-                    .btn-primary {
-                background-color:#4e73df;
-                border-color:#4e73df;
-                }
+{% include 'authorsidebar.html' %}
 
-                .btn-primary:hover {
-                color: #fff;
-                background-color:#2e59d9;
-                border-color:#2653d4;
-                }
-
-                .btn-primary:focus, .btn-primary.focus {
-                color: #fff;
-                background-color:#2e59d9;
-                border-color:#2653d4;
-                box-shadow: 0 0 0 0.2rem rgba(105, 136, 228, 0.5);
-                }   
-        </style>
-
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
-
-    </head>
-
-    <body id="page-top">
-
-        {% include 'authorsidebar.html' %}
-            
-        <!-- Begin Page Content -->
-        <div class="container-fluid">
-            <div class="container form-container">
-                <div class="card">
-                    <div class="card-header py-3">
-                        <h4 class="m-0 font-weight-bold text-primary">SUBMIT ARTICLES</h4>
-                    </div>
-                    <div class="card-body">
-                        <form action="/article_submission/" method="POST" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="department">Department:</label>
-                                        <select id="department" name="department" class="form-control">
-                                            <option disabled selected>Select a department</option>
-                                            {% for department in departments %}
-                                                <option value="{{ department.dept_id }}">{{ department.dept_name }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="volume">Volume:</label>
-                                        <select id="volume" name="volume" class="form-control">
-                                            <option disabled selected>Select a volume</option>
-                                        </select>
-                                    </div>                                                         
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="journalName">Journal Name:</label>
-                                        <select id="journalName" name="journalName" class="form-control">
-                                            <option disabled selected>Select a journal</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="issueNumber">Issue Number:</label>
-                                        <select id="issueNumber" name="issueNumber" class="form-control">
-                                            <option disabled selected>Select an issue</option>
-                                        </select>
-                                    </div>
-                                </div>
+<!-- Begin Page Content -->
+<div class="container-fluid">
+    <div class="container form-container">
+        <div class="card">
+            <div class="card-header py-3">
+                <h4 class="m-0 font-weight-bold text-primary">SUBMIT ARTICLES</h4>
+            </div>
+            <div class="card-body">
+                <form action="/article_submission/" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="department">Department:</label>
+                                <select id="department" name="department" class="form-control">
+                                    <option disabled selected>Select a department</option>
+                                    {% for department in departments %}
+                                        <option value="{{ department.dept_id }}">{{ department.dept_name }}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
-                            <div class="row">
-                                <div class="col-md-12">                                        
-                                    <div class="form-group">
-                                        <label for="articleFile">Choose Article: </label>
-                                        <input type="file" id="articleFile" name="articleFile" class="form-control-file">
-                                        <p class="note">(upload in pdf format)</p>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="authorCount">Number of Authors:</label>
-                                        <select id="authorCount" name="authorCount" class="form-control">
-                                            <option value="1" selected>1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <!-- Add more options as needed -->
-                                        </select>
-                                    </div>
-                                    <div id="authorInputs">
-                                        <!-- JavaScript will add input fields here -->
-                                    </div><br>
-                                    <div class="form-group">
-                                        <label for="articleTitle">Article Title:</label>
-                                        <input type="text" id="articleTitle" name="articleTitle" class="form-control" placeholder="Enter Article Title">
-                                    </div>
-                                </div>
-                            </div>                    
-                            <div class="d-flex justify-content-center">
-                                <button type="submit" class="btn btn-primary">Submit Article</button>
+                            <div class="form-group">
+                                <label for="volume">Volume:</label>
+                                <select id="volume" name="volume" class="form-control">
+                                    <option disabled selected>Select a volume</option>
+                                </select>
                             </div>
-                        </form>             
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="journalName">Journal Name:</label>
+                                <select id="journalName" name="journalName" class="form-control">
+                                    <option disabled selected>Select a journal</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="issueNumber">Issue Number:</label>
+                                <select id="issueNumber" name="issueNumber" class="form-control">
+                                    <option disabled selected>Select an issue</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="articleTitle">Article Title:</label>
+                                <input type="text" id="articleTitle" name="articleTitle" class="form-control" placeholder="Enter Article Title">
+                            </div><br>
+                            <div class="form-group">
+                                <label for="authorCount">Number of Authors:</label>
+                                <select id="authorCount" name="authorCount" class="form-control">
+                                    <option value="1" selected>1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <!-- Add more options as needed -->
+                                </select>
+                            </div>
+                            <div id="authorInputs">
+                                <div class="form-group">
+                                    <label for="author1">Author 1:</label>
+                                    <input type="text" id="author1" name="author1" class="form-control" value="{{ author_name }}" readonly>
+                                </div>
+                                <!-- JavaScript will add input fields here for other authors -->
+                            </div><br>
+                            <div class="form-group">
+                                <label for="articleFile">Choose Article (PDF only):</label>
+                                <input type="file" id="articleFile" name="articleFile" class="form-control-file" accept=".pdf">
+                                <p class="note">(upload in pdf format)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-primary">Submit Article</button>
+                    </div>
+                </form>
             </div>
         </div>
-        
-            <!-- End of Page Wrapper -->
+    </div>
+</div>
 
-            <script src="{% static 'js/jquery.min.js' %}"></script>
-            <script>
-                $(document).ready(function() {
-                    $('#department').change(function() {
-                        var departmentId = $(this).val();
-                        $.ajax({
-                            url: '{% url "ajax_load_journals" %}',
-                            data: {
-                                'department_id': departmentId
-                            },
-                            success: function(data) {
-                                $('#journalName').html('<option value="" disabled selected>Select a journal</option>');
-                                $.each(data, function(key, value) {
-                                    $('#journalName').append('<option value="' + value.journal_id + '">' + value.journal_name + '</option>');
-                                });
-                            }
-                        });
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script>
+    $(document).ready(function() {
+        $('#department').change(function() {
+            var departmentId = $(this).val();
+            $.ajax({
+                url: '/ajax_load_journals/',
+                data: {
+                    'department_id': departmentId
+                },
+                success: function(data) {
+                    $('#journalName').html('<option value="" disabled selected>Select a journal</option>');
+                    $.each(data, function(key, value) {
+                        $('#journalName').append('<option value="' + value.journal_id + '">' + value.journal_name + '</option>');
                     });
-                    
-                    $('#journalName').change(function() {
-                        var journalId = $(this).val();
-                        $.ajax({
-                            url: '{% url "ajax_load_volumes" %}',
-                            data: {
-                                'journal_id': journalId
-                            },
-                            success: function(data) {
-                                $('#volume').html('<option value="" selected="selected">Select a volume</option>');
-                                $.each(data, function(key, value) {
-                                    $('#volume').append('<option value="' + value.volume_id + '">' + value.volume + '</option>');
-                                });
-                            }
-                        });
+                }
+            });
+        });
+
+        $('#journalName').change(function() {
+            var journalId = $(this).val();
+            $.ajax({
+                url: '{/ajax_load_volumes/',
+                data: {
+                    'journal_id': journalId
+                },
+                success: function(data) {
+                    $('#volume').html('<option value="" selected="selected">Select a volume</option>');
+                    $.each(data, function(key, value) {
+                        $('#volume').append('<option value="' + value.volume_id + '">' + value.volume + '</option>');
                     });
-        
-                    $('#volume').change(function() {
-                        var volumeId = $(this).val();
-                        $.ajax({
-                            url: '{% url "ajax_load_issues" %}',
-                            data: {
-                                'volume_id': volumeId
-                            },
-                            success: function(data) {
-                                $('#issueNumber').html('<option value="" selected="selected">Select an issue</option>');
-                                $.each(data, function(key, value) {
-                                    $('#issueNumber').append('<option value="' + value.issue_id + '">' + value.issue_no + '</option>');
-                                });
-                            }
-                        });
+                }
+            });
+        });
+
+        $('#volume').change(function() {
+            var volumeId = $(this).val();
+            $.ajax({
+                url: '/ajax_load_issues/',
+                data: {
+                    'volume_id': volumeId
+                },
+                success: function(data) {
+                    $('#issueNumber').html('<option value="" selected="selected">Select an issue</option>');
+                    $.each(data, function(key, value) {
+                        $('#issueNumber').append('<option value="' + value.issue_id + '">' + value.issue_no + '</option>');
                     });
-        
-                    $('#authorCount').change(function() {
-                        var authorCount = $(this).val();
-                        $('#authorInputs').html('');
-                        for (var i = 1; i <= authorCount; i++) {
-                            $('#authorInputs').append('<div class="form-group"><label for="author' + i + '">Author ' + i + ':</label><input type="text" id="author' + i + '" name="author' + i + '" class="form-control"></div>');
-                        }
-                    }).trigger('change'); // Trigger change to initialize author fields on page load
-                });
-            </script>    
+                }
+            });
+        });
 
-
-        <!-- Bootstrap core JavaScript-->
-        <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
-        <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-
-        <!-- Core plugin JavaScript-->
-        <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
-
-        <!-- Custom scripts for all pages-->
-        <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
-
-        <!-- Page level plugins -->
-        <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
-
-        <!-- Page level custom scripts -->
-        <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
-        <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
-
-    </body>
-
+        $('#authorCount').change(function() {
+            var count = $(this).val();
+            var authorInputs = $('#authorInputs');
+            authorInputs.empty();
+            authorInputs.append('<div class="form-group"><label for="author1">Author 1:</label><input type="text" id="author1" name="author1" class="form-control" value="{{ author_name }}" readonly></div>');
+            for (var i = 2; i <= count; i++) {
+                authorInputs.append('<div class="form-group"><label for="author' + i + '">Author ' + i + ':</label><input type="text" id="author' + i + '" name="author' + i + '" class="form-control" placeholder="Enter Author ' + i + '"></div>');
+            }
+        }).trigger('change');
+    });
+</script>
+</body>
 </html>

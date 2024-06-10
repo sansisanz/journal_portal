@@ -3,28 +3,10 @@
 <html lang="en">
 
 <head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Notifications by Editor</title>
-
-    <!-- Custom fonts for this template-->
-    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-
-    <!-- Custom styles for this template-->
-    <link href="{% static 'css/sb-editor.css' %}" rel="stylesheet">
-    <link href="{% static 'css/update.css' %}" rel="stylesheet">
+    <!-- ... -->
 </head>
 
 <body id="page-top">
-
     {% include 'editor_sidebar.html' %}
 
     <!-- Begin Page Content -->
@@ -32,7 +14,16 @@
         <div class="container">
             <div class="card-header py-3">
                 <h4 class="m-0 font-weight-bold text-primary">ADD NOTIFICATIONS</h4>
-            </div><br> 
+            </div><br>
+            
+            {% if messages %}
+                <div class="alert alert-success" role="alert">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
             <form action='/notify/' method="post" enctype="multipart/form-data" id="articleForm" class="border border-primary p-4 rounded">
                 {% csrf_token %}
                 <div class="form-group">
@@ -49,41 +40,59 @@
                     <label for="volume">New Notification:</label>
                     <textarea id="volume" name="volume" class="form-control" placeholder="Enter new notification details"></textarea>
                 </div>
-                    
+                
                 <div class="form-group">
-                    <label for="next_volume">Link:</label>
-                    <input type="text" id="next_volume" name="next_volume" class="form-control" placeholder="Enter link">
+                    <label for="input_type">Choose Input Type:</label>
+                    <select id="input_type" name="input_type" class="form-control">
+                        <option value="url">Input URL</option>
+                        <option value="file">Upload File</option>
+                    </select>
                 </div>
-                    
+
+                <div id="url_input" class="form-group">
+                    <label for="next_volume_url">Link:</label>
+                    <input type="text" id="next_volume_url" name="next_volume_url" class="form-control" placeholder="Enter link">
+                </div>
+
+                <div id="file_input" class="form-group" style="display: none;">
+                    <label for="next_volume_file">Upload File:</label>
+                    <input type="file" id="next_volume_file" name="next_volume_file" class="form-control-file">
+                </div>
+                
                 <div class="text-center">
                     <input type="submit" value="Notify" class="btn btn-primary">
                 </div>
             </form>
-        </div>                
+        </div>
     </div>
-        <!-- End of Content Wrapper -->
+    <!-- End of Content Wrapper -->
 
-    </div>
     <!-- End of Page Wrapper -->
 
     <!-- Bootstrap core JavaScript-->
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-
     <!-- Core plugin JavaScript-->
     <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
-
     <!-- Custom scripts for all pages-->
     <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
-
     <!-- Page level plugins -->
     <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
-
     <!-- Page level custom scripts -->
     <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
     <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
     <script src="{% static 'js/demo/chart-bar-demo.js' %}"></script>
 
+    <script>
+        document.getElementById('input_type').addEventListener('change', function() {
+            if (this.value === 'file') {
+                document.getElementById('url_input').style.display = 'none';
+                document.getElementById('file_input').style.display = 'block';
+            } else {
+                document.getElementById('url_input').style.display = 'block';
+                document.getElementById('file_input').style.display = 'none';
+            }
+        });
+    </script>
 </body>
-
 </html>
