@@ -1,26 +1,22 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>journal</title>
+    <title>Journal</title>
 
     <!-- Custom fonts for this template-->
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-editor.css' %}" rel="stylesheet">
-    <link href="{% static 'css/journal.css' %}" rel="stylesheet" >
+    <link href="{% static 'css/journal.css' %}" rel="stylesheet">
 
     <style>
         .form-box {
@@ -69,6 +65,10 @@
                 <div class="form-group">
                     <label for="volume">New Volume:</label>
                     <input type="text" class="form-control" id="volume" name="volume" required>
+                </div>
+                <div class="form-group">
+                    <label for="currentVolume">Current Open Volume:</label>
+                    <input type="text" class="form-control" id="currentVolume" name="currentVolume" value="{% if current_open_volume %}{{ current_open_volume.volume }}{% else %}None{% endif %}" readonly>
                 </div>                                    
                 <button type="submit" class="btn btn-success btn-block mt-3">Submit</button>
             </form>
@@ -103,47 +103,30 @@
                 <input type="hidden" name="form_type" value="add_issue">
                 <input type="hidden" name="journal_id" value="{{ journal_id }}">
                 <div class="form-group">
-                    <label for="volumeSelect">Select Volume:</label>
-                    <select class="form-control" id="volumeSelect" name="volume_id" required>
-                        {% for volume in volumes %}
-                            <option value="{{ volume.volume_id }}">{{ volume.volume }}</option>
-                        {% endfor %}
-                    </select>
+                    <label for="issue_number">New Issue Number:</label>
+                    <input type="number" class="form-control" id="issue_number" name="issue_number" required>
                 </div>
                 <div class="form-group">
-                    <label for="issueNumber">Issue Number:</label>
-                    <input type="number" class="form-control" id="issueNumber" name="issue_number" min="1" required>
+                    <label for="cover_image">Cover Image:</label>
+                    <input type="file" class="form-control-file" id="cover_image" name="cover_image" required>
                 </div>
                 <div class="form-group">
-                    <label for="coverImage">Cover Image:</label>
-                    <input type="file" class="form-control-file" id="coverImage" name="cover_image" required>
+                    <label for="currentIssue">Current Open Issue:</label>
+                    <input type="text" class="form-control" id="currentIssue" name="currentIssue" value="{% if current_open_issue %}{{ current_open_issue.issue_no }}{% else %}None{% endif %}" readonly>
                 </div>
                 <button type="submit" class="btn btn-success btn-block mt-3">Submit</button>
-            </form>                
+            </form>
         </div>
     </div>
-    
-                     
-                 
-                
-                <!-- Bootstrap core JavaScript-->
-       <!-- Bootstrap core JavaScript-->
-       <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
-       <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-   
-       <!-- Core plugin JavaScript-->
-       <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
-   
-       <!-- Custom scripts for all pages-->
-       <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
-   
-       <!-- Page level plugins -->
-       <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
-   
-       <!-- Page level custom scripts -->
-       <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
-       <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
 
+    <!-- Bootstrap core JavaScript-->
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
 </body>
-
 </html>

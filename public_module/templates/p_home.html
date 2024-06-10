@@ -102,14 +102,14 @@
                       <br><br>
                       <nav class="journal-menu">
                           <ul>
-                              <li><a href="/p_home/{{ jdata.journal_id }}#aim&scope">Aim & Scopes</a></li>
-                              <li><a href="/p_home/{{ jdata.journal_id }}#editorialboard">Editorial Board</a></li>
-                              <li><a href="/p_home/{{ jdata.journal_id }}#submitarticle">Submit Article</a></li>
-                              <li><a href="/p_home/{{ jdata.journal_id }}#journalupdates">Journal Updates</a></li>
+                              <li><a href="/p_home/{{ jdata.journal_id }}/#aim&scope">Aim & Scopes</a></li>
+                              <li><a href="/p_home/{{ jdata.journal_id }}/#editorialboard">Editorial Board</a></li>
+                              <li><a href="/p_home/{{ jdata.journal_id }}/#submitarticle">Submit Article</a></li>
+                              <li><a href="/p_home/{{ jdata.journal_id }}/#journalupdates">Journal Updates</a></li>
                               <li><a href="/p_guidelines/{{ jdata.journal_id }}">Submission Guidelines</a></li>
                               <li><a href="/p_ethics/{{ jdata.journal_id }}">Ethics & Disclosure</a></li>
                               <li><a href="/p_alljournals/{{ jdata.journal_id }}/">All Journals</a></li>
-                              <li><a href="/p_home/{{ jdata.journal_id }}#contact">Contact Us</a></li>
+                              <li><a href="/p_home/{{ jdata.journal_id }}/#contact">Contact Us</a></li>
                           </ul>
                       </nav>
                   </div>
@@ -193,7 +193,7 @@
       </section>
     <!-- =========== end of submit article ============ -->
 
-<!-- ======== Journal Updates ======== -->
+<!-- ======== Journal Notifications ======== -->
       <section id="journalupdates" class="journalupdates bg-light py-5">
         <div class="container">
           <div class="section-title" data-aos="zoom-out">
@@ -204,13 +204,14 @@
 
           <div class="news-ticker">
             <ul>
-              {% for i in ndata %}
-              <li><a href="/p_home/{{i.journal_id}}" >{{i.notification}}</a></li>
+              {% for notification in ndata %}
+              <li><a href="{{ notification.link }}" >{{ notification.notification }}</a></li>
               {% endfor %}
             </ul>
           </div>
         </div>
       </section>
+
 <!-- ========= Journal Updates End ========= -->    
 
   <!-- ======= Contact Section ======= -->

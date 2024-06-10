@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 import hashlib
-from admin_module.models import JournalPageVisit, article_table, ea_table, eb_table, gl_table, issue_table, notification_table, role_table, seat_table, designation_table, usertable, dept_table, journal_table, volume_table
+from admin_module.models import ArticleDownload, ArticleVisit, JournalPageVisit, article_table, ea_table, eb_table, gl_table, issue_table, message_table, notification_table, review_table, role_table, seat_table, designation_table, usertable, dept_table, journal_table, volume_table
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -14,151 +14,10 @@ import secrets
 
 # Create your views here.
 
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 def login(request):
     return render(request, 'login.html')
-
-
-def index(request):
-    if request.session.has_key('empid'):
-        empid = request.session['empid']
-        return render(request, "index.html", {"empid": empid})
-    else:
-        return redirect('/login')
-
-def forgotpassword(request):
-    if request.session.has_key('empid'):
-        empid = request.session['empid']
-        return render(request, "forgotpassword.html", {"empid": empid})
-    else:
-        return redirect('/login')
-    
-    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-def visit_c(request):
-    if request.session.has_key('empid'):
-        empid = request.session['empid']
-        departments = dept_table.objects.all()
-        return render(request, "visit_c.html", {"empid": empid, 'departments': departments})
-    else:
-        return redirect('/login')  
-
-
-logger = logging.getLogger(__name__)
-
-def get_journals_by_dept(request):
-    dept_id = request.GET.get('dept_id')
-    if not dept_id:
-        return JsonResponse({'error': 'Department ID not provided'}, status=400)
-    
-    try:
-        dept_id = int(dept_id)
-        journals = journal_table.objects.filter(dept_id=dept_id)
-        journal_list = list(journals.values('journal_id', 'journal_name', 'visit_count'))
-        return JsonResponse(journal_list, safe=False)
-    except ValueError:
-        return JsonResponse({'error': 'Invalid Department ID'}, status=400)
-    except Exception as e:
-        logger.error(f"Error fetching journals for department ID {dept_id}: {e}")
-        return JsonResponse({'error': str(e)}, status=500)
-    
-def get_journals_by_department(request):
-    dept_id = request.GET.get('dept_id')
-    journals = journal_table.objects.filter(dept_id=dept_id).values('journal_id', 'journal_name')
-    return JsonResponse(list(journals), safe=False)
-
-def get_volumes_by_journal(request):
-    journal_id = request.GET.get('journal_id')
-    volumes = volume_table.objects.filter(journal_id=journal_id).values('volume_id', 'volume')
-    return JsonResponse(list(volumes), safe=False)
-
-def get_issues_by_volume(request):
-    volume_id = request.GET.get('volume_id')
-    issues = issue_table.objects.filter(volume_id=volume_id).values('issue_id', 'issue_no')
-    return JsonResponse(list(issues), safe=False)
-
-def get_articles_by_issue(request):
-    issue_id = request.GET.get('issue_id')
-    articles = article_table.objects.filter(issue_id=issue_id).values('article_id', 'article_title', 'visit_count', 'download_count')
-    return JsonResponse(list(articles), safe=False)
-        
-#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-def userlist(request):
-    if request.session.has_key('empid'):
-        empid = request.session['empid']
-        return render(request, "userlist.html", {"empid": empid})
-    else:
-        return redirect('/login')
-
-def adminprofile(request):
-    if request.session.has_key('empid'):
-            empid = request.session.get('empid')
-            user = get_object_or_404(ea_table, employee_id=empid)
-            return render(request, 'adminprofile.html', {'user': user})
-    else:
-        return redirect('/login/')
-
-def adminresetpassword(request):
-    if request.session.has_key('empid'):
-        empid = request.session['empid']        
-        user = get_object_or_404(ea_table, employee_id=empid)
-        return render(request, "adminresetpassword.html", {"user": user})
-
-    else:
-        return redirect('/login/')
-
-def create_j(request):
-    if request.session.has_key('empid'):
-        empid = request.session['empid']
-        departments = dept_table.objects.all()
-        editors = ea_table.objects.filter(ea_type='editor')        
-        return render(request, "create_j.html", {"empid": empid, 'departments': departments, 'editors': editors})
-    else:
-        return redirect('/login/')
-
-def set_password(request):
-    user = request.GET.get('user')
-    request.session['token']=user
-    return render(request, 'set_password.html')
-
-def view_j(request):
-    if request.session.has_key('empid'):
-        empid = request.session['empid']
-        journals = journal_table.objects.all()  # Fetch all journals from the database
-        csrf_token = request.COOKIES['csrftoken']  # Fetch the CSRF token
-        return render(request, "view_j.html", {"empid": empid, "journals": journals, "csrf_token": csrf_token})
-    else:
-        return redirect('/login/')
-
-
-def edit_j(request, journal_id):
-    empid = request.session.get('empid')
-    if empid is None:
-        return redirect(f'/login/?next=/edit_j/{journal_id}/')
-    
-    journal = get_object_or_404(journal_table, journal_id=journal_id)
-    departments = dept_table.objects.all()
-    editors = ea_table.objects.all()
-    
-    # Get all messages for the request
-    message_list = messages.get_messages(request)
-    
-    return render(request, 'edit_j.html', {
-        'journal': journal, 
-        'departments': departments, 
-        'editors': editors, 
-        'empid': empid,
-        'message_list': message_list
-    })
-
-
-def add_editor(request):
-    if request.session.has_key('empid'):
-        empid = request.session['empid']
-        return render(request, "add_editor.html", {"empid": empid})
-    else:
-        return redirect('/login')
 
 
 def ea_login(request):
@@ -196,8 +55,79 @@ def logout(request):
       pass
    return render(request,"login.html")
 
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+def forgotpassword(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        try:
+            user = ea_table.objects.get(ea_email=email)
+            key = hashlib.sha1(email.encode("utf-8")).hexdigest()
+            user.token = key
+            user.save()
+            msg = "Click the link to reset your password: http://127.0.0.1:8000/passwordUpdate/?user="+key
+            send_mail(
+                'Password Reset',
+                msg,
+                'subindax@gmail.com',
+                [email],
+                fail_silently=False,
+            )
+            return render(request, "forgotpassword.html", {'message': "Password reset link sent to your email."})
+        except ea_table.DoesNotExist:
+            return render(request, "forgotpassword.html", {'error': "Email address not found."})
+    else:
+        return render(request, "forgotpassword.html")
+
+def PasswordUpdate(request):
+    user_token = request.GET.get('user')
+    try:
+        user = ea_table.objects.get(token=user_token)
+        request.session['token'] = user_token
+        return render(request, "passwordUpdate.html")
+    except ea_table.DoesNotExist:
+        return render(request, "passwordUpdate.html", {'error': "Invalid or expired token."})
+
+def updatePassword(request):
+    if request.method == "POST":
+        password = request.POST.get("password")
+        confirm = request.POST.get("confirm")
+        if password != confirm:
+            return render(request, "passwordUpdate.html", {"error": "Passwords do not match."})
+        try:
+            user = ea_table.objects.get(token=request.session['token'])
+            user.password = hashlib.sha1(password.encode('utf-8')).hexdigest()
+            user.token = ""
+            user.save()
+            del request.session['token']
+            return redirect("/login/")  # Redirect to login page
+        except ea_table.DoesNotExist:
+            return render(request, "passwordUpdate.html", {"error": "Invalid or expired token."})
+    else:
+        return render(request, "passwordUpdate.html")
+
+
+
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+def index(request):
+    if request.session.has_key('empid'):
+        empid = request.session['empid']
+        return render(request, "index.html", {"empid": empid})
+    else:
+        return redirect('/login/')
+    
+
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #ADD EDITOR 
+
+def add_editor(request):
+    if request.session.has_key('empid'):
+        empid = request.session['empid']
+        return render(request, "add_editor.html", {"empid": empid})
+    else:
+        return redirect('/login/')
+
 def addeditor(request):
     if request.method == 'POST':
         # Extract data from the submitted form
@@ -252,15 +182,24 @@ def addeditor(request):
             rdata = role_table()
             rdata.role_name = role_name
             rdata.save()
-
-        desdata = designation_table()
-        desdata.designation = designation
-        desdata.save()
-
-        sdata = seat_table()
-        sdata.seat_name = role_name
-        sdata.save()
-
+        
+        #save data to designation_table
+        if designation_table.objects.filter(designation=designation).exists():
+            desdata = role_table.objects.get(designation=designation)
+        else:
+            desdata = designation_table()
+            desdata.designation = designation
+            desdata.save()
+        
+        #save data to seat_table
+        if seat_table.objects.filter(seat_name=role_name).exists():
+            sdata = seat_table.objects.get(seat_name=role_name)
+        else:
+            sdata = seat_table()
+            sdata.seat_name = role_name
+            sdata.save()
+    
+        #save data to usertable
         udata = usertable()
         udata.ea_id = eadata
         udata.seat_id = sdata
@@ -271,7 +210,7 @@ def addeditor(request):
         message = 'Click the link to set your password: http://127.0.0.1:8000/set_password/?user='+token
         html_message = render_to_string('email_template.html', {'message': message})
         plain_message = strip_tags(html_message)
-        sender_email = 'subindax@gmail.com'  # Update with your email address
+        sender_email = 'subindax@gmail.com' 
         send_mail(subject, plain_message, sender_email, [ea_email], html_message=html_message)
         
         messages.success(request, 'Added editor successfully. Now set your password using the mail we send to you.')
@@ -279,6 +218,12 @@ def addeditor(request):
 
     # Render the form page
     return render(request, 'set_password.html', {'employee_id': employee_id})
+
+#SET PASSWORD TO NEWLY ADDED EDITOR
+def set_password(request):
+    user = request.GET.get('user')
+    request.session['token']=user
+    return render(request, 'set_password.html')
 
 def setpassword(request):
     if request.method == 'POST':
@@ -310,6 +255,72 @@ def setpassword(request):
 
     return HttpResponse("Invalid Request")
 
+def remove_editor(request):
+    if request.session.has_key('empid'):
+        empid = request.session['empid']
+        departments = dept_table.objects.all()
+        
+        if request.method == 'POST':
+            dept_id = request.POST.get('dept_id')
+            editor_id = request.POST.get('editor_id')
+            
+            if dept_id and editor_id:
+                # Remove editor from the journals in the specified department
+                journals = journal_table.objects.filter(dept_id=dept_id, editor_id=editor_id)
+                for journal in journals:
+                    journal.editor_id = None
+                    journal.save()
+
+                # Remove editor from articles
+                articles = article_table.objects.filter(ea_id=editor_id)
+                for article in articles:
+                    article.ea_id = None
+                    article.save()
+
+                # Remove editor from messages
+                messages_table = message_table.objects.filter(ea_id=editor_id)
+                for msg in messages_table:
+                    msg.ea_id = None
+                    msg.save()
+
+                # Remove editor from reviews
+                reviews = review_table.objects.filter(editor_id=editor_id)
+                for review in reviews:
+                    review.editor_id = None
+                    review.save()
+
+                # Set status to inactive in ea_table
+                ea_table.objects.filter(ea_id=editor_id).update(status='inactive')
+                
+                # Set status to inactive in usertable
+                usertable.objects.filter(ea_id=editor_id).update(status='inactive')
+
+                messages.success(request, 'Editor has been successfully removed from all assigned journals and tables.')
+                return redirect('/remove_editor/')
+        
+        return render(request, "remove_editor.html", {"empid": empid, "departments": departments})
+    else:
+        return redirect('/login/')
+
+def get_editors_by_department(request, dept_id):
+    try:
+        editors = ea_table.objects.filter(dept_id=dept_id).values('ea_id', 'ea_name')
+        return JsonResponse({'editors': list(editors)})
+    except Exception as e:
+        print(f"Error fetching editors for department {dept_id}: {e}")
+        return JsonResponse({'error': 'Error fetching editors'}, status=500)
+
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+def create_j(request):
+    if request.session.has_key('empid'):
+        empid = request.session['empid']
+        departments = dept_table.objects.all()
+        editors = ea_table.objects.filter(ea_type='editor')        
+        return render(request, "create_j.html", {"empid": empid, 'departments': departments, 'editors': editors})
+    else:
+        return redirect('/login/')
+    
 
 def create_journal(request):
      if request.method == 'POST':
@@ -321,7 +332,7 @@ def create_journal(request):
             department = dept_table.objects.get(dept_id=department_id)
             # Get the editor instance using the editor_id
             editor = ea_table.objects.get(ea_id=editor_id)
-            created_by = "Admin"  # Replace this with the actual logged-in admin's name
+            created_by = "admin" 
 
             # Create a new journal entry
             new_journal = journal_table.objects.create(
@@ -332,21 +343,167 @@ def create_journal(request):
             )
         
         messages.success(request, 'Successfully created the journal.')    
-        return redirect('/create_j/')  # Redirect to success page after creating journal
-     return render(request, 'index.html')
-
-
-def view_profile(request):
-    empid = request.session.get('empid')
-    user = get_object_or_404(ea_table, employee_id=empid)
-    if user.ea_type == 'admin':
-        return render(request, 'adminprofile.html', {'user': user})
-    elif user.ea_type == 'editor':
-        return render(request, 'editorprofile.html', {'user': user})
+        return redirect('/create_j/')  
+     return render(request, 'index.html')    
+    
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------    
+def view_j(request):
+    if request.session.has_key('empid'):
+        empid = request.session['empid']
+        journals = journal_table.objects.filter(status='active')
+        csrf_token = request.COOKIES['csrftoken']  # Fetch the CSRF token
+        return render(request, "view_j.html", {"empid": empid, "journals": journals, "csrf_token": csrf_token})
     else:
-        return HttpResponse("Invalid user type", status=400)
+        return redirect('/login/')
 
 
+def edit_j(request, journal_id):
+    empid = request.session.get('empid')
+    if empid is None:
+        return redirect(f'/login/?next=/edit_j/{journal_id}/')
+    
+    journal = get_object_or_404(journal_table, journal_id=journal_id)
+    departments = dept_table.objects.all()
+    editors = ea_table.objects.all()
+    
+    # Get all messages for the request
+    message_list = messages.get_messages(request)
+    
+    return render(request, 'edit_j.html', {
+        'journal': journal, 
+        'departments': departments, 
+        'editors': editors, 
+        'empid': empid,
+        'message_list': message_list
+    })
+
+def update_journal(request, journal_id):
+    if request.method == 'POST':
+        empid = request.session.get('empid')
+        if empid is None:
+            return HttpResponse("Unauthorized", status=401)
+
+        journal = get_object_or_404(journal_table, journal_id=journal_id)
+        journal_name = request.POST.get('journal_name')
+        dept_id = request.POST.get('dept_id')
+        editor_id = request.POST.get('editor_id')
+
+        # Update the journal object with the new values
+        journal.journal_name = journal_name
+        journal.dept_id_id = dept_id
+        journal.editor_id = editor_id
+
+        # Save the changes to the database
+        journal.save()
+
+        messages.success(request, 'Journal updated successfully.')
+        return redirect('/view_j/')
+
+    else:
+        return HttpResponse("Invalid method", status=405)  
+
+def confirm_delete_journal(request, journal_id):
+    try:
+        journal = get_object_or_404(journal_table, journal_id=journal_id)
+
+        volumes_count = volume_table.objects.filter(journal_id=journal, status='active').count()
+        issues_count = issue_table.objects.filter(volume_id__journal_id=journal, status='active').count()
+        articles_count = article_table.objects.filter(issue_id__volume_id__journal_id=journal, status='active').count()
+        eb_entries_count = eb_table.objects.filter(journal_id=journal, status='active').count()
+        guidelines_count = gl_table.objects.filter(journal_id=journal, status='active').count()
+        notifications_count = notification_table.objects.filter(journal_id=journal, status='active').count()
+
+        response_data = {
+            'volumes_count': volumes_count,
+            'issues_count': issues_count,
+            'articles_count': articles_count,
+            'eb_entries_count': eb_entries_count,
+            'guidelines_count': guidelines_count,
+            'notifications_count': notifications_count,
+        }
+        return JsonResponse(response_data)
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+def remove_journal(request, journal_id):
+    if request.method == 'POST':
+        try:
+            journal = get_object_or_404(journal_table, journal_id=journal_id)
+            journal.status = 'inactive'
+            journal.save()
+            
+            volume_table.objects.filter(journal_id=journal).update(status='inactive')
+            issue_table.objects.filter(volume_id__journal_id=journal).update(status='inactive')
+            article_table.objects.filter(issue_id__volume_id__journal_id=journal).update(status='inactive')
+            eb_table.objects.filter(journal_id=journal).update(status='inactive')
+            gl_table.objects.filter(journal_id=journal).update(status='inactive')
+            notification_table.objects.filter(journal_id=journal).update(status='inactive')
+            
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------    
+
+def visit_c(request):
+    if request.session.has_key('empid'):
+        empid = request.session['empid']
+        departments = dept_table.objects.all()
+        return render(request, "visit_c.html", {"empid": empid, 'departments': departments})
+    else:
+        return redirect('/login/')  
+
+
+logger = logging.getLogger(__name__)
+
+def get_journals_by_dept(request):
+    dept_id = request.GET.get('dept_id')
+    if not dept_id:
+        return JsonResponse({'error': 'Department ID not provided'}, status=400)
+    
+    try:
+        dept_id = int(dept_id)
+        journals = journal_table.objects.filter(dept_id=dept_id)
+        journal_list = list(journals.values('journal_id', 'journal_name', 'visit_count'))
+        return JsonResponse(journal_list, safe=False)
+    except ValueError:
+        return JsonResponse({'error': 'Invalid Department ID'}, status=400)
+    except Exception as e:
+        logger.error(f"Error fetching journals for department ID {dept_id}: {e}")
+        return JsonResponse({'error': str(e)}, status=500)
+    
+def get_journals_by_department(request):
+    dept_id = request.GET.get('dept_id')
+    journals = journal_table.objects.filter(dept_id=dept_id).values('journal_id', 'journal_name')
+    return JsonResponse(list(journals), safe=False)
+
+def get_volumes_by_journal(request):
+    journal_id = request.GET.get('journal_id')
+    volumes = volume_table.objects.filter(journal_id=journal_id).values('volume_id', 'volume')
+    return JsonResponse(list(volumes), safe=False)
+
+def get_issues_by_volume(request):
+    volume_id = request.GET.get('volume_id')
+    issues = issue_table.objects.filter(volume_id=volume_id).values('issue_id', 'issue_no')
+    return JsonResponse(list(issues), safe=False)
+
+def get_articles_by_issue(request):
+    issue_id = request.GET.get('issue_id')
+    articles = article_table.objects.filter(issue_id=issue_id).values('article_id', 'article_title', 'visit_count', 'download_count')
+    return JsonResponse(list(articles), safe=False)
+        
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+def adminprofile(request):
+    if request.session.has_key('empid'):
+            empid = request.session.get('empid')
+            user = get_object_or_404(ea_table, employee_id=empid)
+            return render(request, 'adminprofile.html', {'user': user})
+    else:
+        return redirect('/login/')
+    
 def update_profile(request):
     if request.method == 'POST':
         empid = request.session.get('empid')
@@ -368,9 +525,20 @@ def update_profile(request):
         else:
             return HttpResponse("Invalid user type", status=400)
     else:
-        return HttpResponse("Invalid method", status=405)
+        return HttpResponse("Invalid method", status=405)    
+   
 
-    
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------    
+
+def adminresetpassword(request):
+    if request.session.has_key('empid'):
+        empid = request.session['empid']        
+        user = get_object_or_404(ea_table, employee_id=empid)
+        return render(request, "adminresetpassword.html", {"user": user})
+
+    else:
+        return redirect('/login/')
+ 
 def reset_password(request):
     if request.method == 'POST':
         current_password = request.POST.get('currentPassword')
@@ -412,121 +580,9 @@ def reset_password(request):
     if utype == "admin":
         return redirect('/adminresetpassword/')
     return redirect('/editorresetpassword/')
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------    
     
 
-def update_journal(request, journal_id):
-    if request.method == 'POST':
-        empid = request.session.get('empid')
-        if empid is None:
-            return HttpResponse("Unauthorized", status=401)
 
-        journal = get_object_or_404(journal_table, journal_id=journal_id)
-        journal_name = request.POST.get('journal_name')
-        dept_id = request.POST.get('dept_id')
-        editor_id = request.POST.get('editor_id')
-
-        # Update the journal object with the new values
-        journal.journal_name = journal_name
-        journal.dept_id_id = dept_id
-        journal.editor_id = editor_id
-
-        # Save the changes to the database
-        journal.save()
-
-        messages.success(request, 'Journal updated successfully.')
-        return redirect('/view_j/')
-
-    else:
-        return HttpResponse("Invalid method", status=405)  
-
-
-def remove_journal(request, journal_id):
-    journal = get_object_or_404(journal_table, journal_id=journal_id)
-
-    if request.method == 'POST':
-        # Collect related entries
-        volumes = volume_table.objects.filter(journal_id=journal)
-        issues = issue_table.objects.filter(volume_id__in=volumes)
-        articles = article_table.objects.filter(issue_id__in=issues)
-        eb_entries = eb_table.objects.filter(journal_id=journal)
-        guidelines = gl_table.objects.filter(journal_id=journal)
-        notifications = notification_table.objects.filter(journal_id=journal)
-        article_visits = article_visit.objects.filter(article_id__in=articles)
-        journal_visits = journalpage_visit.objects.filter(journal_id=journal)
-        article_downloads = article_download.objects.filter(article_id__in=articles)
-
-        # Delete related entries
-        article_downloads.delete()
-        article_visits.delete()
-        notifications.delete()
-        guidelines.delete()
-        eb_entries.delete()
-        articles.delete()
-        issues.delete()
-        volumes.delete()
-        journal.delete()
-
-        messages.success(request, 'Journal and all related entries have been successfully deleted.')
-        return redirect('/view_j/')
-    
-    return redirect('/confirm_delete_journal/{}/'.format(journal_id))
-
-
-def confirm_delete_journal(request, journal_id):
-    journal = get_object_or_404(journal_table, journal_id=journal_id)
-
-    # Collect details for confirmation
-    volumes_count = volume_table.objects.filter(journal_id=journal).count()
-    issues_count = issue_table.objects.filter(volume_id__journal_id=journal).count()
-    articles_count = article_table.objects.filter(issue_id__volume_id__journal_id=journal).count()
-    eb_entries_count = eb_table.objects.filter(journal_id=journal).count()
-    guidelines_count = gl_table.objects.filter(journal_id=journal).count()
-    notifications_count = notification_table.objects.filter(journal_id=journal).count()
-
-    context = {
-        'journal': journal,
-        'volumes_count': volumes_count,
-        'issues_count': issues_count,
-        'articles_count': articles_count,
-        'eb_entries_count': eb_entries_count,
-        'guidelines_count': guidelines_count,
-        'notifications_count': notifications_count,
-    }
-
-    return render(request, 'confirm_delete_journal.html', context)
-
-
-def remove_editor(request):
-    if request.session.has_key('empid'):
-        empid = request.session['empid']
-        departments = dept_table.objects.all()
-        
-        if request.method == 'POST':
-            dept_id = request.POST.get('dept_id')
-            editor_id = request.POST.get('editor_id')
-            
-            if dept_id and editor_id:
-                # Remove editor from the journals in the specified department
-                journals = journal_table.objects.filter(dept_id=dept_id, editor_id=editor_id)
-                for journal in journals:
-                    journal.editor_id = None
-                    journal.save()
-
-                # Remove editor from other tables
-                ea_table.objects.filter(ea_id=editor_id).delete()
-                role_table.objects.filter(role_id=editor_id).delete()
-                seat_table.objects.filter(seat_id=editor_id).delete()
-                designation_table.objects.filter(designation_id=editor_id).delete()
-                usertable.objects.filter(ea_id=editor_id).delete()
-
-                messages.success(request, 'Editor has been successfully removed from all assigned journals and tables.')
-                return redirect('/remove_editor/')
-        
-        return render(request, "remove_editor.html", {"empid": empid, "departments": departments})
-    else:
-        return redirect('/login/')
-
-def get_editors_by_department(request, dept_id):
-    editors = ea_table.objects.filter(dept_id=dept_id).values('ea_id', 'ea_name')
-    return JsonResponse({'editors': list(editors)})
 

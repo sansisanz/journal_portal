@@ -1,0 +1,167 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Manage Notifications</title>
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet">
+    <link href="{% static 'css/sb-editor.css' %}" rel="stylesheet">
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+            font-size: 18px;
+            text-align: left;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        .btn {
+            margin: 5px;
+        }
+    </style>
+</head>
+
+<body id="page-top">
+    {% include 'editor_sidebar.html' %}
+
+    <div class="container-fluid">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>SI No.</th>
+                        <th>Notification</th>
+                        <th>Link</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for notification in active_notifications %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ notification.notification }}</td>
+                        <td>{{ notification.link }}</td>
+                        <td>
+                            <button class="btn btn-primary edit-notification" data-notification-id="{{ notification.notification_id }}">Edit</button>
+                            <button class="btn btn-danger remove-notification" data-notification-id="{{ notification.notification_id }}">Remove</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Edit Notification Modal -->
+    <div class="modal fade" id="editNotificationModal" tabindex="-1" role="dialog" aria-labelledby="editNotificationModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editNotificationModalLabel">Edit Notification</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editNotificationForm" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" id="editNotificationId" name="notification_id">
+                        <div class="form-group">
+                            <label for="editNotification">Notification</label>
+                            <input type="text" class="form-control" id="editNotification" name="notification">
+                        </div>
+                        <div class="form-group">
+                            <label for="editLink">Link</label>
+                            <input type="text" class="form-control" id="editLink" name="link">
+                        </div>
+                        <div class="form-group">
+                            <label for="editFile">File</label>
+                            <input type="file" class="form-control" id="editFile" name="file">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include jQuery and Bootstrap JS -->
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    <script>
+    $(document).ready(function(){
+        // Edit notification
+        $('.edit-notification').click(function(){
+            var notification_id = $(this).data('notification-id');
+            $('#editNotificationId').val(notification_id);
+            var row = $(this).closest('tr');
+            $('#editNotification').val(row.find('td:nth-child(2)').text());
+            $('#editLink').val(row.find('td:nth-child(3)').text());
+            $('#editNotificationModal').modal('show');
+        });
+
+        $('#editNotificationForm').submit(function(e){
+            e.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                type: 'POST',
+                url: '/edit_notification/',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response){
+                    if (response.success) {
+                        alert('Notification edited successfully.');
+                        location.reload();
+                    } else {
+                        alert('Failed to edit notification. Please try again.');
+                    }
+                },
+                error: function(xhr, errmsg, err){
+                    alert('Failed to edit notification. Please try again.');
+                }
+            });
+        });
+
+        // Remove notification
+        $('.remove-notification').click(function(){
+            var notification_id = $(this).data('notification-id');
+            if (confirm("Are you sure you want to remove this notification?")) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/remove_notification/',
+                    data: {
+                        'notification_id': notification_id,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response){
+                        if (response.success) {
+                            alert('Notification removed successfully.');
+                            location.reload();
+                        } else {
+                            alert('Failed to remove notification. Please try again.');
+                        }
+                    },
+                    error: function(xhr, errmsg, err){
+                        alert('Failed to remove notification. Please try again.');
+                    }
+                });
+            }
+        });
+    });
+    </script>
+
+</body>
+
+</html>

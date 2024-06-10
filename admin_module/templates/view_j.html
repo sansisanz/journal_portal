@@ -1,52 +1,33 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-
     <title>JP Admin Panel</title>
-
-    <!-- Custom fonts for this template-->
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-
-    <!-- Custom styles for this template-->
-    <link href="{% static 'css/sb-admin-2.css'%}" rel="stylesheet">
-
-    <!-- Include jQuery for convenience -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="{% static 'css/sb-admin-2.css' %}" rel="stylesheet">
     <style>
         .form-box {
-          background-color: #f8f9fa;
-          border: 1px solid #ced4da;
-          border-radius: 10px;
-          padding: 20px;
-          margin-bottom: 70%;
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 70%;
         }
     </style>
-
 </head>
-
 <body id="page-top">
-
     {% include 'admin_sidebar.html' %}
-
-    <!-- view_j.html -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h4 class="m-0 font-weight-bold text-primary">VIEW JOURNALS</h4>
         </div>
         <div class="card-body">
-            <!-- Display success message -->
             {% if messages %}
                 {% for message in messages %}
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -80,7 +61,7 @@
                                 <a class="btn btn-success font-weight-bolder btn-user btn-block col-sm-6" href="/edit_j/{{ journal.journal_id }}/">EDIT</a>
                             </td>
                             <td>
-                                <a class="btn btn-danger font-weight-bolder btn-user btn-block col-sm-6" href="/confirm_delete_journal/{{ journal.journal_id }}/">REMOVE</a>
+                                <button class="btn btn-danger font-weight-bolder btn-user btn-block col-sm-6 remove-btn" data-journal-id="{{ journal.journal_id }}">REMOVE</button>
                             </td>
                         </tr>
                         {% endfor %}
@@ -89,83 +70,108 @@
             </div>
         </div>
     </div>
-
-
-
-    <script>
-        function sortTable(columnIndex) {
-            var table, rows, switching, i, x, y, shouldSwitch;
-            table = document.getElementById("dataTable");
-            switching = true;
-            while (switching) {
-                switching = false;
-                rows = table.rows;
-                for (i = 1; i < (rows.length - 1); i++) {
-                    shouldSwitch = false;
-                    x = rows[i].getElementsByTagName("td")[columnIndex];
-                    y = rows[i + 1].getElementsByTagName("td")[columnIndex];
-                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                        shouldSwitch = true;
-                        break;
-                    }
-                }
-                if (shouldSwitch) {
-                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                    switching = true;
-                }
-            }
-        }
-    </script>
-
+    <!-- Confirm Deletion Modal -->
+    <div class="modal fade" id="confirmDeletionModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeletionModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeletionModalLabel">Confirm Deletion</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete the journal <strong id="journalName"></strong> and all related entries?</p>
+                    <p>The following will be deleted:</p>
+                    <ul>
+                        <li id="volumesCount"></li>
+                        <li id="issuesCount"></li>
+                        <li id="articlesCount"></li>
+                        <li id="ebEntriesCount"></li>
+                        <li id="guidelinesCount"></li>
+                        <li id="notificationsCount"></li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteButton">Yes, Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const removeButtons = document.querySelectorAll('.remove-btn');
+            let journalIdToDelete = null;
+    
             removeButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const journalId = this.getAttribute('data-journal-id');
-                    if (confirm('Are you sure you want to remove this journal?')) {
-                        fetch(`/remove_journal/${journalId}/`, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRFToken': '{{ csrf_token }}',
-                                'Content-Type': 'application/json'
-                            }
-                        })
+                    const journalName = this.closest('tr').querySelector('td:nth-child(2)').innerText;
+    
+                    fetch(`/confirm_delete_journal/${journalId}/`)
                         .then(response => {
-                            if (response.ok) {
-                                // Reload the page after successful removal
-                                location.reload();
-                            } else {
-                                alert('Failed to remove the journal.');
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
                             }
+                            return response.json();
+                        })
+                        .then(data => {
+                            document.getElementById('journalName').innerText = journalName;
+                            document.getElementById('volumesCount').innerText = `${data.volumes_count} Volume(s)`;
+                            document.getElementById('issuesCount').innerText = `${data.issues_count} Issue(s)`;
+                            document.getElementById('articlesCount').innerText = `${data.articles_count} Article(s)`;
+                            document.getElementById('ebEntriesCount').innerText = `${data.eb_entries_count} Editorial Board Member(s)`;
+                            document.getElementById('guidelinesCount').innerText = `${data.guidelines_count} Guideline(s)`;
+                            document.getElementById('notificationsCount').innerText = `${data.notifications_count} Notification(s)`;
+    
+                            journalIdToDelete = journalId;
+                            $('#confirmDeletionModal').modal('show');
                         })
                         .catch(error => {
-                            console.error('Error:', error);
+                            console.error('Fetch error:', error);
+                            alert('An error occurred while fetching journal details. Please try again.');
                         });
-                    }
                 });
+            });
+    
+            document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+                if (journalIdToDelete) {
+                    fetch(`/remove_journal/${journalIdToDelete}/`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert('Failed to remove the journal: ' + data.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Fetch error:', error);
+                        alert('An error occurred while removing the journal. Please try again.');
+                    });
+                }
             });
         });
     </script>
-  
-
-    <!-- Bootstrap core JavaScript-->
+    
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-
-    <!-- Core plugin JavaScript-->
     <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
-
-    <!-- Custom scripts for all pages-->
     <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
-
-    <!-- Page level plugins -->
     <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
-
-    <!-- Page level custom scripts -->
     <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
     <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
-
 </body>
-
-</html>    
+</html>

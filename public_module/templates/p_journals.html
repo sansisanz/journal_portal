@@ -50,28 +50,11 @@
 
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a class="nav-link scrollto " href="/p_index/#hero">Home</a></li>
+          <li><a class="nav-link scrollto" href="/p_index/">Home</a></li>
           <li><a class="nav-link scrollto" href="/p_index/#about">About</a></li>
-          <li><a class="nav-link scrollto" href="/p_journals/">Journals</a></li>
-          <li><a class="nav-link scrollto " href="/p_index/#latestissues">Latest Issues</a></li>
-          <li class="dropdown"><a href="#"><span>Sign In</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-              <li><a href="#">Author</a></li>
-              <!-- <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
-                <ul>
-                  <li><a href="#">Deep Drop Down 1</a></li>
-                  <li><a href="#">Deep Drop Down 2</a></li>
-                  <li><a href="#">Deep Drop Down 3</a></li>
-                  <li><a href="#">Deep Drop Down 4</a></li>
-                  <li><a href="#">Deep Drop Down 5</a></li>
-                </ul>
-              </li> -->
-              <li><a href="/p_index/#pricing">User</a></li>
-              <!-- <li><a href="#">Drop Down 3</a></li>
-              <li><a href="#">Drop Down 4</a></li> -->
-            </ul>
-          </li>
-          <!-- <li><a class="nav-link scrollto" href="index.html#pricing">Subscription</a></li> -->
+          <li><a class="nav-link scrollto active" href="/p_journals/">Journals</a></li>
+          <li><a class="nav-link scrollto" href="/p_index/#latestissues">Latest Issues</a></li>
+          <li><a class="nav-link scrollto" href="/p_index/#cta">Sign In</a></li>
           <li><a class="nav-link scrollto" href="/p_index/#contact">Contact</a></li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
@@ -100,31 +83,13 @@
 
     <section class="inner-page">
       <div class="container">    
-      
-      
-        <!-- search bar -->
-        
-
-          <div class="col-md-8">
-
-            <div class="search">
-              <i class="fa fa-search"></i>
-              <input type="text" class="form-control" placeholder="SEARCH JOURNALS, ARTICLES, AUTHORS,...">
-              <button class="btn btn-primary">Search</button>
-            </div>
-            
-          </div>
-          
- 
-      <!-- searh bar end -->
-    
-        
+             
         <p>
           <h2>Welcome to the CU Journals!</h2>
 Dear Researchers,
 
 The University of Calicut is proud to launch the CU Journal Hub, a comprehensive online platform dedicated to showcasing the exceptional research conducted within our esteemed institution. This digital repository offers seamless access to a vast array of scholarly publications, encompassing a diverse range of disciplines and academic fields.
-        </p>
+        </p><br><br>
       </div>
 
     <!-- proceedings -->
@@ -161,14 +126,14 @@ The University of Calicut is proud to launch the CU Journal Hub, a comprehensive
     <div class="container">
       <div class="row">
         <div class="col-md-3 sidebar bg-light rounded shadow">
-          <h3>Journals</h3>
+          <h3>All Journals</h3>
           <ul class="list-group list-group-flush">
             {% for i in jdata %}
             <li class="list-group-item">
 
               <!-- onclick="showJournal('Journal1', 'assets/img/eb.jpg', ['Article 1', 'Article 2', 'Article 3'])" -->
 
-            <a href="/p_home/{{i.journal_id}}" >{{i.journal_name}}</a>
+            <a href="/p_home/{{i.journal_id}}/" >{{i.journal_name}}</a>
             </li>
             {% endfor %}
             <!-- Add more journal links here -->

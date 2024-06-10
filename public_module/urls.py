@@ -4,15 +4,17 @@ from public_module import views
 
 urlpatterns = [
     path("p_index/", views.p_index, name="authorlogin"),
+
+    path("p_journals/", views.p_journals),
+
+    path("p_home/<int:id>/", views.p_home),
+
     path("p_ethics/<int:id>", views.p_ethics),
     path("p_guidelines/<int:id>", views.p_guidelines),
-    path("p_j/", views.p_j),
-    path("p_journals/", views.p_journals),
     path("p_authorreg/", views.p_authorreg),
     path("p_userreg/", views.p_userreg),
     path("p_userprofile/", views.p_userprofile),
     path("public_navbar/", views.public_navbar),
-    path("p_home/<int:id>", views.p_home),
     path('p_alljournals/<int:journal_id>/', views.p_alljournals),
     path("read/", views.read),
     path("verify_author/", views.verify_author),

@@ -33,51 +33,100 @@
   <!-- Template Main CSS File -->
   <link href="{% static 'css/public-style.css' %}" rel="stylesheet">
 
-<style>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
 
-</style>
+    main {
+      flex: 1;
+    }
+
+    /* Your additional CSS styles here */
+
+    #footer {
+      background-color: #f8f9fa;
+      padding: 60px 0;
+      text-align: center;
+    }
+
+    #footer h3 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      font-weight: 700;
+      color: #333;
+    }
+
+    #footer p {
+      font-size: 14px;
+      line-height: 24px;
+      margin-bottom: 0;
+      color: #666;
+    }
+
+    #footer .social-links a {
+      font-size: 18px;
+      display: inline-block;
+      background: #286efa;
+      color: #fff;
+      line-height: 1;
+      padding: 8px 0;
+      margin-right: 4px;
+      border-radius: 4px;
+      transition: 0.3s;
+    }
+
+    #footer .social-links a:hover {
+      background: #0e59b0;
+      color: #fff;
+      text-decoration: none;
+    }
+  </style>
 </head>
 
 <body>
-    {% include 'public_navbar.html' %}
+  {% include 'public_navbar.html' %}
 
+  <main>
     <!-- ========= Submisiion Guidelines ========= -->
-   <section id="ethics&disclosure" class="ethics&disclosure">
-    <div class="container">
-      <div class="section-title" data-aos="zoom-out">
-        <h2>Ethics & Disclosure</h2><br>
-        <p>Publication Ethics, Journal Policies and Author Responsibilities</p>
-      </div>
-  
-      <div class="row justify-content-center">
+    <section id="ethics&disclosure" class="ethics&disclosure">
+      <div class="container">
+        <div class="section-title" data-aos="zoom-out">
+          <h2>Ethics & Disclosure</h2><br>
+          <p>Publication Ethics, Journal Policies and Author Responsibilities</p>
+        </div>
 
-          <p>{{edata.journal_ethics}}</p>      
-                     
+        <div class="row justify-content-center">
+
+          <p>{{edata.journal_ethics}}</p>
+          
+        </div>
+      </div>
+    </section>
+    <!-- ========= Submisiion Guidelines ========= -->
+  </main>
+
+  <!-- ======= Footer ======= -->
+
+  <footer id="footer">
+    <div class="container">
+      <h3>CU JOURNAL HUB</h3>
+      <p>"Empowering discovery and shaping tomorrow through cutting-edge research."</p>
+      <div class="social-links">
+        <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+        <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+        <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+        <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
+        <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
       </div>
     </div>
-  </section>
-  <!-- ========= Submisiion Guidelines ========= -->
+  </footer>
+  <!-- End Footer -->
 
-      <!-- ======= Footer ======= -->
-      
-    <footer id="footer">
-        <div class="container">
-          <h3>CU JOURNAL HUB</h3>
-          <p>"Empowering discovery and shaping tomorrow through cutting-edge research."</p>
-          <div class="social-links">
-            <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-            <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-            <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-            <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-            <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
-          </div>
-          <!-- <div class="credits"></div> -->
-        </div>
-      </footer>
-    <!-- End Footer -->
-
-<!-- ---------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
-      <!-- Vendor JS Files -->
+  <!-- ---------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+  <!-- Vendor JS Files -->
   <script src="{% static 'vendor/aos/aos.js' %}"></script>
   <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
   <script src="{% static 'vendor/glightbox/js/glightbox.min.js' %}"></script>

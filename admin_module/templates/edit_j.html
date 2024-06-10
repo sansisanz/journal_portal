@@ -74,16 +74,19 @@
                   </select>
               </div>
               <div class="form-group">
-                  <label for="editor" class="form-label">Editor:</label>
-                  <select class="form-control" id="editor" name="editor_id">
-                      <option value="">Select Editor</option>
-                      {% for editor in editors %}
-                          <option value="{{ editor.ea_id }}" {% if editor.ea_id == journal.editor_id %}selected{% endif %}>
-                              {{ editor.ea_name }}
-                          </option>
-                      {% endfor %}
-                  </select>
-              </div>
+                <label for="editor" class="form-label">Editor:</label>
+                <select class="form-control" id="editor" name="editor_id">
+                    <option value="">Select Editor</option>
+                    {% for editor in editors %}
+                        {% if editor.ea_type == 'editor' and editor.status == 'active' %}
+                            <option value="{{ editor.ea_id }}" {% if editor.ea_id == journal.editor_id %}selected{% endif %}>
+                                {{ editor.ea_name }}
+                            </option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>           
+
               <button type="submit" class="btn btn-success btn-block mt-2" id="saveJournalBtn">Save Changes</button>
             </form>
           </div>
