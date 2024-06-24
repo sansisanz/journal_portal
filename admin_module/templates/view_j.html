@@ -46,7 +46,9 @@
                             <th>Journal Name</th>
                             <th>Department</th>
                             <th>Editor</th>
+                            <th>Visit Count</th>
                             <th>Edit</th>
+                            <th>Manage</th>
                             <th>Remove</th>
                         </tr>
                     </thead>
@@ -57,11 +59,17 @@
                             <td>{{ journal.journal_name }}</td>
                             <td>{{ journal.dept_id.dept_name }}</td>
                             <td>{{ journal.editor.ea_name }}</td>
+                            <td>{{ journal.visit_count }}</td>
                             <td>
-                                <a class="btn btn-success font-weight-bolder btn-user btn-block col-sm-6" href="/edit_j/{{ journal.journal_id }}/">EDIT</a>
+                                <a class="btn btn-success font-weight-bolder btn-user btn-block col-sm-6"
+                                    href="/edit_j/{{ journal.journal_id }}/">EDIT</a>
                             </td>
                             <td>
-                                <button class="btn btn-danger font-weight-bolder btn-user btn-block col-sm-6 remove-btn" data-journal-id="{{ journal.journal_id }}">REMOVE</button>
+                                <a class="btn btn-info font-weight-bolder btn-user btn-block col-sm-10" href="/edit_journals/{{ journal.journal_id }}/">MANAGE</a>
+                            </td>
+                            <td>
+                                <button class="btn btn-danger font-weight-bolder btn-user btn-block col-sm-6 remove-btn"
+                                    data-journal-id="{{ journal.journal_id }}">REMOVE</button>
                             </td>
                         </tr>
                         {% endfor %}

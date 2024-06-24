@@ -1,7 +1,9 @@
-import os, logging, json
+import os, logging, json, fitz
 from venv import logger
-from PyPDF2 import PdfMerger
+from django.utils import timezone
+from PyPDF2 import PdfMerger, PdfReader, PdfWriter
 from django.views.decorators.csrf import csrf_exempt
+from requests import request
 from weasyprint import HTML, html
 from django.template.loader import render_to_string
 from django.conf import settings
@@ -12,9 +14,14 @@ from django.shortcuts import get_object_or_404, render,redirect
 from django.views.decorators.csrf import csrf_protect
 from django.urls import reverse
 from django.db import transaction
-from django.db.models import Count
+from django.db.models import Count,Q
 from django.views.decorators.http import require_POST
 from django.core.files.storage import FileSystemStorage
+from io import BytesIO
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from django.db.models import F
+from django.core.exceptions import ObjectDoesNotExist
 from admin_module.models import ArticleDownload, ArticleVisit, JournalPageVisit, article_table, author_table, ea_table, dept_table, gl_table, journal_table, notification_table, review_table, volume_table, issue_table, eb_table
 
 
@@ -56,16 +63,26 @@ def assigned_journal(request):
         journals = journal_table.objects.filter(editor=editor)
         # Create a list of dictionaries to pass to the template
         journal_data = []
-        for index, journal in enumerate(journals, start=1):
+        for journal in journals:
+            volumes = volume_table.objects.filter(journal_id=journal.journal_id)
+            total_volumes = volumes.count()
+            total_issues = issue_table.objects.filter(volume_id__in=volumes).count()
+            total_articles = article_table.objects.filter(issue_id__in=issue_table.objects.filter(volume_id__in=volumes)).count()
+            visit_count = journal.visit_count  # Assuming visit_count is a field in journal_table
+            
             journal_data.append({
-                'si_no': index,
+                'si_no': journal.journal_id,
                 'journal_name': journal.journal_name,
                 'dept_name': journal.dept_id.dept_name,
-                'journal_id': journal.journal_id
+                'total_volumes': total_volumes,
+                'total_issues': total_issues,
+                'total_articles': total_articles,
+                'visit_count': visit_count
             })
         return render(request, "assignedjournal.html", {"journal_data": journal_data})
     else:
         return redirect('/login')
+
     
 
 def add_vic(request, journal_id):
@@ -222,7 +239,7 @@ def journal_details(request):
                     heading = request.POST.get(f'heading_{i}', '').strip()
                     content = request.POST.get(f'content_{i}', '').strip()
                     if heading and content:
-                        guideline = gl_table(journal_id=journal, heading=heading, content=content)
+                        guideline = gl_table(journal_id=journal, heading=heading, content=content, status='active')
                         guideline.save()
 
             success_message = "Journal details have been successfully updated."
@@ -237,6 +254,7 @@ def journal_details(request):
             })
     else:
         return redirect('/login')
+
     
 #----------------------------    ADD EB     ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -297,23 +315,6 @@ def add_editorial_board_member(request):
     else:
         return render(request, 'editorialboard.html')
      
-#------------------------------------------------------------------------------------------------------------------------------------
-
-
-def editor_article(request):
-    if request.session.has_key('empid'):
-        empid = request.session['empid']
-        return render(request, "article.html", {"empid": empid})
-    else:
-        return redirect('/login/')
-    
-
-def editor_forgotpassword(request):
-    if request.session.has_key('empid'):
-        empid = request.session['empid']
-        return render(request, "forgot-password.html", {"empid": empid})
-    else:
-        return redirect('/login/')
     
 #---------------------------------ADD NOTIFICATIONS-------------------------------------------------------------------------
 
@@ -428,18 +429,20 @@ def upddetails(request):
             total_volumes = volumes.count()
             total_issues = issue_table.objects.filter(volume_id__in=volumes).count()
             total_articles = article_table.objects.filter(issue_id__in=issue_table.objects.filter(volume_id__in=volumes)).count()
+            visit_count = journal.visit_count  # Assuming visit_count is a field in journal_table
             
             journal_data.append({
                 'journal_id': journal.journal_id,
                 'journal_name': journal.journal_name,
                 'total_volumes': total_volumes,
                 'total_issues': total_issues,
-                'total_articles': total_articles
+                'total_articles': total_articles,
+                'visit_count': visit_count  # Add visit count to the dictionary
             })
 
         return render(request, "upddetails.html", {"empid": empid, "journal_data": journal_data})
     else:
-        return redirect('/login/')    
+        return redirect('/login/')   
      
 def edit_journals(request, journal_id):
     if 'empid' in request.session:
@@ -453,34 +456,44 @@ def edit_journals(request, journal_id):
     else:
         return redirect('/login/')   
 
-#______________________    MAnAGE VOLUMES      __________________________________________________________
-  
-from django.db.models import Count
+#______________________    MANAGE VOLUMES      __________________________________________________________
 
 def manage_volume(request, journal_id):
     if 'empid' in request.session:
         empid = request.session['empid']
         journal = get_object_or_404(journal_table, journal_id=journal_id)
-        
-        # Annotate volumes with the count of distinct issues
-        volumes = journal.volume_table_set.annotate(
-            num_issues=Count('issue_table', distinct=True),
-        ).all()
-        
+
+        # Filter volumes based on status
+        volumes = volume_table.objects.filter(
+            journal_id=journal_id,
+            status__in=['active', 'open', 'closed']
+        )
+
+        volume_data = []
         for volume in volumes:
-            # Calculate the total number of articles for each volume
-            volume.num_articles = sum(
-                issue.article_table_set.count()
-                for issue in volume.issue_table_set.all()
-            )
-        
+            total_issues = issue_table.objects.filter(volume_id=volume.volume_id).exclude(status='inactive').count()
+            approved_articles = article_table.objects.filter(issue_id__volume_id=volume.volume_id, status='approved')
+
+            # Get the count and titles of approved articles
+            approved_articles_count = approved_articles.count()
+            approved_article_titles = [article.article_title for article in approved_articles]
+            approved_articles_display = f"{approved_articles_count} ({', '.join(approved_article_titles)})" if approved_articles_count else "0"
+
+            volume_data.append({
+                'volume_id': volume.volume_id,
+                'volume': volume.volume,
+                'total_issues': total_issues,
+                'approved_articles_display': approved_articles_display,
+            })
+
         return render(request, "manage_volume.html", {
             "empid": empid,
             "journal_id": journal_id,
-            "volumes": volumes,
+            "volumes": volume_data,
         })
     else:
         return redirect('/login/')
+
 
 def update_volume_name(request):
     if request.method == 'POST':
@@ -524,344 +537,57 @@ def remove_volume(request):
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
 #______________________________   MANAGE ISSUES   ________________________________________________________________________________
-def manage_issues(request, journal_id):
-    if request.method == 'POST':
-        # Handle form submission
-        volume_id = request.POST.get('volume')
-        issue_id = request.POST.get('issue')
-        cover_image = request.FILES.get('cover_image')
-
-        # Update issue details
-        issue = issue_table.objects.get(pk=issue_id)
-        issue.cover_image = cover_image
-        issue.save()
-
-        return redirect('manage_issues', journal_id=journal_id)
-
-    else:
-        # Fetch volumes and issues for the selected journal
-        volumes = volume_table.objects.filter(journal_id=journal_id)
-        issues = issue_table.objects.none()  # Initially, no issues
-        selected_issue = None
-
-        # Fetch selected issue details if available
-        issue_id = request.GET.get('issue')
-        if issue_id:
-            selected_issue = issue_table.objects.get(pk=issue_id)
-            issues = issue_table.objects.filter(volume_id=selected_issue.volume_id)
-
-        return render(request, 'manage_issue.html', {'journal_id': journal_id, 'volumes': volumes, 'issues': issues, 'selected_issue': selected_issue})
 
 def remove_issue(request, journal_id):
-    if request.method == 'POST':
-        issue_id = request.POST.get('issue')
-        issue = issue_table.objects.get(pk=issue_id)
-        issue.status = 'inactive'
-        issue.save()
-        return redirect('manage_issues', journal_id=journal_id)
+    if 'empid' in request.session:
+        if request.method == 'POST':
+            issue_id = request.POST.get('remove_issue_id')
+            issue = get_object_or_404(issue_table, pk=issue_id)
+            
+            if issue.status == 'open':
+                # Find the most recent closed issue in the same volume
+                previous_issue = issue_table.objects.filter(volume_id=issue.volume_id, status='closed').order_by('-created_at').first()
+                if previous_issue:
+                    previous_issue.status = 'open'
+                    previous_issue.save()
+            
+            elif issue.status == 'closed':
+                # Decrement issue_no for all later issues in the same volume
+                issue_table.objects.filter(volume_id=issue.volume_id, issue_no__gt=issue.issue_no).update(issue_no=F('issue_no') - 1)
+            
+            # Set the current issue to inactive
+            issue.status = 'inactive'
+            issue.save()
+            # Set all approved articles in the current issue to inactive
+            article_table.objects.filter(issue_id=issue, status='approved').update(status='inactive')
+
+            messages.success(request, 'Issue and its approved articles were set to inactive successfully.')
+        return redirect(f'/manage_issue/{journal_id}/')
     else:
-        return redirect('manage_issues', journal_id=journal_id)
-
-#___________________________________________________________________________________________________________________
-
-def manage_notification(request, journal_id):
+        return redirect('/login/')
+    
+def manage_issue(request, journal_id):
     if 'empid' in request.session:
         empid = request.session['empid']
-        journal = get_object_or_404(journal_table, journal_id=journal_id)
-        active_notifications = notification_table.objects.filter(journal_id=journal, status='active')
-        return render(request, "manage_notification.html", {
-            "empid": empid,
-            "journal_id": journal_id,
-            "active_notifications": active_notifications,
+        
+        # Fetch issues with status other than 'inactive'
+        issues = issue_table.objects.filter(volume_id__journal_id=journal_id).exclude(status='inactive').select_related('volume_id')
+
+        # Add volume name, article count, and article titles to each issue
+        for issue in issues:
+            approved_articles = article_table.objects.filter(issue_id=issue, status='approved')
+            issue.total_articles = approved_articles.count()
+            issue.article_titles = ', '.join(approved_articles.values_list('article_title', flat=True))
+            issue.volume = issue.volume_id.volume
+
+        return render(request, 'manage_issue.html', {
+            'journal_id': journal_id,
+            'issues': issues,
         })
     else:
         return redirect('/login/')
-
-@csrf_exempt
-def edit_notification(request):
-    if request.method == 'POST':
-        notification_id = request.POST.get('notification_id')
-        notification = get_object_or_404(notification_table, notification_id=notification_id)
-        notification_text = request.POST.get('notification')
-        link = request.POST.get('link')
-
-        if notification_text:
-            notification.notification = notification_text
-        if link:
-            notification.link = link
-        if 'file' in request.FILES:
-            file = request.FILES['file']
-            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'notifications'))
-            filename = fs.save(file.name, file)
-            notification.link = fs.url(filename)
-
-        notification.save()
-        return JsonResponse({'success': True})
-    return JsonResponse({'success': False})
-
-@csrf_exempt
-def remove_notification(request):
-    if request.method == 'POST':
-        notification_id = request.POST.get('notification_id')
-        notification = get_object_or_404(notification_table, notification_id=notification_id)
-        notification.status = 'inactive'
-        notification.save()
-        return JsonResponse({'success': True})
-    return JsonResponse({'success': False})
-#___________________________________________________________________________________________________________________
-
-def manage_article(request, journal_id):
-    if 'empid' in request.session:
-        empid = request.session['empid']
-        journals = journal_table.objects.filter(editor__employee_id=empid, status='active')
-        
-        # Fetch articles related to the specified journal
-        articles = article_table.objects.filter(issue_id__volume_id__journal_id=journal_id, status='approved')
-        
-        return render(request, "manage_article.html", {
-            "empid": empid,
-            "journals": journals,
-            "articles": articles,
-        })
-    else:
-        return redirect('/login/')
-
-
-#___________________________________________________________________________________________________________________
-
-#--------------------------------------------------------------------------------------------------------------- 
-#--------------------------------------------------------------------------------------------------------------- 
-
-def editorprofile(request):
-
-    if request.session.has_key('empid'):
-            empid = request.session.get('empid')
-            user = get_object_or_404(ea_table, employee_id=empid)
-            return render(request, 'editorprofile.html', {'user': user})
-    else:
-        return redirect('/login/')
     
-
-def editorresetpassword(request):
-    
-    if request.session.has_key('empid'):
-        empid = request.session['empid']        
-        user = get_object_or_404(ea_table, employee_id=empid)
-        return render(request, "adminresetpassword.html", {"user": user})
-
-    else:
-        return redirect('/login/')
-    
-#---------------------------------------------------------------------------------------------------------------    
-    
-
-    
-#---------------------------------------------------------------------------------------------------------------    
-
-
-    
-#---------------------------------------------------------------------------------------------------------------    
-def view_articles(request):   
-    if request.session.has_key('empid'):
-        empid = request.session['empid']
-        # Fetch journals assigned to the logged-in user
-        journals = journal_table.objects.filter(editor__employee_id=empid)
-
-        # Fetch articles related to those journals
-        articles = article_table.objects.filter(issue_id__volume_id__journal_id__in=journals)
-
-        return render(request, "view_articles.html", {"empid": empid, "articles": articles})
-    else:
-        return redirect('/login') 
-
-def view_article(request, article_id):
-    article = get_object_or_404(article_table, pk=article_id)
-    # Assuming the article_file field contains the path to the PDF file
-    pdf_path = os.path.join(settings.MEDIA_ROOT, str(article.article_file))
-    with open(pdf_path, 'rb') as pdf_file:
-        response = HttpResponse(pdf_file.read(), content_type='application/pdf')
-        response['Content-Disposition'] = 'inline; filename=' + os.path.basename(pdf_path)
-        return response
-
-def approve_article(request, article_id):
-    article = get_object_or_404(article_table, pk=article_id)
-    
-    if article.status == 'approved':
-        messages.warning(request, 'The article has already been approved.')
-    else:
-        # Update article status
-        article.status = 'approved'
-        article.save()
-        
-        # Generate the PDF from the template
-        pdf_file_path = generate_article_pdf(article)
-        
-        # Merge the generated PDF with the article's PDF
-        merged_pdf_path = merge_pdfs(pdf_file_path, article.article_file.path)
-        
-        # Update the article file with the merged PDF
-        article.article_file.name = os.path.relpath(merged_pdf_path, settings.MEDIA_ROOT)
-        article.save()
-        
-        # Add a success message
-        messages.success(request, 'The article has been successfully approved.')
-    
-    return redirect('/view_articles/')
-
-def generate_article_pdf(article):
-    # Fetch related details
-    journal = article.issue_id.volume_id.journal_id
-    department = journal.dept_id.dept_name
-    volume = article.issue_id.volume_id.volume
-    issue = article.issue_id.issue_no
-    
-    # Prepare context for the template
-    context = {
-        'journal_name': journal.journal_name,
-        'department': department,
-        'volume': volume,
-        'issue': issue,
-        'article_title': article.article_title,
-        'authors': ', '.join(filter(None, [article.author1, article.author2, article.author3])),
-        'url': f'{settings.MEDIA_URL}merged_pdfs/article_{os.path.basename(article.article_file.name)}',
-        'published_by': journal.journal_name,
-    }
-    
-    # Render HTML content from template
-    html_content = render_to_string('pdftemp.html', context)
-    
-    # Define the path for the generated PDF
-    generated_pdfs_dir = os.path.join(settings.MEDIA_ROOT, 'generated_pdfs')
-    os.makedirs(generated_pdfs_dir, exist_ok=True)
-    pdf_file_path = os.path.join(generated_pdfs_dir, f'{article.article_id}_pg1.pdf')
-    
-    # Generate PDF file from HTML content
-    HTML(string=html_content).write_pdf(pdf_file_path)
-    
-    return pdf_file_path
-
-def merge_pdfs(generated_pdf_path, article_pdf_path):
-    merger = PdfMerger()
-    
-    # Append the generated PDF first, then the article PDF
-    merger.append(generated_pdf_path)
-    merger.append(article_pdf_path)
-    
-    merged_pdfs_dir = os.path.join(settings.MEDIA_ROOT, 'merged_pdfs')
-    os.makedirs(merged_pdfs_dir, exist_ok=True)
-    merged_pdf_path = os.path.join(merged_pdfs_dir, f'article_{os.path.basename(article_pdf_path)}')
-    with open(merged_pdf_path, 'wb') as merged_file:
-        merger.write(merged_file)
-    
-    return merged_pdf_path
-
-def reject_article(request, article_id):
-    article = get_object_or_404(article_table, pk=article_id)
-    
-    if article.status == 'pending approval':
-        article.status = 'rejected'
-        article.save()
-        messages.success(request, 'The article has been rejected.')
-    elif article.status == 'rejected':
-        messages.warning(request, 'The article has already been rejected.')
-    else:
-        messages.warning(request, 'The article cannot be rejected.')
-    
-    return redirect('/view_articles/')
-
-def accept_article(request, article_id):
-    article = get_object_or_404(article_table, pk=article_id)
-    
-    if article.status == 'pending approval':
-        article.status = 'accepted'
-        article.save()
-        messages.success(request, 'The article has been accepted for peer review.')
-    elif article.status == 'accepted':
-        messages.warning(request, 'The article has already been accepted.')
-    else:
-        messages.warning(request, 'The article cannot be accepted.')
-    
-    return redirect('/view_articles/')
-
-#---------------------------------------------------------------------------------------------------------------    
-
-
- 
-#---------------------------------------------------------------------------------------------------------------
-
-def e_visits(request):
-    if request.session.has_key('empid'):
-        empid = request.session['empid']
-        editor = ea_table.objects.get(employee_id=empid)
-        journals = journal_table.objects.filter(editor=editor)
-        return render(request, "e_visits.html", {"empid": empid, "journals": journals})
-    else:
-        return redirect('/login')
-
-def get_volumes_by_journal(request):
-    journal_id = request.GET.get('journal_id')
-    volumes = volume_table.objects.filter(journal_id=journal_id).values('volume_id', 'volume')
-    return JsonResponse(list(volumes), safe=False)
-
-def get_issues_by_volume(request):
-    volume_id = request.GET.get('volume_id')
-    issues = issue_table.objects.filter(volume_id=volume_id).values('issue_id', 'issue_no')
-    return JsonResponse(list(issues), safe=False)
-
-def get_articles_by_issue(request):
-    issue_id = request.GET.get('issue_id')
-    articles = article_table.objects.filter(issue_id=issue_id).values('article_id', 'article_title')
-    return JsonResponse(list(articles), safe=False)
-
-def get_journal_visit_count(request):
-    journal_id = request.GET.get('journal_id')
-    print(f"Received journal_id: {journal_id}")  # Debug statement
-    visit_count = JournalPageVisit.objects.filter(journal_id=journal_id).count()
-    print(f"Visit count for journal_id {journal_id}: {visit_count}")  # Debug statement
-    return JsonResponse({'visit_count': visit_count})
-
-def get_article_visit_count(request):
-    article_id = request.GET.get('article_id')
-    print(f"Received article_id: {article_id}")  # Debug statement
-    visit_count = ArticleVisit.objects.filter(article_id=article_id).count()
-    print(f"Visit count for article_id {article_id}: {visit_count}")  # Debug statement
-    return JsonResponse({'visit_count': visit_count})
-
-def get_article_download_count(request):
-    article_id = request.GET.get('article_id')
-    print(f"Received article_id: {article_id}")  # Debug statement
-    download_count = ArticleDownload.objects.filter(article_id=article_id).count()
-    print(f"Download count for article_id {article_id}: {download_count}")  # Debug statement
-    return JsonResponse({'download_count': download_count})
-
-
-#---------------------------------------------------------------------------------------------------------------
-
-
-    
-#-----------------------------------------------------------------------------------------------------
-
- 
-#_____________________________________________________________________________________________________________________________________________
-    
- 
-
-
-#_____________________________________________________________________________________________________________________________________________
-
-
-def manage_isssues(request, journal_id):
-    if 'empid' in request.session:
-        empid = request.session['empid']
-        jdata = get_object_or_404(journal_table, journal_id=journal_id)
-                
-        return render(request, "manage_volume.html", {
-            "empid": empid,
-            "journal_id": journal_id,
-        })
-    else:
-        return redirect('/login/') 
-#_____________________________________________________________________________________________________________________________________________    
+#_______________________________________   MANMAGE AIM AND SCOPES ______________________________________________________________________________________________________    
 
 def manage_aim(request, journal_id):
     if 'empid' in request.session:
@@ -894,9 +620,8 @@ def manage_aim(request, journal_id):
         })
     else:
         return redirect('/login/')
-
-    
-#_____________________________________________________________________________________________________________________________________________   
+            
+#_____________________________________  MANAGE GUIDELINES   ________________________________________________________________________________________________________   
 
 @csrf_exempt
 def update_row(request):
@@ -938,11 +663,19 @@ def manage_gl(request, journal_id):
         empid = request.session['empid']
         journal = get_object_or_404(journal_table, journal_id=journal_id)
         guidelines = gl_table.objects.filter(journal_id=journal_id, status='active')
-        return render(request, 'manage_gl.html', {'guidelines': guidelines})
+        success_message = request.GET.get('success_message', '')
+        error_message = request.GET.get('error_message', '')
+        return render(request, 'manage_gl.html', {
+            'guidelines': guidelines,
+            'success_message': success_message,
+            'error_message': error_message,
+            'journal_id': journal_id,  # Pass journal_id to the template context
+        })
     else:
-        return redirect('/login/')    
+        return redirect('/login/')
 
-#_____________________________________________________________________________________________________________________________________________    
+
+#________________________________   MANAGE ETHICS   _____________________________________________________________________________________________________________    
 
 def manage_ethics(request, journal_id):
     if 'empid' in request.session:
@@ -975,7 +708,8 @@ def manage_ethics(request, journal_id):
         })
     else:
         return redirect('/login/')
-#_____________________________________________________________________________________________________________________________________________    
+#________________________________   MANAGE EDITORIAL BOARD   _____________________________________________________________________________________________________________    
+
 @csrf_exempt
 def update_eb_member(request):
     if request.method == 'POST':
@@ -995,7 +729,7 @@ def update_eb_member(request):
             if photo:
                 member.photo = photo
             member.save()
-            return JsonResponse({'success': True})
+            return JsonResponse({'success': True, 'message': 'Member updated successfully'})
         except eb_table.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Member does not exist'})
 
@@ -1011,7 +745,7 @@ def remove_eb_member(request):
             member = get_object_or_404(eb_table, board_id=id)
             member.status = 'inactive'
             member.save()
-            return JsonResponse({'success': True})
+            return JsonResponse({'success': True, 'message': 'Member removed successfully'})
         except eb_table.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Member does not exist'})
 
@@ -1029,7 +763,7 @@ def manage_eb(request, journal_id):
         })
     else:
         return redirect('/login/')
-#_____________________________________________________________________________________________________________________________________________   
+#_________________________    MANAGE CONTACT    ____________________________________________________________________________________________________________________   
 
 def manage_contact(request, journal_id):
     if 'empid' in request.session:
@@ -1080,65 +814,373 @@ def remove_contact(request):
 
     return JsonResponse({'success': False, 'error': 'Invalid request'})
 
-   
-#-------------------------------------------------------------------------------------------------------
+#______________________   MANAGE NOTIFICATIONS   _____________________________________________________________________________________________
 
-def contact_edit(request,journal_id):
+def manage_notification(request, journal_id):
+    if 'empid' in request.session:
+        empid = request.session['empid']
+        journal = get_object_or_404(journal_table, journal_id=journal_id)
+        active_notifications = notification_table.objects.filter(journal_id=journal, status='active')
+        return render(request, "manage_notification.html", {
+            "empid": empid,
+            "journal_id": journal_id,
+            "active_notifications": active_notifications,
+        })
+    else:
+        return redirect('/login/')
+
+@csrf_exempt
+def edit_notification(request):
     if request.method == 'POST':
-        mobile = request.POST.get("contact")
-        email = request.POST.get("mail")
-        cdata = journal_table.objects.get(journal_id=journal_id)
-        cdata.phone = mobile
-        cdata.email = email
-        cdata.save()
+        notification_id = request.POST.get('notification_id')
+        notification = get_object_or_404(notification_table, notification_id=notification_id)
+        notification_text = request.POST.get('notification')
+        link = request.POST.get('link')
 
-    return render(request,"edit_journals.html")
+        if notification_text:
+            notification.notification = notification_text
+        if link:
+            notification.link = link
+        if 'file' in request.FILES:
+            file = request.FILES['file']
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'notifications'))
+            filename = fs.save(file.name, file)
+            notification.link = fs.url(filename)
 
-#--------------------------------------------------------------------------------------------------------
+        notification.save()
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False})
 
-def details_edit(request,journal_id):
+@csrf_exempt
+def remove_notification(request):
     if request.method == 'POST':
-        aim = request.POST.get("aimsScope")
-        ethics = request.POST.get("ethics")
-        ghead = request.POST.get("heading")
-        guidecontent = request.POST.get("content")
-        ddata = journal_table.objects.get(journal_id=journal_id)
-        ddata.journal_aim = aim
-        ddata.journal_ethics = ethics
-        ddata.heading = ghead
-        ddata.content = guidecontent
-        ddata.save()
+        notification_id = request.POST.get('notification_id')
+        notification = get_object_or_404(notification_table, notification_id=notification_id)
+        notification.status = 'inactive'
+        notification.save()
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False})
 
-    return render(request,"edit_journals.html")
+#________________________ MANAGE ARTICLES  ___________________________________________________________________________________________
 
-#-----------------------------------------------------------------------------------------------------------
+def manage_article(request, journal_id):
+    if 'empid' in request.session:
+        empid = request.session['empid']
+        journals = journal_table.objects.filter(editor__employee_id=empid, status='active')
+        articles = article_table.objects.filter(issue_id__volume_id__journal_id=journal_id, status='approved')
+        
+        return render(request, "manage_article.html", {
+            "empid": empid,
+            "journals": journals,
+            "articles": articles,
+        })
+    else:
+        return redirect('/login/')
 
-def get_notification_details(request, notification_id):
-    try:
-        notification = notification_table.objects.get(notification_id=notification_id)
-        data = {
-            'notification': notification.notification,
-            'link': notification.link
-            # Add other fields as needed
-        }
-        return JsonResponse(data)
-    except notification_table.DoesNotExist:
-        return JsonResponse({'error': 'Notification not found'}, status=404)
+def edit_article(request, article_id):
+    article = get_object_or_404(article_table, article_id=article_id)
     
-#-------------------------------------------------------------------------------------------------------------
+    if request.method == 'POST':
+        article.article_title = request.POST.get('article_title', article.article_title)
+        
+        if 'article_file' in request.FILES:
+            article.article_file = request.FILES['article_file']
+        
+        article.save()
+        return redirect(f'/manage_article/{article.issue_id.volume_id.journal_id.journal_id}/')
 
-def get_editor_details(request, editor_id):
-    editor = get_object_or_404(eb_table, pk=editor_id)
-    editor_details = {
-        'editor_name':editor.editor_name,
-        'editor_address': editor.editor_address,
-        'editor_email': editor.editor_email,
-        'editor_mobile': editor.editor_mobile,
-        'photo': editor.photo.url if editor.photo else ''  # Assuming photo is a FileField or ImageField
+    return render(request, "edit_article.html", {"article": article})
+
+def remove_article(request, article_id):
+    if request.method == 'POST':
+        article = get_object_or_404(article_table, article_id=article_id)
+        article.status = 'inactive'
+        article.save()
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+
+#__________________________________________________________________________________________________________________________________________________________________________
+
+def editorprofile(request):
+
+    if request.session.has_key('empid'):
+            empid = request.session.get('empid')
+            user = get_object_or_404(ea_table, employee_id=empid)
+            return render(request, 'editorprofile.html', {'user': user})
+    else:
+        return redirect('/login/')
+    
+
+def editorresetpassword(request):
+    
+    if request.session.has_key('empid'):
+        empid = request.session['empid']        
+        user = get_object_or_404(ea_table, employee_id=empid)
+        return render(request, "editorresetpassword.html", {"user": user})
+
+    else:
+        return redirect('/login/')
+
+    
+#--------------------------------------------------------------- VIEW ARTICLES ---------------------------------------------------------------------------------------------------    
+def view_articles(request):
+    if request.session.has_key('empid'):
+        empid = request.session['empid']
+        
+        # Fetch journals assigned to the logged-in user
+        journals = journal_table.objects.filter(editor__employee_id=empid)
+        
+        # Fetch articles related to those journals and with status not equal to 'inactive'
+        articles = article_table.objects.filter(issue_id__volume_id__journal_id__in=journals).exclude(status='inactive')
+
+        return render(request, "view_articles.html", {"empid": empid, "articles": articles})
+    else:
+        return redirect('/login')
+
+def view_article(request, article_id):
+    article = get_object_or_404(article_table, pk=article_id)
+    # Assuming the article_file field contains the path to the PDF file
+    pdf_path = os.path.join(settings.MEDIA_ROOT, str(article.article_file))
+    with open(pdf_path, 'rb') as pdf_file:
+        response = HttpResponse(pdf_file.read(), content_type='application/pdf')
+        response['Content-Disposition'] = 'inline; filename=' + os.path.basename(pdf_path)
+        return response
+    
+def calculate_number_of_pages(article):
+    article_pdf_path = article.article_file.path
+    
+    # Open the PDF file
+    pdf_document = fitz.open(article_pdf_path)
+    
+    # Get the number of pages
+    number_of_pages = pdf_document.page_count
+    
+    return number_of_pages    
+
+def approve_article(request, article_id):
+    article = get_object_or_404(article_table, pk=article_id)
+    issue = article.issue_id
+    journal_name = article.issue_id.volume_id.journal_id.journal_name
+
+    if issue.status not in ['open', 'active']:
+        messages.warning(request, 'The issue is not open or active, so the article cannot be approved.')
+        return redirect('/view_articles/')
+
+    if article.status == 'approved':
+        messages.warning(request, 'The article has already been approved.')
+    else:
+        # Fetch the last approved article in the same issue
+        last_article = article_table.objects.filter(issue_id=issue, status='approved').order_by('-starting_page_number').first()
+        
+        if last_article:
+            last_page_number = last_article.starting_page_number + calculate_number_of_pages(last_article) - 1
+            article.starting_page_number = last_page_number + 1
+        else:
+            article.starting_page_number = 1  # If no articles have been approved yet
+
+        article.status = 'approved'
+        article.save()
+
+        # Update the issue's current_page_number
+        number_of_pages = calculate_number_of_pages(article)
+        issue.current_page_number = article.starting_page_number + number_of_pages - 1
+        issue.save()
+
+        # Generate the PDF from the template
+        pdf_file_path = generate_article_pdf(article, request)
+
+        # Merge the generated PDF with the article's PDF
+        merged_pdf_path = merge_pdfs(pdf_file_path, article.article_file.path, journal_name, article)
+
+        # Add a success message
+        messages.success(request, 'The article has been successfully approved and PDFs have been merged.')
+
+    return redirect('/view_articles/')
+
+
+def generate_article_pdf(article, request):
+    # Fetch related details
+    journal = article.issue_id.volume_id.journal_id
+    department = journal.dept_id.dept_name
+    volume = article.issue_id.volume_id.volume
+    issue = article.issue_id.issue_no
+    
+    # Prepare context for the template
+    context = {
+        'journal_name': journal.journal_name,
+        'department': department,
+        'volume': volume,
+        'issue': issue,
+        'article_title': article.article_title,
+        'authors': ', '.join(filter(None, [article.author1, article.author2, article.author3])),
+        'url': f'{settings.MEDIA_URL}merged_pdfs/article_{os.path.basename(article.article_file.name)}',
+        'published_by': journal.journal_name,
+        'issn_number': journal.issn_number,
+        'ugc_care_list_number': journal.ugc_care_list_number,
+        'national_registration_number': journal.national_registration_number,
+        'ip_address': request.META.get('REMOTE_ADDR'),
+        'date': timezone.now().strftime('%Y-%m-%d'),
     }
-    return JsonResponse(editor_details)
+    
+    # Render HTML content from template
+    html_content = render_to_string('pdftemp.html', context)
+    
+    # Define the file path for the generated PDF
+    pdf_file_path = os.path.join(settings.MEDIA_ROOT, 'generated_pdfs', f'article_{article.pk}.pdf')
+    os.makedirs(os.path.dirname(pdf_file_path), exist_ok=True)
+    
+    # Generate PDF from HTML content using WeasyPrint
+    HTML(string=html_content).write_pdf(pdf_file_path)
+    
+    return pdf_file_path
 
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+def merge_pdfs(generated_pdf_path, article_pdf_path, journal_name, article):
+    merger = PdfMerger()
+
+    # Append the generated PDF first, then the article PDF
+    merger.append(generated_pdf_path)
+    merger.append(article_pdf_path)
+
+    merged_pdfs_dir = os.path.join(settings.MEDIA_ROOT, 'merged_pdfs')
+    os.makedirs(merged_pdfs_dir, exist_ok=True)
+    merged_pdf_path = os.path.join(merged_pdfs_dir, f'merged_{os.path.basename(article_pdf_path)}')
+
+    with open(merged_pdf_path, 'wb') as merged_file:
+        merger.write(merged_file)
+
+    # Add watermark and page numbers to the merged PDF
+    watermarked_pdf_path = add_watermark_and_page_numbers(merged_pdf_path, journal_name, article)
+
+    return watermarked_pdf_path
+
+def add_watermark_and_page_numbers(pdf_path, watermark_text, article):
+    reader = PdfReader(pdf_path)
+    writer = PdfWriter()
+    total_pages = len(reader.pages)
+
+    # Retrieve the starting page number from the article
+    starting_page_number = article.starting_page_number
+
+    # Create a watermark template
+    watermark_pdf = BytesIO()
+    c = canvas.Canvas(watermark_pdf, pagesize=letter)
+    c.setFont("Helvetica", 60)
+    c.setFillColorRGB(0.8, 0.8, 0.8, alpha=0.5)  # Light gray with some transparency
+    c.saveState()
+    c.translate(300, 500)
+    c.rotate(45)
+    c.drawCentredString(0, 0, watermark_text)
+    c.restoreState()
+    c.save()
+
+    watermark_pdf.seek(0)
+    watermark = PdfReader(watermark_pdf)
+    watermark_page = watermark.pages[0]
+
+    for page_num in range(total_pages):
+        page = reader.pages[page_num]
+        if page_num >= 1:  # Skip watermark and page number on the first two pages
+            page.merge_page(watermark_page)
+            # Add page numbers starting from the third page
+            if page_num > 0:
+                number_pdf = BytesIO()
+                number_canvas = canvas.Canvas(number_pdf, pagesize=letter)
+                number_canvas.setFont("Helvetica", 12)
+                number_canvas.drawString(500, 20, str(starting_page_number))
+                number_canvas.save()
+
+                number_pdf.seek(0)
+                number_reader = PdfReader(number_pdf)
+                number_page = number_reader.pages[0]
+                page.merge_page(number_page)
+
+                starting_page_number += 1
+        writer.add_page(page)
+
+    watermarked_pdf_path = os.path.join(os.path.dirname(pdf_path), f'watermarked_{os.path.basename(pdf_path)}')
+    with open(watermarked_pdf_path, 'wb') as watermarked_file:
+        writer.write(watermarked_file)
+
+    return watermarked_pdf_path
+
+def reject_article(request, article_id):
+    article = get_object_or_404(article_table, pk=article_id)
+    
+    if article.status == 'pending approval':
+        article.status = 'rejected'
+        article.save()
+        messages.success(request, 'The article has been rejected.')
+    elif article.status == 'rejected':
+        messages.warning(request, 'The article has already been rejected.')
+    else:
+        messages.warning(request, 'The article cannot be rejected.')
+    
+    return redirect('/view_articles/')
+
+def accept_article(request, article_id):
+    article = get_object_or_404(article_table, pk=article_id)
+    
+    if article.status == 'pending approval':
+        article.status = 'accepted'
+        article.save()
+        messages.success(request, 'The article has been accepted for peer review.')
+    elif article.status == 'accepted':
+        messages.warning(request, 'The article has already been accepted.')
+    else:
+        messages.warning(request, 'The article cannot be accepted.')
+    
+    return redirect('/view_articles/')
+
+#-----------------------------------------------------     VISIT AND DOWNLOAD   -------------------------------------------------------------------------------------------------    
+
+def e_visits(request):
+    if request.session.has_key('empid'):
+        empid = request.session['empid']
+        editor = ea_table.objects.get(employee_id=empid)
+        journals = journal_table.objects.filter(editor=editor)
+        return render(request, "e_visits.html", {"empid": empid, "journals": journals})
+    else:
+        return redirect('/login')
+
+def get_volumes_by_journal(request):
+    journal_id = request.GET.get('journal_id')
+    volumes = volume_table.objects.filter(journal_id=journal_id).values('volume_id', 'volume')
+    return JsonResponse(list(volumes), safe=False)
+
+def get_issues_by_volume(request):
+    volume_id = request.GET.get('volume_id')
+    issues = issue_table.objects.filter(volume_id=volume_id).values('issue_id', 'issue_no')
+    return JsonResponse(list(issues), safe=False)
+
+def get_articles_by_issue(request):
+    issue_id = request.GET.get('issue_id')
+    articles = article_table.objects.filter(issue_id=issue_id).values('article_id', 'article_title')
+    return JsonResponse(list(articles), safe=False)
+
+def get_journal_visit_count(request):
+    journal_id = request.GET.get('journal_id')
+    print(f"Received journal_id: {journal_id}")  # Debug statement
+    visit_count = JournalPageVisit.objects.filter(journal_id=journal_id).count()
+    print(f"Visit count for journal_id {journal_id}: {visit_count}")  # Debug statement
+    return JsonResponse({'visit_count': visit_count})
+
+def get_article_visit_count(request):
+    article_id = request.GET.get('article_id')
+    print(f"Received article_id: {article_id}")  # Debug statement
+    visit_count = ArticleVisit.objects.filter(article_id=article_id).count()
+    print(f"Visit count for article_id {article_id}: {visit_count}")  # Debug statement
+    return JsonResponse({'visit_count': visit_count})
+
+def get_article_download_count(request):
+    article_id = request.GET.get('article_id')
+    print(f"Received article_id: {article_id}")  # Debug statement
+    download_count = ArticleDownload.objects.filter(article_id=article_id).count()
+    print(f"Download count for article_id {article_id}: {download_count}")  # Debug statement
+    return JsonResponse({'download_count': download_count}) 
+
+#------------------------------------------------   REVIEW BY EDITOR   ------------------------------------------------------------------------------------------------------------
 def editor_review(request):
     if request.session.has_key('empid'):
         empid = request.session['empid']
@@ -1179,7 +1221,13 @@ def editor_review(request):
         
     return redirect('/login/')
 
+def view_reviews(request, article_id):
+    article = get_object_or_404(article_table, article_id=article_id)
+    reviews = review_table.objects.filter(article_id=article).order_by('-created_at')
+    return render(request, "view_reviews.html", {'article': article, 'reviews': reviews})
 
+
+#-------------------------------------    SUBMIT ARTICLES BY EDITOR   -----------------------------------------------------------------------------------------------------
     
 def editor_submitarticle(request):
     if request.session.has_key('empid'):
@@ -1193,36 +1241,52 @@ def earticle_submission(request):
     if request.session.has_key('empid'):
         if request.method == "POST":
             journal_id = request.POST.get('journalName')
-            volume_id = request.POST.get('volume')
-            issue_id = request.POST.get('issueNumber')
             article_title = request.POST.get('articleTitle')
             article_file = request.FILES.get('articleFile')
             author_count = int(request.POST.get('authorCount'))
-            authors = [request.POST.get(f'author{i+1}') for i in range(author_count)]
+            authors = [request.POST.get(f'author{i}') for i in range(1, author_count + 1)]
 
-            # Get the logged-in author
+            # Get the logged-in editor
             empid = request.session.get('empid')
             editor = get_object_or_404(ea_table, employee_id=empid)
 
-            # Save article details
-            article = article_table(
-                issue_id=get_object_or_404(issue_table, pk=issue_id),
-                ea_id=editor,
-                article_title=article_title,
-                created_by=editor.ea_name,
-                status='approved',
-                editor_id = editor,
-                author1=authors[0] if author_count >= 1 else '',
-                author2=authors[1] if author_count >= 2 else '',
-                author3=authors[2] if author_count >= 3 else '',
-                article_file=article_file  # Save the uploaded file
-            )
-            article.save()
-            messages.success(request,'succesfully uploaded')
-            return redirect('/editor_submitarticle/')  # Redirect to a success page
+           # Get the open volume and issue for the selected journal
+            open_volume = get_object_or_404(volume_table, journal_id=journal_id, status='open')
+            open_issue = get_object_or_404(issue_table, volume_id=open_volume.volume_id, status='open')
 
-        return redirect('submit_article')  # Redirect back to the form if not a POST request
+            try:
+                # Get the author with author_id = 100 from author_table
+                author = get_object_or_404(author_table, author_id=100)
+
+                # Save article details
+                article = article_table(
+                    issue_id=open_issue,
+                    ea_id=editor,
+                    article_title=article_title,
+                    created_by=editor.ea_name,
+                    status='pending approval',
+                    author_id=author,  # Assign author instance
+                    author1=authors[0] if len(authors) > 0 else '',
+                    author2=authors[1] if len(authors) > 1 else '',
+                    author3=authors[2] if len(authors) > 2 else '',
+                    article_file=article_file  # Save the uploaded file
+                )
+                article.save()
+
+                return redirect('/editor_submitarticle/')  # Redirect to a success page
+
+            except author_table.DoesNotExist:
+                # Handle case where author_id=100 does not exist in author_table
+                return render(request, 'error_page.html', {'error_message': 'Author not found'})
+
+        return redirect('/editor-index/')  # Redirect back to the form if not a POST request
     else:
-        return redirect('/editor_index/')  
+        return redirect('/editor-index/')
+
+def ajax_load_journals(request):
+    department_id = request.GET.get('department_id')
+    journals = journal_table.objects.filter(dept_id=department_id, status='active')
+    journal_list = list(journals.values('journal_id', 'journal_name'))
+    return JsonResponse(journal_list, safe=False) 
     
     #-------------------------------------------------------------------------------------------------

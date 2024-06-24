@@ -46,6 +46,8 @@
                                 <th>VOLUME</th>
                                 <th>ISSUE</th>
                                 <th>VIEW</th>
+                                <th>DOWNLOADS</th> <!-- New column for download count -->
+                                <th>VISITS</th> <!-- New column for visit count -->
                                 <th>ACTIONS</th>
                             </tr>
                         </thead>
@@ -55,7 +57,9 @@
                                     <td>{{ forloop.counter }}</td>
                                     <td>{{ article.article_title }}</td>
                                     <td>
-                                        {{ article.author1 }}{% if article.author2 %}, {{ article.author2 }}{% endif %}{% if article.author3 %}, {{ article.author3 }}{% endif %}
+                                        {{ article.author1 }}
+                                        {% if article.author2 %}, {{ article.author2 }}{% endif %}
+                                        {% if article.author3 %}, {{ article.author3 }}{% endif %}
                                     </td>
                                     <td>{{ article.issue_id.volume_id.journal_id.journal_name }}</td>
                                     <td>{{ article.issue_id.volume_id.volume }}</td>
@@ -63,24 +67,25 @@
                                     <td>
                                         <a href="/view_article/{{ article.article_id }}/" class="btn btn-primary text-white font-weight-bolder btn-user btn-block col-sm-10">View Article</a>
                                     </td>
+                                    <td>{{ article.download_count }}</td> <!-- Display download count -->
+                                    <td>{{ article.visit_count }}</td> <!-- Display visit count -->
                                     <td>
                                         {% if article.status == 'pending approval' %}
                                             <a href="/approve_article/{{ article.article_id }}/" class="btn btn-success font-weight-bolder btn-user btn-block col-sm-10">Approve and Upload</a>
                                             <a href="/accept_article/{{ article.article_id }}/" class="btn btn-warning font-weight-bolder btn-user btn-block col-sm-10">Accept for Peer Review</a>
                                             <a href="/reject_article/{{ article.article_id }}/" class="btn btn-danger font-weight-bolder btn-user btn-block col-sm-10">Reject</a>
-                                            
                                         {% elif article.status == 'approved' %}
                                             <button class="btn btn-success font-weight-bolder btn-user btn-block col-sm-10" disabled>Approved</button>
                                         {% elif article.status == 'rejected' %}
                                             <button class="btn btn-danger font-weight-bolder btn-user btn-block col-sm-10" disabled>Rejected</button>
                                         {% elif article.status == 'accepted' %}
-                                            <button class="btn btn-warning font-weight-bolder btn-user btn-block col-sm-10" disabled>Accepted for Peer Review</button>    
+                                            <button class="btn btn-warning font-weight-bolder btn-user btn-block col-sm-10" disabled>Accepted for Peer Review</button>
                                         {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
-                    </table>                    
+                    </table>                                 
                     <div class="card-body">
                         {% if messages %}
                             <div class="container mt-4">
@@ -95,6 +100,7 @@
             </div>
         </div>
     </div>
+   </div> 
     
    
 

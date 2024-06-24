@@ -43,6 +43,7 @@
                             <th>TOTAL VOLUMES</th>
                             <th>TOTAL ISSUES</th>
                             <th>TOTAL ARTICLES</th>
+                            <th>VISITS</th> <!-- New column for visits -->
                             <th>MANAGE</th>
                         </tr>
                     </thead>
@@ -54,6 +55,7 @@
                             <td>{{ journal.total_volumes }}</td>
                             <td>{{ journal.total_issues }}</td>
                             <td>{{ journal.total_articles }}</td>
+                            <td>{{ journal.visit_count }}</td> <!-- Display visit count -->
                             <td><a class="btn btn-success font-weight-bolder btn-user btn-block col-sm-10" href="/edit_journals/{{ journal.journal_id }}/">MANAGE</a></td>
                         </tr>
                         {% endfor %}

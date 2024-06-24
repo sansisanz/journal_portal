@@ -14,20 +14,19 @@
 
     <!-- Custom fonts for this template-->
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="{% static 'css/sb-admin-2.css'%}" rel="stylesheet">
+    <link href="{% static 'css/sb-admin-2.css' %}" rel="stylesheet">
 
     <style>
         .form-box {
-          background-color: #f8f9fa;
-          border: 1px solid #ced4da;
-          border-radius: 10px;
-          padding: 20px;
-          margin-bottom: 70%;
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 70%;
         }
     </style>
 
@@ -39,59 +38,76 @@
 
     <div class="container">
         <div class="row">
-          <div class="col-md-6 offset-md-3"> <!-- Centering the form for medium and large screens -->
-            <div class="form-box">
-                <div class="card-header py-3">
-                    <h4 class="m-0 font-weight-bold text-primary" style="text-align: center;">CREATE JOURNAL</h4>
-                </div><br>  
-                <!-- Display success message -->
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {{ message }}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-                <form method="post" action="/create_journal/">
-                    {% csrf_token %}
+            <div class="col-md-6 offset-md-3">
+                <div class="form-box">
                     <div class="card-header py-3">
-                        <div class="form-group">
-                            <label for="journalName">Journal Name</label>
-                            <input type="text" class="form-control" id="journalName" name="journalName" placeholder="Enter Journal Name">
-                        </div>
-                        <div class="form-group">
-                            <label for="journalDepartment">Department</label>
-                            <select class="form-control" id="journalDepartment" name="journalDepartment">
-                                <option value="">Select Department</option>
-                                {% for department in departments %}
-                                <option value="{{ department.dept_id }}">{{ department.dept_name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="editorId">Select Editor</label>
-                            <select class="form-control" id="editorId" name="editorId">
-                                <option value="">Select Editor</option>
-                                {% for editor in editors %}
-                                    {% if editor.status == 'active' %}
-                                        <option value="{{ editor.ea_id }}">{{ editor.ea_name }}</option>
-                                    {% endif %}
-                                {% endfor %}
-                            </select>
-                        </div>                       
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-success btn-block mt-2" id="saveJournalBtn">Create</button>
-                        </div>
+                        <h4 class="m-0 font-weight-bold text-primary" style="text-align: center;">CREATE JOURNAL</h4>
+                    </div><br>
+                    <!-- Display success message -->
+                    {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                </form>
+                    {% endfor %}
+                    {% endif %}
+                    <form method="post" action="/create_journal/">
+                        {% csrf_token %}
+                        <div class="card-header py-3">
+                            <div class="form-group">
+                                <label for="journalName">Journal Name</label>
+                                <input type="text" class="form-control" id="journalName" name="journalName"
+                                    placeholder="Enter Journal Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="journalDepartment">Department</label>
+                                <select class="form-control" id="journalDepartment" name="journalDepartment" required>
+                                    <option value="">Select Department</option>
+                                    {% for department in departments %}
+                                    <option value="{{ department.dept_id }}">{{ department.dept_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="editorId">Select Editor</label>
+                                <select class="form-control" id="editorId" name="editorId" required>
+                                    <option value="">Select Editor</option>
+                                    {% for editor in editors %}
+                                    {% if editor.status == 'active' %}
+                                    <option value="{{ editor.ea_id }}">{{ editor.ea_name }}</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="issnNumber">ISSN Number</label>
+                                <input type="text" class="form-control" id="issnNumber" name="issnNumber"
+                                    placeholder="Enter ISSN Number" minlength="8" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ugcCareNumber">UGC CARE List Number</label>
+                                <input type="text" class="form-control" id="ugcCareNumber" name="ugcCareNumber"
+                                    placeholder="Enter UGC CARE List Number" minlength="8" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="registrationNumber">National Registration Number</label>
+                                <input type="text" class="form-control" id="registrationNumber"
+                                    name="registrationNumber" placeholder="Enter Registration Number" minlength="8"
+                                    required>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-success btn-block mt-2" id="saveJournalBtn">Create</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-            
+    </div>
+
 
     <!-- Bootstrap core JavaScript-->
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
@@ -103,13 +119,6 @@
     <!-- Custom scripts for all pages-->
     <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
 
-    <!-- Page level plugins -->
-    <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
-
-    <!-- Page level custom scripts -->
-    <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
-    <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
-
 </body>
 
-</html>    
+</html>

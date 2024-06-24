@@ -233,6 +233,20 @@
 
   <!-- Template Main JS File -->
   <script src="{% static 'js/main.js' %}"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const params = new URLSearchParams(window.location.search);
+        const query = params.get('q');
+        const index = params.get('index');
+        if (query && index) {
+            const sanitizedQuery = query.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+            document.body.innerHTML = document.body.innerHTML.replace(new RegExp(`(${sanitizedQuery})`, 'gi'), '<span class="highlight">$1</span>');
+        }
+    });
+</script>
+
 </body>
 
 </html>

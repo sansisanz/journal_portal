@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JP Editor</title>
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="{% static 'css/sb-editor.css' %}" rel="stylesheet">
+    <style>
+            .container-fluid {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .card {
+                flex: 0 0 auto;
+                width: 300px; /* Adjust the width of the cards as needed */
+                background-color: #f8f9fc;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            .card h3 {
+                margin-top: 0;
+                font-size: 18px;
+            }
+
+            .card p {
+                margin-bottom: 0;
+            }
+
+            .manage-button {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                margin-top: 10px;
+                text-align: center;
+            }
+
+            .manage-button i {
+                font-size: 24px; /* Change the size as needed */
+                margin-bottom: 5px; /* Adjust spacing between icon and text */
+            }
+
+
+    </style>
+</head>
+
+<body id="page-top">
+    {% include 'admin_sidebar.html' %}
+
+    <div class="container-fluid">
+        <div class="card">
+            <h3>Manage Volume <i class="fas fa-book"></i></h3>
+            <p>Manage your journal's volumes here.</p>
+            <a href="/manage_volume/{{journal_id}}/" class="btn btn-primary manage-button">Manage</a>
+        </div>
+        <div class="card">
+            <h3>Manage Issues <i class="fas fa-archive"></i></h3>
+            <p>Manage your journal's issues here.</p>
+            <a href="/manage_issue/{{journal_id}}/" class="btn btn-primary manage-button">Manage</a>
+        </div>
+        <div class="card">
+            <h3>Manage Aim and Scope <i class="fas fa-bullseye"></i></h3>
+            <p>Manage the aim and scope of your journal here.</p>
+            <a href="/manage_aim/{{journal_id}}/" class="btn btn-primary manage-button">Manage</a>
+        </div>
+        <div class="card">
+            <h3>Manage Guidelines <i class="fas fa-file-alt"></i></h3>
+            <p>Manage guidelines for submissions here.</p>
+            <a href="/manage_gl/{{journal_id}}/" class="btn btn-primary manage-button">Manage</a>
+        </div>
+        <div class="card">
+            <h3>Manage Ethics <i class="fas fa-clipboard-check"></i></h3>
+            <p>Manage ethical considerations here.</p>
+            <a href="/manage_ethics/{{journal_id}}/" class="btn btn-primary manage-button">Manage</a>
+        </div>
+        <div class="card">
+            <h3>Manage Editorial Board <i class="fas fa-users"></i></h3>
+            <p>Manage your journal's editorial board here.</p>
+            <a href="/manage_eb/{{journal_id}}/" class="btn btn-primary manage-button">Manage</a>
+        </div>
+        <div class="card">
+            <h3>Manage Notifications <i class="fas fa-bell"></i></h3>
+            <p>Manage notifications for your journal here.</p>
+            <a href="/manage_notification/{{journal_id}}/" class="btn btn-primary manage-button">Manage</a>
+        </div>
+        <div class="card">
+            <h3>Manage Contact <i class="fas fa-address-book"></i></h3>
+            <p>Manage contact information here.</p>
+            <a href="/manage_contact/{{journal_id}}/" class="btn btn-primary manage-button">Manage</a>
+        </div>
+        <div class="card">
+            <h3>Manage Articles <i class="fas fa-file-alt"></i></h3>
+            <p>Manage articles submitted to your journal here.</p>
+            <a href="/manage_article/{{journal_id}}/" class="btn btn-primary manage-button">Manage</a>
+        </div>
+    </div>
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="/editor_login/">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+
+    <!-- Page level plugins -->
+    <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
+    <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+    <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
+</body>
+
+</html>

@@ -1,5 +1,6 @@
 import os
-from django.http import HttpResponse
+from django.conf import settings
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render,redirect
 from django.db.models import Q
 import hashlib
@@ -7,7 +8,9 @@ import random
 from django.db.models import F
 from django.core.mail import send_mail
 from django.contrib import messages
-from admin_module.models import  ArticleDownload, ArticleVisit, JournalPageVisit, article_table, author_table, ea_table, issue_table,volume_table,journal_table,dept_table,eb_table,notification_table,gl_table
+from django.template.loader import render_to_string
+from admin_module.models import  message_table, ArticleDownload, ArticleVisit, JournalPageVisit, article_table, author_table, ea_table, issue_table,volume_table,journal_table,dept_table,eb_table,notification_table,gl_table
+from editor_module.views import add_watermark_and_page_numbers, generate_article_pdf, merge_pdfs
 
 # Create your views here.
 
@@ -58,14 +61,14 @@ def p_alljournals(request, journal_id):
     selected_journal = journal_table.objects.get(journal_id=journal_id)
 
     # Retrieve all volumes for the selected journal that are active
-    volumes = volume_table.objects.filter(journal_id=journal_id, status__in=['open', 'closed'])
+    volumes = volume_table.objects.filter(journal_id=journal_id).exclude(status='inactive')
 
     # Create a list to store volume and issue information
     volume_issues_list = []
 
     for volume in volumes:
         # Retrieve issues for each volume that are either 'open' or 'closed'
-        issues = issue_table.objects.filter(volume_id=volume.volume_id, status__in=['open', 'closed']).order_by('-created_at')
+        issues = issue_table.objects.filter(volume_id=volume.volume_id).exclude(status='inactive').order_by('-created_at')
 
         # Count the number of issues for the volume
         issue_count = issues.count()
@@ -85,44 +88,169 @@ def p_alljournals(request, journal_id):
 
     return render(request, 'p_alljournals.html', {'selected_journal': selected_journal, 'volume_issues_list': volume_issues_list})
 
-
 #---------------------------------------------------------------------------------------------------------------------------------------------------
 
 def p_home(request, id):
     # Fetch the journal data
     j_data = get_object_or_404(journal_table, journal_id=id)
-    
+
+    # Check if the journal status is closed
+    if j_data.status.lower() != 'active':
+        return redirect('/p_index/')  # name of the view you want to redirect to
+
     # Fetch the latest issue for the journal
     latest_issue = issue_table.objects.filter(volume_id__journal_id=id).order_by('-issue_id').first()
     
     # Fetch editorial board and notifications data
-    p_data = eb_table.objects.filter(journal_id=id)
-    n_data = notification_table.objects.filter(journal_id=id)
-    
+    p_data = eb_table.objects.filter(journal_id=id, status='active')
+    n_data = notification_table.objects.filter(journal_id=id, status='active')
+
+    # Check for journal ethics and submission guidelines
+    has_ethics = bool(j_data.journal_ethics)
+    has_guidelines = gl_table.objects.filter(journal_id=id).exists()
+
+    # Check for a banner
+    has_banner = bool(j_data.banner)
+
     # Get the client's IP address
     ip_address = get_client_ip(request)
-    
-    # Check if there's already a visit record for this IP address
-    visit_record, created = JournalPageVisit.objects.get_or_create(
-        journal_id=j_data,
-        ip_address=ip_address
-    )
-    
-    if created:
-        # Increment the visit count for the journal if it's a new visit
-        j_data.visit_count = F('visit_count') + 1
-        j_data.save()
-        # Refresh the journal data to get the updated visit count
-        j_data.refresh_from_db()
-    
-    return render(request, 'p_home.html', {
+
+    # Log the visit count or perform other tracking here
+
+    context = {
         'jdata': j_data,
         'latest_issue': latest_issue,
         'pdata': p_data,
         'ndata': n_data,
-        'visit_count': j_data.visit_count  # Pass the visit count to the template
-    })
+        'has_ethics': has_ethics,
+        'has_guidelines': has_guidelines,
+        'has_banner': has_banner,
+        'visit_count': j_data.visit_count,
+    }
 
+    return render(request, 'p_home.html', context)
+
+def get_client_ip(request):
+    # Function to get client IP address
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+
+def search_results(request, journal_id):
+    query = request.GET.get('q')
+    journal = get_object_or_404(journal_table, pk=journal_id)
+    
+    # Collecting content from the journal's various sections
+    results = []
+    
+    if query:
+        # Search in journal aim
+        index = journal.journal_aim.lower().find(query.lower())
+        if index != -1:
+            results.append({
+                'section': 'Aim & Scopes',
+                'url': f'/p_home/{journal.journal_id}/#aimscope?q={query}&index={index}',
+                'context': journal.journal_aim,
+                'index': index
+            })
+
+        # Search in journal ethics
+        index = journal.journal_ethics.lower().find(query.lower())
+        if index != -1:
+            results.append({
+                'section': 'Ethics & Disclosure',
+                'url': f'/p_ethics/{journal.journal_id}/?q={query}&index={index}',
+                'context': journal.journal_ethics,
+                'index': index
+            })
+
+        # Search in journal_table for p_home sections
+        contact_results = journal_table.objects.filter(email__icontains=query) | journal_table.objects.filter(phone__icontains=query)
+        for contact in contact_results:
+            results.append({
+                'section': 'Contact',
+                'url': f'/p_home/{journal.journal_id}/#contact?q={query}&index={index}',
+                'context': contact.email or contact.phone,
+                'index': (contact.email or contact.phone).lower().find(query.lower())
+            })
+
+        journal_update_results = notification_table.objects.filter(notification__icontains=query)
+        for update in journal_update_results:
+            results.append({
+                'section': 'Journal Notifications',
+                'url': update.link,
+                'context': update.notification,
+                'index': update.notification.lower().find(query.lower())
+            })
+
+        editorial_results = eb_table.objects.filter(editor_name__icontains=query)
+        for editor in editorial_results:
+            results.append({
+                'section': 'Editorial Board',
+                'url': f'p_home/{journal.journal_id}/#editorialboard/?q={query}&index={index}',
+                'context': editor.editor_name,
+                'index': editor.editor_name.lower().find(query.lower())
+            })
+
+        # Search in gl_table for p_guidelines.html
+        guidelines_results = gl_table.objects.filter(heading__icontains=query) | gl_table.objects.filter(content__icontains=query)
+        for guideline in guidelines_results:
+            index = guideline.heading.lower().find(query.lower())
+            if index == -1:
+                index = guideline.content.lower().find(query.lower())
+            results.append({
+                'section': 'Guidelines',
+                'url': f'/p_guidelines/{journal.journal_id}/',
+                'context': guideline.heading if guideline.heading.lower().find(query.lower()) != -1 else guideline.content,
+                'index': index
+            })
+
+        # Search in issue_table for issue_detail.html
+        issue_results = issue_table.objects.filter(issue_no__icontains=query)
+        for issue in issue_results:
+            results.append({
+                'section': 'Issue',
+                'url': f'/issue_detail/{issue.issue_id}/?q={query}&index={issue.issue_no.lower().find(query.lower())}',
+                'context': issue.issue_no,
+                'index': issue.issue_no.lower().find(query.lower())
+            })
+
+        # Search articles within each issue for issue_detail.html
+        article_results = article_table.objects.filter(article_title__icontains=query)
+        for article in article_results:
+            issue = article.issue_id
+            results.append({
+                'section': 'Article',
+                'url': f'/issue_detail/{issue.issue_id}/?q={query}&index={article.article_title.lower().find(query.lower())}',
+                'context': article.article_title,
+                'index': article.article_title.lower().find(query.lower())
+            })
+
+        # Search in volume_table for p_alljournals.html
+        volume_results = volume_table.objects.filter(volume__icontains=query)
+        for volume in volume_results:
+            results.append({
+                'section': 'Volume',
+                'url': f'/p_alljournals/{journal.journal_id}/?q={query}&index={index}',
+                'context': volume.volume,
+                'index': volume.volume.lower().find(query.lower())
+            })
+    
+
+        # Add other search conditions here
+        # ...
+
+    context = {
+        'query': query,
+        'results': results,
+        'journal': journal,
+    }
+    
+    return render(request, 'search_results.html', context)
 #---------------------------------------------------------------------------------------------------------------------------------------------------
 
 def p_authorreg(request):
@@ -277,7 +405,7 @@ def author_logout(request):
 def issue_detail(request, issue_id):
     selected_issue = get_object_or_404(issue_table, issue_id=issue_id)
     articles = article_table.objects.filter(issue_id=issue_id, status='approved')
-    
+
     articles_list = []
     for article in articles:
         authors = [article.author1, article.author2, article.author3]
@@ -286,10 +414,13 @@ def issue_detail(request, issue_id):
         articles_list.append({
             'id': article.article_id,
             'title': article.article_title,
-            'authors': authors_str
+            'authors': authors_str,
+            'visit_count': article.visit_count,
+            'download_count': article.download_count
         })
-    
+
     return render(request, 'issue_detail.html', {'selected_issue': selected_issue, 'articles_list': articles_list})
+
 
 def flipbook(request, article_id):
     article = get_object_or_404(article_table, pk=article_id)
@@ -302,9 +433,21 @@ def flipbook(request, article_id):
 
 def download_article(request, article_id):
     article = get_object_or_404(article_table, pk=article_id)
-    file_path = article.article_file.path
-    file_name = os.path.basename(file_path)
-
+    original_file_path = article.article_file.path
+    file_name = os.path.basename(original_file_path)
+    
+    # Path to the watermarked PDF
+    watermarked_pdf_path = os.path.join(settings.MEDIA_ROOT, 'merged_pdfs', f'watermarked_{file_name}')
+    
+    # Check if watermarked PDF exists
+    if os.path.exists(watermarked_pdf_path):
+        file_path = watermarked_pdf_path
+    else:
+        # Generate the watermarked PDF if it does not exist
+        generated_pdf_path = generate_article_pdf(article, request)
+        merged_pdf_path = merge_pdfs(generated_pdf_path, original_file_path, article.issue_id.volume_id.journal_id.journal_name, article)
+        file_path = merged_pdf_path
+    
     # Increment the download count for the article
     article.download_count = F('download_count') + 1
     article.save()
@@ -312,6 +455,7 @@ def download_article(request, article_id):
     # Save the IP address in ArticleDownload
     ArticleDownload.objects.create(article_id=article, ip_address=request.META['REMOTE_ADDR'])
     
+    # Serve the file
     with open(file_path, 'rb') as file:
         response = HttpResponse(file.read(), content_type='application/octet-stream')
         response['Content-Disposition'] = f'attachment; filename="{file_name}"'
@@ -328,4 +472,55 @@ def read_article(request, article_id):
     
     return redirect(f'/flipbook/{article_id}/')
 
-#----------------------------------------------------------------------------------------------------------------------------------#
+#----------------------------------------------------------------------------------------------------------------------------------#    
+def d_flipbook(request, article_id):
+    article = get_object_or_404(article_table, pk=article_id)
+    
+    # Increment the visit count for the article directly in the article_table
+    article_table.objects.filter(article_id=article_id).update(visit_count=F('visit_count') + 1)
+    
+    # Save the IP address in ArticleVisit
+    ArticleVisit.objects.create(article_id=article, ip_address=request.META['REMOTE_ADDR'])
+    
+    return render(request, 'd_flipbook.html', {'article': article})
+
+#--------------------------------------------------------------------------------------------------------------------------------------------
+
+def message(request):
+    if request.method == 'POST':
+        # Get the form data
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        subject = request.POST.get('subject')
+        message_content = request.POST.get('message')
+        journal_id = request.POST.get('journal_id')  # Get the journal_id from the form data
+
+        # Validate the form data (basic validation)
+        if not name or not email or not subject or not message_content or not journal_id:
+            return JsonResponse({'success': False, 'error': 'All fields are required.'})
+
+        # Fetch the journal from the database
+        try:
+            journal = journal_table.objects.get(pk=journal_id)
+        except journal_table.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Journal not found.'})
+
+        # Fetch the editor for the journal
+        editor = journal.editor
+        if not editor or editor.status.lower() != 'active':
+            return JsonResponse({'success': False, 'error': 'Editor not found or not active.'})
+
+        # Save the message to the database
+        new_message = message_table(
+            journal_id=journal,
+            ea_id=editor,
+            msg_name=name,
+            msg_email=email,
+            subject=subject,
+            message=message_content
+        )
+        new_message.save()
+
+        return JsonResponse({'success': True})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method.'})

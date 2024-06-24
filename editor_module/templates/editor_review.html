@@ -55,7 +55,7 @@
 
     <div class="container-fluid">
         <h1 class="h3 mb-2 text-gray-800">Accepted Articles</h1>
-
+    
         {% if messages %}
             <div class="alert alert-success" role="alert">
                 {% for message in messages %}
@@ -63,7 +63,7 @@
                 {% endfor %}
             </div>
         {% endif %}
-
+    
         {% for article in articles %}
         <div class="card mb-4">
             <div class="card-header">
@@ -71,7 +71,7 @@
             </div>
             <div class="card-body">
                 <p>Author: {{ article.author1 }}{{ article.author2|yesno:", " }}{{ article.author3|yesno:", " }}</p>
-                <form method="post">
+                <form method="post" action="/editor_review/">
                     {% csrf_token %}
                     <input type="hidden" name="article_id" value="{{ article.article_id }}">
                     <div class="form-group">
@@ -79,12 +79,13 @@
                         <textarea class="form-control" name="review" rows="4" required></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit Review</button>
+                    <a href="/view_reviews/{{ article.article_id }}/" class="btn btn-secondary">Previous Reviews</a>
                 </form>
             </div>
         </div>
         {% endfor %}
     </div>
-
+    
     <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>

@@ -10,12 +10,14 @@
   <meta content="" name="description">
   <meta content="" name="keywords">
 
-  <!-- Favicons -->
-  <link href="{% static 'img/favicon.png' %}" rel="icon">
-  <link href="{% static 'img/apple-touch-icon.png' %}" rel="apple-touch-icon">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.0.1/font/bootstrap-icons.css" rel="stylesheet">
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+ <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+ <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
+ <!-- Favicons -->
+ <link href="{% static 'img/favicon.png' %}" rel="icon">
+ <link href="{% static 'img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.0.1/font/bootstrap-icons.css" rel="stylesheet">
+ <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
@@ -44,8 +46,7 @@
       flex: 1;
     }
 
-    /* Your additional CSS styles here */
-
+    /* Additional CSS styles */
     #footer {
       background-color: #f8f9fa;
       padding: 60px 0;
@@ -83,6 +84,10 @@
       color: #fff;
       text-decoration: none;
     }
+
+    .highlight {
+      background-color: yellow;
+    }
   </style>
 </head>
 
@@ -90,7 +95,7 @@
   {% include 'public_navbar.html' %}
 
   <main>
-    <!-- ========= Submisiion Guidelines ========= -->
+    <!-- ========= Submission Guidelines ========= -->
     <section id="ethics&disclosure" class="ethics&disclosure">
       <div class="container">
         <div class="section-title" data-aos="zoom-out">
@@ -99,17 +104,14 @@
         </div>
 
         <div class="row justify-content-center">
-
           <p>{{edata.journal_ethics}}</p>
-          
         </div>
       </div>
     </section>
-    <!-- ========= Submisiion Guidelines ========= -->
+    <!-- ========= Submission Guidelines ========= -->
   </main>
 
   <!-- ======= Footer ======= -->
-
   <footer id="footer">
     <div class="container">
       <h3>CU JOURNAL HUB</h3>
@@ -125,7 +127,6 @@
   </footer>
   <!-- End Footer -->
 
-  <!-- ---------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
   <!-- Vendor JS Files -->
   <script src="{% static 'vendor/aos/aos.js' %}"></script>
   <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
@@ -136,6 +137,20 @@
 
   <!-- Template Main JS File -->
   <script src="{% static 'js/main.js' %}"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const params = new URLSearchParams(window.location.search);
+      const query = params.get('q');
+      const index = params.get('index');
+      if (query && index) {
+        const sanitizedQuery = query.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+        document.body.innerHTML = document.body.innerHTML.replace(new RegExp(`(${sanitizedQuery})`, 'gi'), '<span class="highlight">$1</span>');
+      }
+    });
+  </script>
+
 </body>
 
 </html>

@@ -13,14 +13,20 @@ class author_table(models.Model):
     author_institute = models.CharField(max_length=100)
     author_password = models.CharField(max_length=90)
     created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now=True)
     #created_by=models.CharField(max_length=50)
     status=models.CharField(max_length=25)
     verify = models.BooleanField(default=False)
-    token = models.CharField(max_length=30, null=True, blank=True)
+    token = models.CharField(max_length=100, null=True, blank=True)
+    token_expiry = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         db_table="author_table"
+
+    def save(self, *args, **kwargs):
+        # Update the updated_at attribute before saving
+        self.updated_at = datetime.now()
+        super().save(*args, **kwargs)     
 
 
 #dept_table
@@ -28,7 +34,7 @@ class dept_table(models.Model):
     dept_id = models.BigAutoField(primary_key=True)
     dept_name = models.CharField(max_length=50)
     created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table="dept_table"
@@ -47,10 +53,13 @@ class ea_table(models.Model):
     password = models.CharField(max_length=90)
     dept_id = models.ForeignKey(dept_table,default="1",on_delete=models.SET_DEFAULT)   
     ea_type = models.CharField(max_length=70)
-    token = models.CharField(max_length=90)
     status = models.CharField(max_length=50, default="active")
     ea_mobile = models.CharField(max_length=20, default='')
     ea_address = models.CharField(max_length=200, default='')
+    token = models.CharField(max_length=100, null=True, blank=True)
+    token_expiry = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(default=datetime.now)  # Provide a default value
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table="ea_table"
@@ -109,7 +118,7 @@ class journal_table(models.Model):
     journal_name = models.CharField(max_length=50)
     journal_aim = models.TextField()
     journal_ethics = models.TextField()
-    logo = models.CharField(max_length=100,default="")
+    banner = models.CharField(max_length=100,default="")
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
     created_by=models.CharField(max_length=50)
@@ -153,6 +162,7 @@ class issue_table(models.Model):
     created_by=models.CharField(max_length=50)
     status=models.CharField(max_length=25)
     cover_image = models.ImageField(upload_to='issue_covers/', default='')
+    current_page_number = models.IntegerField(default=1)
 
     class Meta:
         db_table="issue_table"
@@ -175,6 +185,7 @@ class article_table(models.Model):
     visit_count = models.IntegerField(default=0) 
     download_count = models.IntegerField(default=0)
     ea_id = models.ForeignKey(ea_table,default="1",on_delete=models.SET_DEFAULT)
+    starting_page_number = models.IntegerField(default=1)  
 
     class Meta:
         db_table="article_table"
