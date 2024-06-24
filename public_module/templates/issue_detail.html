@@ -104,12 +104,10 @@
       margin-bottom: 40px;
     }
 
-    .chapter-list {
-      list-style-type: none;
-      padding: 0;
-    }
-
     .chapter-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       padding: 20px;
       margin-bottom: 20px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -118,15 +116,8 @@
       position: relative;
       text-decoration: none;
       color: inherit;
-      display: flex;
-      align-items: center;
       background-color: #f5f5f5;
       border-left: 6px solid #007bff;
-    }
-
-    .chapter-item:hover {
-      transform: translateY(-5px);
-      background-color: #e0f7fa;
     }
 
     .chapter-info {
@@ -147,12 +138,15 @@
     }
 
     .chapter-status {
-      margin-left: auto;
       display: flex;
       align-items: center;
     }
 
-    .chapter-status .btn {
+    .btn-group {
+      display: flex;
+    }
+
+    .btn {
       margin-left: 10px;
     }
 
@@ -177,7 +171,7 @@
     }
 
     .stats {
-      margin-left: 10px;
+      margin-left: 20px; /* Adjust spacing between buttons and stats */
       display: flex;
       align-items: center;
     }
@@ -185,6 +179,8 @@
     .stats i {
       margin-right: 5px;
     }
+
+
   </style>
 </head>
 
@@ -208,14 +204,16 @@
               <div class="chapter-authors">{{ article.authors }}</div>
             </div>
             <div class="chapter-status">
-              <a href="/d_flipbook/{{ article.id }}/" class="btn btn-primary">Read</a>
-              <a href="/download_article/{{ article.id }}/" class="btn btn-secondary">Download</a>
+              <div class="btn-group">
+                <a href="/d_flipbook/{{ article.id }}/" class="btn btn-primary">Read</a>
+                <a href="/download_article/{{ article.id }}/" class="btn btn-secondary">Download</a>
+              </div>
               <div class="stats">
                 <i class="bi bi-eye"></i> {{ article.visit_count }}
                 <i class="bi bi-download" style="margin-left: 15px;"></i> {{ article.download_count }}
               </div>
             </div>
-          </li>
+          </li>                   
           {% endfor %}
         </ul>
       </div>

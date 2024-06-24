@@ -51,7 +51,7 @@ def p_ethics(request,id):
     return render(request, 'p_ethics.html',{'edata':e_data,})
 
 def p_guidelines(request,id):
-    g_data = gl_table.objects.filter(journal_id=id)
+    g_data = gl_table.objects.filter(journal_id=id, status='active')
     return render(request, 'p_guidelines.html',{'gdata':g_data,})
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -393,13 +393,29 @@ def author_login(request):
 
     return render(request, "p_index.html#cta")
 
+def authorlogin(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        password = hashlib.sha1(request.POST.get("password").encode('utf-8')).hexdigest()
+
+        try:
+            user = author_table.objects.get(author_email=email, author_password=password)
+            request.session['author_email'] = user.author_email
+            request.session['author_name'] = user.author_name
+            # Redirect to the appropriate page (p_home.html)
+            return redirect('p_home', id=user.journal_id)  # Adjust the URL name and parameter as per your project
+        except author_table.DoesNotExist:
+            return render(request, "author_login.html", {"login_error": "Invalid Email or Password"})
+
+    return render(request, "author_login.html")
+
 def author_logout(request):
     try:
         del request.session['author_email']
         del request.session['author_name']
     except KeyError:
         pass
-    return redirect("/p_index/#cta")
+    return redirect("/authorlogin/")
 
 #----------------------------------------------------------------------------------------------------------------------------------#
 def issue_detail(request, issue_id):

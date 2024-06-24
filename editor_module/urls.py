@@ -15,6 +15,8 @@ urlpatterns = [
     #ASSIGNED JOURNAL
     path("assigned_journal/", views.assigned_journal),
     path('add_vic/<int:journal_id>/', views.add_vic),
+    path('edit_journal/<int:journal_id>/', views.edit_journal),
+    path('manage_volume/<int:journal_id>/', views.manage_volume),
 
     #ADD DETAILS
     path("add_details/", views.add_details),
@@ -31,11 +33,6 @@ urlpatterns = [
     # ADD CONTACT 
     path('add_contact/', views.add_contact),
     path('editor_contact/', views.editor_contact),
-
-    # JOURNAL LIST  
-    path("upddetails/", views.upddetails),
-    path('edit_journals/<int:journal_id>/', views.edit_journals),
-    path('manage_volume/<int:journal_id>/', views.manage_volume),
 
     #VIEW ARTICLES
     path("view_articles/", views.view_articles),
@@ -62,8 +59,7 @@ urlpatterns = [
 
     #REVIEWS
     path('editor_review/', views.editor_review),
-    path('view_reviews/<int:article_id>/', views.view_reviews)
-    
+    path('view_reviews/<int:article_id>/', views.view_reviews),    
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

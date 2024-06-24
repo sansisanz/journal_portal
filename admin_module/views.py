@@ -10,6 +10,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.contrib.auth.hashers import make_password
 import secrets
+from django.utils import timezone
 from datetime import datetime, timedelta
 from django.utils.crypto import get_random_string
 from django.views.decorators.csrf import csrf_protect
@@ -65,9 +66,9 @@ def logout(request):
 def send_reset_email(user, email):
     token = get_random_string(30)
     user.token = token
-    user.token_expiry = datetime.now() + timedelta(hours=1)  # Token is valid for 1 hour
+    user.token_expiry = timezone.now() + timedelta(hours=1)  # Token is valid for 1 hour
     user.save()
-    reset_link = f"http://127.0.0.1:8000/reset_password/{user.token}/"
+    reset_link = f"http://127.0.0.1:8000/reset_pd/{user.token}/"
     send_mail(
         'Password Reset Request',
         f'Click the link to reset your password: {reset_link}',
@@ -93,7 +94,7 @@ def forgotpassword(request):
         return redirect('/forgotpassword/')
     return render(request, 'forgotpassword.html')
 
-def reset_password(request, token):
+def reset_pd(request, token):
     try:
         user = author_table.objects.get(token=token)
     except author_table.DoesNotExist:
@@ -103,7 +104,7 @@ def reset_password(request, token):
             messages.error(request, 'This password reset link is invalid or has expired.')
             return redirect('/forgotpassword/')
     
-    if user.token_expiry and user.token_expiry < datetime.now():
+    if user.token_expiry and user.token_expiry < timezone.now():
         messages.error(request, 'This password reset link is invalid or has expired.')
         return redirect('/forgotpassword/')
     
@@ -112,15 +113,15 @@ def reset_password(request, token):
         confirm_password = request.POST.get('confirm_password')
         
         if new_password == confirm_password:
-            user.password = make_password(new_password)
+            user.password = hashlib.sha1(new_password.encode('utf-8')).hexdigest()
             user.token = None
             user.token_expiry = None
             user.save()
             messages.success(request, 'Your password has been set. You can now log in.')
-            return redirect('login')  # Adjust to your login URL name if different
+            return redirect('/login/')  # Adjust to your login URL name if different
         else:
             messages.error(request, 'Passwords do not match.')
-            return redirect(f'/reset_password/{token}/')
+            return redirect(f'/reset_pd/{token}/')
     
     return render(request, 'reset_password.html', {'token': token})
 
@@ -648,8 +649,6 @@ def edit_journals(request, journal_id):
         })
     else:
         return redirect('/login/')   
-
-
 
 
 #______________________    MANAGE VOLUMES      __________________________________________________________

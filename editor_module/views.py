@@ -22,6 +22,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from django.db.models import F
 from django.core.exceptions import ObjectDoesNotExist
+from django.templatetags.static import static
 from admin_module.models import ArticleDownload, ArticleVisit, JournalPageVisit, article_table, author_table, ea_table, dept_table, gl_table, journal_table, notification_table, review_table, volume_table, issue_table, eb_table
 
 
@@ -63,26 +64,30 @@ def assigned_journal(request):
         journals = journal_table.objects.filter(editor=editor)
         # Create a list of dictionaries to pass to the template
         journal_data = []
-        for journal in journals:
-            volumes = volume_table.objects.filter(journal_id=journal.journal_id)
-            total_volumes = volumes.count()
-            total_issues = issue_table.objects.filter(volume_id__in=volumes).count()
-            total_articles = article_table.objects.filter(issue_id__in=issue_table.objects.filter(volume_id__in=volumes)).count()
-            visit_count = journal.visit_count  # Assuming visit_count is a field in journal_table
-            
+        for index, journal in enumerate(journals, start=1):
             journal_data.append({
-                'si_no': journal.journal_id,
+                'si_no': index,
                 'journal_name': journal.journal_name,
                 'dept_name': journal.dept_id.dept_name,
-                'total_volumes': total_volumes,
-                'total_issues': total_issues,
-                'total_articles': total_articles,
-                'visit_count': visit_count
+                'journal_id': journal.journal_id
             })
         return render(request, "assignedjournal.html", {"journal_data": journal_data})
     else:
         return redirect('/login')
 
+def edit_journal(request, journal_id):
+    if 'empid' in request.session:
+        empid = request.session['empid']
+        # Retrieve the journal data based on journal_id
+        jdata = get_object_or_404(journal_table, journal_id=journal_id)
+                
+        return render(request, "edit_journal.html", {
+            "empid": empid,
+            "journal_id": journal_id,
+            "jdata": jdata  # Pass the retrieved journal data to the template
+        })
+    else:
+        return redirect('/login/')
     
 
 def add_vic(request, journal_id):
@@ -999,7 +1004,6 @@ def approve_article(request, article_id):
 
     return redirect('/view_articles/')
 
-
 def generate_article_pdf(article, request):
     # Fetch related details
     journal = article.issue_id.volume_id.journal_id
@@ -1022,6 +1026,7 @@ def generate_article_pdf(article, request):
         'national_registration_number': journal.national_registration_number,
         'ip_address': request.META.get('REMOTE_ADDR'),
         'date': timezone.now().strftime('%Y-%m-%d'),
+        'logo_url': request.build_absolute_uri(static('img/uni_of_cal.png'))  # Absolute URL for the image
     }
     
     # Render HTML content from template
