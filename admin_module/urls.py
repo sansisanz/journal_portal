@@ -14,7 +14,7 @@ urlpatterns = [
 
     ################################   FORGOT PASSWORD  ############################################
     path("forgotpassword/", views.forgotpassword),
-    path('reset_password/<str:token>/', views.reset_password),
+    path('reset_pd/<str:token>/', views.reset_pd),
 
     ################################   ADD EDITOR  #########################################
     path("add_editor/", views.add_editor),

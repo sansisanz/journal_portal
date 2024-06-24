@@ -7,6 +7,10 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
 from django.utils.dateformat import DateFormat
+from django.contrib.auth.hashers import check_password, make_password
+from django.utils.crypto import get_random_string
+from django.utils import timezone
+from django.core.mail import send_mail
 
 # Create your views here.    
 # Function to render the author's index page with submitted articles
@@ -85,20 +89,90 @@ def update_profile(request):
     
 #========================================================================================================================================================
 
-#def author_forgotpassword(request):
-    if request.session.has_key('author_email'):
-        author_email = request.session['author_email']
-        return render(request, "author-forgotpassword.html", {"author_email": author_email})
-    else:
-        return redirect('/p_index/#cta')    
+def author_forgotpassword(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        try:
+            author = author_table.objects.get(author_email=email)
+            token = get_random_string(50)
+            author.token = token
+            author.token_expiry = timezone.now() + timezone.timedelta(hours=1)
+            author.save()
+            
+            reset_link = request.build_absolute_uri(f'/author_resetpswd/{token}/')
+            send_mail(
+                'Password Reset Request',
+                f'Click the link below to reset your password:\n\n{reset_link}',
+                'no-reply@example.com',
+                [email],
+                fail_silently=False,
+            )
+            
+            messages.success(request, 'A password reset link has been sent to your email.')
+            return redirect('/p_index/#cta/')
+        except author_table.DoesNotExist:
+            messages.error(request, 'Email address not found.')
+            return render(request, "forgotpassword.html")
+    
+    return render(request, "forgotpassword.html")
+
+def author_resetpswd(request, token):
+    try:
+        author = author_table.objects.get(token=token, token_expiry__gte=timezone.now())
+        
+        if request.method == 'POST':
+            new_password = request.POST['new_password']
+            confirm_password = request.POST['confirm_password']
+            
+            if len(new_password) < 8:
+                messages.error(request, "New password must be at least 8 characters long.")
+                return render(request, "resetpassword.html", {"token": token})
+            
+            if new_password != confirm_password:
+                messages.error(request, "New passwords do not match.")
+                return render(request, "resetpassword.html", {"token": token})
+            
+            # Hash the new password before saving
+            author.author_password = hashlib.sha1(new_password.encode('utf-8')).hexdigest()
+            author.token = None
+            author.token_expiry = None
+            author.save()
+            messages.success(request, "Password has been reset successfully.")
+            return redirect('/p_index/#cta')
+        
+        return render(request, "resetpassword.html", {"token": token})
+    except author_table.DoesNotExist:
+        messages.error(request, 'The password reset link is invalid or has expired.')
+        return redirect('/author_forgotpassword/')
 
 
-#def author_resetpassword(request):
+def author_resetpassword(request):
     if request.session.has_key('author_email'):
         author_email = request.session['author_email']
+        author = author_table.objects.get(author_email=author_email)
+        
+        if request.method == 'POST':
+            new_password = request.POST['new_password']
+            confirm_password = request.POST['confirm_password']
+            
+            if len(new_password) < 8:
+                messages.error(request, "New password must be at least 8 characters long.")
+                return render(request, "author_resetpassword.html", {"author_email": author_email})
+
+            if new_password != confirm_password:
+                messages.error(request, "New passwords do not match.")
+                return render(request, "author_resetpassword.html", {"author_email": author_email})
+            
+            # Hash the new password before saving
+            author.author_password = hashlib.sha1(new_password.encode('utf-8')).hexdigest()
+            author.save()
+            messages.success(request, "Password has been reset successfully.")
+            return redirect('/author_resetpassword/')
+        
         return render(request, "author_resetpassword.html", {"author_email": author_email})
     else:
         return redirect('/p_index/#cta')
+
 
 #========================================================================================================================================================
 def author_sidebar(request):

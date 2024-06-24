@@ -21,6 +21,7 @@ urlpatterns = [
     path('author-registration/', views.author_registration, name='author_registration'),
     path('email_verification/', views.email_verification),
     path('author_login/', views.author_login),
+    path('authorlogin/', views.authorlogin),
     path('author_logout/', views.author_logout),
     path('issue_detail/<int:issue_id>/', views.issue_detail),
     path('read_article/', views.read_article),
