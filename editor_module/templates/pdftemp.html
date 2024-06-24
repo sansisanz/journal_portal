@@ -1,8 +1,8 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -13,31 +13,33 @@
     
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             line-height: 1.6;
             margin: 0;
             padding: 0;
-            background-color: #ffffff;
+            background-color: #fff;
             width: 100%;
         }
 
         .container {
-            width:100%;
+            width: 100%;
             max-width: 800px;
-            margin: 100px auto;
+            margin: 50px 0 70px 0;
             padding: 30px;
             background-color: #fff;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            background-size: cover;
+            background-position: center;
         }
 
         .af_head {
-            text-align: center;
+            text-align: left;
+            margin-bottom: 30px;
         }
 
         .af_head h1 {
             font-family: 'Georgia', serif;
-            font-size: 3em;
+            font-size: 2.5em;
             margin-bottom: 10px;
             color: #972929;
         }
@@ -48,8 +50,25 @@
             color: #666;
         }
 
+        .details {
+            font-size: 1em;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        .details p {
+            margin: 5px 0;
+        }
+
+        hr {
+            border: none;
+            height: 2px;
+            background: #000;
+            margin: 30px 0;
+        }
+
         .af_body {
-            margin: 40px 0;
+            margin: 20px 0;
         }
 
         .af_body h4 {
@@ -64,18 +83,28 @@
             color: #333;
         }
 
-        hr {
-            border: none;
-            height: 1px;
-            background: #e0e0e0;
-            margin: 30px 0;
+        .logo {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .logo img {
+            max-width: 150px;
+            height: auto;
+        }
+
+        .university {
+            text-align: center;
+            font-size: 1.2em;
+            color: #333;
+            margin-top: 10px;
         }
 
         .af_foot {
             text-align: center;
             margin-top: 20px;
             font-size: 0.9em;
-            color: #999;
+            color: #000000;
         }
 
         .af_foot p {
@@ -91,6 +120,11 @@
             <h3>{{ department }}</h3>
             <h3>{{ volume }}</h3>
             <h3>Issue {{ issue }}</h3>
+            <div class="details">
+                <p>ISSN: {{ issn_number }}</p>
+                <p>UGC CARE List Number: {{ ugc_care_list_number }}</p>
+                <p>National Registration Number: {{ national_registration_number }}</p>
+            </div>
         </div>
         <hr>
         <div class="af_body">
@@ -99,11 +133,16 @@
             <p>URL: <a href="http://127.0.0.1:8000/{{ url }}">http://127.0.0.1:8000/{{ url }}</a></p>
             <p>Published by: {{ published_by }}</p>
         </div>
+        <div class="logo">
+            <img src="https://en.wikipedia.org/wiki/University_of_Calicut#/media/File:Uni_of_cali.png"> 
+        </div>
+        <div class="university">University of Calicut</div>
         <hr>
         <div class="af_foot">
-            <p>©2024 CU Journal Hub. All rights reserved.</p>
+            <p>Downloaded from IP: {{ ip_address }}</p>
+            <p>Date: {{ date }}</p>
+            <p>©2024 CU Journals. All rights reserved.</p>
         </div>
     </div>
-    
 </body>
 </html>

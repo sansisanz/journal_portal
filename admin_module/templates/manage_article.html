@@ -1,0 +1,179 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Manage Articles</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="{% static 'css/sb-editor.css' %}" rel="stylesheet">
+
+    <style>
+        .large-textarea {
+            width: 100%;
+            height: auto;
+            resize: none;
+        }
+        .card {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .card-header {
+            background-color: #4e73df;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            padding: 15px;
+            font-size: 1.5rem;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .btn {
+            margin-right: 10px;
+        }
+        .alert {
+            margin-top: 20px;
+        }
+        .scroll-to-top {
+            position: fixed;
+            right: 15px;
+            bottom: 15px;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            color: #fff;
+            background: rgba(52, 58, 64, 0.5);
+            line-height: 45px;
+        }
+    </style>
+
+</head>
+
+<body id="page-top">
+    {% include 'admin_sidebar.html' %}
+
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <h2>MANAGE ARTICLES</h2>
+            </div>
+            <div class="card-body">
+                {% if articles %}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Article Title</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for article in articles %}
+                            <tr data-id="{{ article.article_id }}">
+                                <td>{{ article.article_title }}</td>
+                                <td>
+                                    {% if article.created_by == empid %}
+                                    <button onclick="editArticle({{ article.article_id }})" class="btn btn-primary">Edit</button>
+                                    {% endif %}
+                                    <button onclick="removeArticle({{ article.article_id }})" class="btn btn-danger">Remove</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No articles to display.</p>
+                {% endif %}
+                <a href="/edit_journals/{{ journal_id }}/" class="btn btn-back btn-info ml-2">Back</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+
+    <!-- Page level plugins -->
+    <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
+    <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+
+    <!-- Script for managing articles -->
+    <script>
+        function editArticle(articleId) {
+            var newArticleTitle = prompt("Enter new article title:");
+            if (newArticleTitle !== null && newArticleTitle.trim() !== '') {
+                fetch(`/edit_article/${articleId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({ article_title: newArticleTitle })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Article title updated successfully');
+                        document.location.reload();  // Reload the page to reflect changes
+                    } else {
+                        alert('Failed to update article title');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+
+        function removeArticle(articleId) {
+            if (confirm('Are you sure you want to remove this article?')) {
+                fetch(`/remove_article/${articleId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Article removed successfully');
+                        document.location.reload();  // Reload the page to reflect changes
+                    } else {
+                        alert('Failed to remove article');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+    </script>
+
+</body>
+
+</html>

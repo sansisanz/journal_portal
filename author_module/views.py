@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render,redirect
-from admin_module.models import article_table, author_table, dept_table, issue_table, journal_table, review_table, volume_table
+from admin_module.models import article_table, author_table, dept_table, ea_table, issue_table, journal_table, review_table, volume_table
 import hashlib
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
@@ -125,13 +125,10 @@ def author_submitarticle(request):
     else:
         return redirect('/p_index/#cta')
 
-# Function to handle form submission
 def article_submission(request):
     if request.session.has_key('author_email'):
         if request.method == "POST":
             journal_id = request.POST.get('journalName')
-            volume_id = request.POST.get('volume')
-            issue_id = request.POST.get('issueNumber')
             article_title = request.POST.get('articleTitle')
             article_file = request.FILES.get('articleFile')
             author_count = int(request.POST.get('authorCount'))
@@ -141,65 +138,59 @@ def article_submission(request):
             author_email = request.session.get('author_email')
             author = get_object_or_404(author_table, author_email=author_email)
 
-            # Save article details
-            article = article_table(
-                issue_id=get_object_or_404(issue_table, pk=issue_id),
-                author_id=author,
-                article_title=article_title,
-                created_by=author.author_name,
-                status='pending approval',
-                author1=authors[0] if len(authors) > 0 else '',
-                author2=authors[1] if len(authors) > 1 else '',
-                author3=authors[2] if len(authors) > 2 else '',
-                article_file=article_file  # Save the uploaded file
-            )
-            article.save()
+            # Get the open volume and issue for the selected journal
+            open_volume = get_object_or_404(volume_table, journal_id=journal_id, status='open')
+            open_issue = get_object_or_404(issue_table, volume_id=open_volume.volume_id, status='open')
 
-            return redirect('/author_index/')  # Redirect to a success page
+            try:
+                # Get the editor/admin with ea_id = 100 from ea_table
+                editor_admin = get_object_or_404(ea_table, ea_id=100)
+
+                # Save article details with ea_id set to editor/admin instance
+                article = article_table(
+                    issue_id=open_issue,
+                    author_id=author,
+                    article_title=article_title,
+                    created_by=author.author_name,
+                    status='pending approval',
+                    author1=authors[0] if len(authors) > 0 else '',
+                    author2=authors[1] if len(authors) > 1 else '',
+                    author3=authors[2] if len(authors) > 2 else '',
+                    article_file=article_file,
+                    ea_id=editor_admin  # Assign editor/admin instance, not just ea_id
+                )
+                article.save()
+
+                return redirect('/author_index/')  # Redirect to a success page after saving
+
+            except ea_table.DoesNotExist:
+                # Handle case where ea_id=100 does not exist in ea_table
+                return render(request, 'error_page.html', {'error_message': 'Editor/Admin not found'})
 
         return redirect('submit_article')  # Redirect back to the form if not a POST request
     else:
         return redirect('/p_index/#cta')
-
     
 def load_journals(request):
     department_id = request.GET.get('department_id')
     journals = journal_table.objects.filter(dept_id=department_id).all()
     return JsonResponse(list(journals.values('journal_id', 'journal_name')), safe=False)
 
-def load_volumes(request):
-    journal_id = request.GET.get('journal_id')
-    volumes = volume_table.objects.filter(journal_id=journal_id).all()
-    return JsonResponse(list(volumes.values('volume_id', 'volume')), safe=False)
-
-def load_issues(request):
-    volume_id = request.GET.get('volume_id')
-    issues = issue_table.objects.filter(volume_id=volume_id).all()
-    return JsonResponse(list(issues.values('issue_id', 'issue_no')), safe=False)
-
 #========================================================================================================================================================
 
 def author_review(request):
     if request.session.has_key('author_email'):
         author_email = request.session['author_email']
-        return render(request, "author_review.html", {"author_email": author_email})
-    else:
-        return redirect('/p_index/#cta')
-
-def view_review(request):
-    if request.session.has_key('author_email'):
-        author_email = request.session['author_email']
         author = get_object_or_404(author_table, author_email=author_email)
-        articles = article_table.objects.filter(author_id=author.author_id)
-        article_ids = articles.values_list('article_id', flat=True)
         
-        # Retrieve the review objects from the database using the article_ids
-        reviews = review_table.objects.filter(article_id__in=article_ids).select_related('article_id', 'editor_id')
+        # Fetch articles authored by the current author
+        articles = article_table.objects.filter(author_id=author)
         
-        # Pass the reviews queryset to the template for rendering
-        return render(request, 'author_review.html', {'reviews': reviews})
-    else:
-        # Handle the case when the author is not logged in
-        return HttpResponse("You must be logged in as an author to view reviews.")
+        # Fetch reviews for these articles
+        reviews = review_table.objects.filter(article_id__in=articles).select_related('article_id', 'editor_id')
+        
+        return render(request, "author_review.html", {'author': author, 'reviews': reviews})
+    
+    return redirect('/p_index/#cta')
     
 #========================================================================================================================================================

@@ -16,9 +16,8 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.0.1/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
-
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="{% static 'vendor/animate.css/animate.min.css' %}" rel="stylesheet">
@@ -33,100 +32,223 @@
   <!-- Template Main CSS File -->
   <link href="{% static 'css/public-style.css' %}" rel="stylesheet">
 
-<style>
-  .news-ticker {
-  overflow: hidden;
-}
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
-.news-ticker ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  animation: ticker 20s linear infinite;
-}
+  <!-- Bootstrap JS -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
-.news-ticker li {
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
-}
+  <style>
+    .news-ticker {
+      overflow: hidden;
+    }
+    .news-ticker ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      animation: ticker 30s linear infinite;
+    }
+    .news-ticker li {
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+    @keyframes ticker {
+      0% {
+        transform: translateY(0);
+      }
+      100% {
+        transform: translateY(-100%);
+      }
+    }
+    /* Define fixed dimensions for editor photos */
+    .member {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
 
-@keyframes ticker {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-100%);
-  }
-}
+    .member:hover {
+      transform: translateY(-10px);
+    }
 
-/* Define fixed dimensions for editor photos */
-.member-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center; /* For fallback */
-}
+    .member-img {
+      overflow: hidden;
+    }
 
-.editor-photo {
-  width: 100%; /* Adjust this value as needed */
-  height: auto; /* Maintains aspect ratio */
-  max-width: 200px; /* Maximum width for consistency */
-  max-height: 200px; /* Maximum height for consistency */
-}
+    .member-img img {
+      width: 100%;
+      height: auto;
+      transition: transform 0.3s ease;
+    }
 
-</style>
+    .member:hover .member-img img {
+      transform: scale(1.1);
+    }
+
+    .member-info {
+      padding: 20px;
+    }
+
+    .member-info h4 {
+      font-size: 1.5em;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .member-info span {
+      display: block;
+      font-size: 1.1em;
+      color: #777;
+      margin-bottom: 10px;
+    }
+
+    .list-unstyled {
+      padding: 0;
+      list-style: none;
+    }
+
+    .list-unstyled li {
+      font-size: 1.5rem;
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    .list-unstyled li i {
+      color: #007bff;
+      margin-right: 10px;
+    }
+
+    .journal-nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 50px;
+    }
+    .journal-nav ul li {
+      display: inline;
+    }
+    .journal-nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1em;
+      padding: 15px 10px;
+    }
+    .journal-nav ul li a:hover {
+      background-color: #444;
+      border-radius: 5px;
+    }
+    .highlight {
+      background-color: yellow;
+    }
+    #header {
+      width: 100%;
+      padding: 10px 0;
+      z-index: 1000; /* Ensure it's above other content */
+      position: fixed; /* Fixed positioning */
+      top: 0;
+      background-color: #343a40;
+    }
+
+    .logo h1 {
+      margin: 0;
+      font-size: 24px; /* Adjust font size as needed */
+      color: white;
+    }
+
+    .header-buttons button {
+      margin-left: 10px;
+    }
+
+  </style>
 </head>
 
 <body>
-    {% include 'public_navbar.html' %}
+  <header id="header" class="fixed-top d-flex align-items-center">
+    <p style="color: aliceblue; margin-right: 20px;">Visit count: {{ visit_count }}</p>
+    <div class="container d-flex align-items-center justify-content-between">
+      <div class="logo">
+        <h1><a href="/p_index/">CU JOURNALS</a></h1>
+        <a href="#home"><img src="{% static 'img/logo.png' %}" alt="" class="img-fluid"></a>
+      </div>
+      <div class="ml-auto d-flex align-items-center">
+        <div class="header-buttons"> <!-- ml-auto aligns items to the right -->
+          <button type="button" class="btn btn-success" id="loginButton">Login</button>
+          <button type="button" class="btn btn-info" id="registerButton">Register</button>
+        </div>
+      </div>
+    </div>
+  </header>
+  
     <main id="main">
       <section class="inner-page">
         <div class="container"></div>   
         <!-- header for journal -->
   
         <section id="cta" class="cta">
-          <div class="col-12 text-left mb-3">
-            <p>Visit count: {{ visit_count }}</p>
-          <div class="container">
-              <div class="row justify-content-center align-items-center">                  
-                  <div class="col-sm-5 text-center">
-                      {% if latest_issue %}
-                          <img src="{{ latest_issue.cover_image.url }}" alt="Journal Cover Image" style="width: 100%; height: auto; max-width: 400px;">
-                      {% else %}
-                          <p>No cover image available.</p>
-                      {% endif %}
-                  </div>
-                  <div class="col-sm-7 text-center">
-                      <h1 class="j_menu_h1" style="text-transform: capitalize;">{{ jdata.journal_name }}</h1>
-                      <h4 class="j_menu_h4" style="text-transform: capitalize;">{{ jdata.dept_id.dept_name }}</h4>
-                      <br><br>
-                      <nav class="journal-menu">
-                          <ul>
-                              <li><a href="/p_home/{{ jdata.journal_id }}/#aim&scope">Aim & Scopes</a></li>
-                              <li><a href="/p_home/{{ jdata.journal_id }}/#editorialboard">Editorial Board</a></li>
-                              <li><a href="/p_home/{{ jdata.journal_id }}/#submitarticle">Submit Article</a></li>
-                              <li><a href="/p_home/{{ jdata.journal_id }}/#journalupdates">Journal Updates</a></li>
-                              <li><a href="/p_guidelines/{{ jdata.journal_id }}">Submission Guidelines</a></li>
-                              <li><a href="/p_ethics/{{ jdata.journal_id }}">Ethics & Disclosure</a></li>
-                              <li><a href="/p_alljournals/{{ jdata.journal_id }}/">All Journals</a></li>
-                              <li><a href="/p_home/{{ jdata.journal_id }}/#contact">Contact Us</a></li>
-                          </ul>
-                      </nav>
-                  </div>
-              </div>
-          </div>
+          <div class="col-12 text-left mb-3">            
+            <div class="container">
+                <div class="row justify-content-center align-items-center">                  
+                    <div class="col-sm-5 text-center">
+                        {% if latest_issue %}
+                            <img src="{{ latest_issue.cover_image.url }}" alt="Journal Cover Image" style="width: 100%; height: auto; max-width: 400px;">
+                        {% else %}
+                            <p>No cover image available.</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-7 text-center">
+                        <h1 class="j_menu_h1" style="text-transform: capitalize;">{{ jdata.journal_name }}</h1>
+                        <h4 class="j_menu_h4" style="text-transform: capitalize;">{{ jdata.dept_id.dept_name }}</h4>
+                        <br><br>
+
+                        <!-- Search Form -->
+                        <div class="container">
+                          <div class="row justify-content-center">
+                            <div class="col-md-6">
+                              <form action="/search_results/{{ jdata.journal_id }}/" method="GET" class="input-group my-4">
+                                <input type="text" name="q" class="form-control" placeholder="Search..." required>
+                                <div class="input-group-append">
+                                  <button type="submit" class="btn btn-success">Search</button>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                        <br>
+                            <nav class="journal-nav">
+                              <ul>
+                                <li><a href="/p_home/{{ jdata.journal_id }}/#aim&scope">About</a></li>
+                                <li><a href="/p_home/{{ jdata.journal_id }}/#editorialboard">Editorial Board</a></li>
+                                <li><a href="/p_home/{{ jdata.journal_id }}/#submitarticle">Submit Article</a></li>
+                                <li><a href="/p_guidelines/{{ jdata.journal_id }}/">Submission Guidelines</a></li>
+                              </ul><br>
+                            </nav>
+                            <nav class="journal-nav">
+                              <ul>
+                                <li><a href="/p_home/{{ jdata.journal_id }}/#journalupdates">Journal Notifications</a></li>
+                                <li><a href="/p_ethics/{{ jdata.journal_id }}/">Ethics & Disclosure</a></li>
+                                <li><a href="/p_alljournals/{{ jdata.journal_id }}/">Back Volumes</a></li>
+                                <li><a href="/p_home/{{ jdata.journal_id }}/#contact">Contact Us</a></li>
+                              </ul>
+                            </nav>                   
+                    </div>
+                </div>
+            </div>
       </section>       
       
           <!-- Your content here -->
       </section>
-    <!-- aims and scope section -->
+    <!--About section -->
     <section id="aim&scope" class="aim&scope">
         <div class="container">
       
           <div class="section-title" data-aos="zoom-out">
             <br><br>
-            <h2>Aim & Scope</h2>
-            <p>Understanding Journals</p>
+            <h2>About</h2>
+            <p>Understanding Journal</p>
           </div>
       
           <div class="row">
@@ -148,21 +270,25 @@
       
           <div class="row justify-content-center">
             {% for i in pdata %}
-            <div class="col-lg-4 col-md-6 mb-4">
-              <div class="member-item border rounded shadow p-4">
-                <img src="/media/{{i.photo}}" class="editor-photo" style="width: 250px; height: 250px; border-radius: 50%;"><br>
-                <h4>{{i.editor_name}}</h4>
-                <p>Editor</p>
-                <ul class="list-unstyled mb-0">
-                  <li><i class="fas fa-map-marker-alt"></i> {{i.editor_address}}</li>
-                  <li><i class="fas fa-envelope"></i> {{i.editor_email}}</li>
-                  <li><i class="fas fa-phone-alt"></i> {{i.editor_mobile}}</li>
-                </ul>
+              <div class="col-lg-3 col-md-6 d-flex align-items-stretch">
+                <div class="member" data-aos="fade-up" data-aos-delay="100">
+                  <div class="member-img">
+                    <img src="/media/{{i.photo}}" class="img-fluid" alt="">
+                  </div>
+                  <div class="member-info">
+                    <h4>{{i.editor_name}}</h4>
+                    <span>Editor</span>
+                    <ul class="list-unstyled mb-0">
+                      <li><i class="fas fa-map-marker-alt"></i> {{i.editor_address}}</li>
+                      <li><i class="fas fa-envelope"></i> {{i.editor_email}}</li>
+                      <li><i class="fas fa-phone-alt"></i> {{i.editor_mobile}}</li>
+                    </ul>
+                  </div>
+                </div>
               </div>
-            </div>
-            {% endfor %} 
-
+            {% endfor %}
             <div class="eb-para">
+              <br><br>
               <h5>The CU Journal Hub is overseen by a dedicated Editorial Board, ensuring the quality and integrity of the scholarly publications we disseminate. This esteemed body comprises a Chief Editor and several committee members, in recognition of their extensive experience and distinguished reputations within the academic community. We are grateful for their invaluable contributions in guiding the selection and publication of impactful research within our journals.</h5>
             </div>
         
@@ -193,13 +319,13 @@
       </section>
     <!-- =========== end of submit article ============ -->
 
-<!-- ======== Journal Notifications ======== -->
+ <!-- ======== Journal Notifications ======== -->
       <section id="journalupdates" class="journalupdates bg-light py-5">
         <div class="container">
           <div class="section-title" data-aos="zoom-out">
             <br><br>
-            <h2>Journal Updates</h2>
-            <p>Stay informed with the latest developments!</p>
+            <h2>Journal Notifications</h2>
+            <p>Stay informed with the latest developments and notifications!</p>
           </div>
 
           <div class="news-ticker">
@@ -212,7 +338,7 @@
         </div>
       </section>
 
-<!-- ========= Journal Updates End ========= -->    
+<!-- ========= Journal Updates End ========= -->   
 
   <!-- ======= Contact Section ======= -->
       <section id="contact" class="contact">
@@ -248,28 +374,31 @@
 
             <div class="col-lg-8 mt-5 mt-lg-0" data-aos="fade-left">
 
-              <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+              <form id="contactForm" action="/message/" method="post" role="form" class="php-email-form">
+                {% csrf_token %}
+                <input type="hidden" name="journal_id" value="{{ jdata.journal_id }}"> <!-- Hidden field for journal_id -->
                 <div class="row">
-                  <div class="col-md-6 form-group">
-                    <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
-                  </div>
-                  <div class="col-md-6 form-group mt-3 mt-md-0">
-                    <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
-                  </div>
+                    <div class="col-md-6 form-group">
+                        <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="col-md-6 form-group mt-3 mt-md-0">
+                        <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
+                    </div>
                 </div>
                 <div class="form-group mt-3">
-                  <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
+                    <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
                 </div>
                 <div class="form-group mt-3">
-                  <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
+                    <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
                 </div>
                 <div class="my-3">
-                  <div class="loading">Loading</div>
-                  <div class="error-message"></div>
-                  <div class="sent-message">Your message has been sent. Thank you!</div>
+                    <div class="loading" style="display: none;">Loading</div>
+                    <div class="error-message" style="display: none;"></div>
+                    <div class="sent-message" style="display: none;">Your message has been sent. Thank you!</div>
                 </div>
                 <div class="text-center"><button type="submit">Send Message</button></div>
-              </form>
+            </form>
+        
 
             </div>
 
@@ -282,7 +411,7 @@
       <!-- ======= Footer ======= -->
     <footer id="footer">
         <div class="container">
-          <h3>CU JOURNAL HUB</h3>
+          <h3>CU JOURNALS</h3>
           <p>"Empowering discovery and shaping tomorrow through cutting-edge research."</p>
           <div class="social-links">
             <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
@@ -299,6 +428,9 @@
       </footer>
     <!-- End Footer -->
 
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
 <!-- ---------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
       <!-- Vendor JS Files -->
   <script src="{% static 'vendor/aos/aos.js' %}"></script>
@@ -310,6 +442,92 @@
 
   <!-- Template Main JS File -->
   <script src="{% static 'js/main.js' %}"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const params = new URLSearchParams(window.location.search);
+      const query = params.get('q');
+      const index = params.get('index');
+      if (query && index) {
+        const sanitizedQuery = query.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+        document.body.innerHTML = document.body.innerHTML.replace(new RegExp(`(${sanitizedQuery})`, 'gi'), '<span class="highlight">$1</span>');
+      }
+    });
+  </script>
+
+
+  <script>
+    // Get button references
+    const loginButton = document.getElementById("loginButton");
+    const registerButton = document.getElementById("registerButton");
+
+    // Add click event listeners
+    loginButton.addEventListener("click", () => {
+      window.location.href = "/p_index/#cta";
+    });
+
+    registerButton.addEventListener("click", () => {
+      window.location.href = "/p_authorreg/";
+    });
+  </script>
+
+<script>
+  document.getElementById('contactForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent default form submission
+
+      // Disable the submit button to prevent multiple submissions
+      const submitButton = document.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+
+      // Show loading indicator
+      document.querySelector('.loading').style.display = 'block';
+
+      // Hide previous messages
+      document.querySelector('.error-message').style.display = 'none';
+      document.querySelector('.sent-message').style.display = 'none';
+
+      const formData = new FormData(this);
+
+      fetch(this.action, {
+          method: 'POST',
+          body: formData,
+          headers: {
+              'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+          }
+      })
+      .then(response => response.json())
+      .then(data => {
+          // Hide loading indicator
+          document.querySelector('.loading').style.display = 'none';
+
+          if (data.success) {
+              // Show success message
+              document.querySelector('.sent-message').style.display = 'block';
+              this.reset(); // Reset form fields
+          } else {
+              // Show error message
+              document.querySelector('.error-message').textContent = data.error || 'An error occurred. Please try again.';
+              document.querySelector('.error-message').style.display = 'block';
+          }
+
+          // Re-enable the submit button
+          submitButton.disabled = false;
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          // Hide loading indicator
+          document.querySelector('.loading').style.display = 'none';
+          // Show error message
+          document.querySelector('.error-message').textContent = 'An error occurred. Please try again.';
+          document.querySelector('.error-message').style.display = 'block';
+
+          // Re-enable the submit button
+          submitButton.disabled = false;
+      });
+  });
+</script>
+
 </body>
 
 </html>

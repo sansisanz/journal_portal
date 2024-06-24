@@ -16,7 +16,6 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.0.1/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
-
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
@@ -33,6 +32,30 @@
   <!-- Template Main CSS File -->
   <link href="{% static 'css/public-style.css' %}" rel="stylesheet">
 
+  <style>
+    /* Sticky Footer Styles */
+html {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+#main {
+  flex: 1;
+}
+
+#footer {
+  background: #2c3e50;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+}
+
+  </style>
 
 </head>
 
@@ -41,13 +64,11 @@
   <!-- ======= Header ======= -->
   <header id="header" class="fixed-top d-flex align-items-center ">
     <div class="container d-flex align-items-center justify-content-between">
-
       <div class="logo">
         <h1><a href="/p_index/">CU JOURNAL HUB</a></h1>
         <!-- Uncomment below if you prefer to use an image logo -->
         <a href="/p_index/"><img src="{% static 'img/logo.png' %}" alt="" class="img-fluid"></a>
       </div>
-
       <nav id="navbar" class="navbar">
         <ul>
           <li><a class="nav-link scrollto" href="/p_index/">Home</a></li>
@@ -58,17 +79,14 @@
           <li><a class="nav-link scrollto" href="/p_index/#contact">Contact</a></li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
-      </nav><!-- .navbar -->
-
+      </nav>
     </div>
-  </header><!-- End Header -->
+  </header>
 
   <main id="main">
-
     <!-- ======= Breadcrumbs ======= -->
     <section class="breadcrumbs">
       <div class="container">
-
         <div class="d-flex justify-content-between align-items-center">
           <h2>Journals</h2>
           <ol>
@@ -76,115 +94,40 @@
             <li>Journals</li>
           </ol>
         </div>
-
       </div>
-      
-    </section><!-- End Breadcrumbs -->
+    </section>
 
     <section class="inner-page">
-      <div class="container">    
-             
+      <div class="container">
         <p>
           <h2>Welcome to the CU Journals!</h2>
-Dear Researchers,
+          Dear Researchers,
 
-The University of Calicut is proud to launch the CU Journal Hub, a comprehensive online platform dedicated to showcasing the exceptional research conducted within our esteemed institution. This digital repository offers seamless access to a vast array of scholarly publications, encompassing a diverse range of disciplines and academic fields.
+          The University of Calicut is proud to launch the CU Journal Hub, a comprehensive online platform dedicated to showcasing the exceptional research conducted within our esteemed institution. This digital repository offers seamless access to a vast array of scholarly publications, encompassing a diverse range of disciplines and academic fields.
         </p><br><br>
       </div>
 
-    <!-- proceedings -->
-    <!-- <div class="container">
-      <div class="row">
-        <div class="col-md-3 sidebar bg-light rounded shadow">
-          <h3>Journals</h3>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-              <a href="#journal-1-details" class="journal-link">Journal 1</a>
-            </li>
-            <li class="list-group-item">
-              <a href="#journal-2" class="journal-link">Journal 2</a>
-            </li>
-            <li class="list-group-item">
-              <a href="#journal-3" class="journal-link">Journal 3</a>
-            </li>
-          </ul>
-        </div>
-    
-        <div id="journal-1-details" class="col-md-9 journal-details d-none">
-          <h2>Journal 1</h2>
-          <img src="assets/img/eb.jpg" alt="Journal 1 Cover" class="img-fluid mb-3">
-          <h4>Chapters/Articles</h4>
-          <ul>
-            <li>Chapter 1: Introduction</li>
-            <li>Chapter 2: The Basics</li>
-            <li>Chapter 3: Advanced Topics</li>
-          </ul>
+      <!-- proceedings -->
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3 sidebar bg-light rounded shadow">
+            <h3>All Journals</h3>
+            <ul class="list-group list-group-flush">
+              {% for i in jdata %}
+              <li class="list-group-item">
+                <a href="/p_home/{{i.journal_id}}/">{{i.journal_name}}</a>
+              </li>
+              {% endfor %}
+              <!-- Add more journal links here -->
+            </ul>
+          </div>
+          <div class="col-md-9" id="journalContent">
+            <!-- Content of the selected journal will be displayed here -->
+          </div>
         </div>
       </div>
-    </div> -->
-
-    <div class="container">
-      <div class="row">
-        <div class="col-md-3 sidebar bg-light rounded shadow">
-          <h3>All Journals</h3>
-          <ul class="list-group list-group-flush">
-            {% for i in jdata %}
-            <li class="list-group-item">
-
-              <!-- onclick="showJournal('Journal1', 'assets/img/eb.jpg', ['Article 1', 'Article 2', 'Article 3'])" -->
-
-            <a href="/p_home/{{i.journal_id}}/" >{{i.journal_name}}</a>
-            </li>
-            {% endfor %}
-            <!-- Add more journal links here -->
-          </ul>
-        </div>
-        <div class="col-md-9" id="journalContent">
-          <!-- Content of the selected journal will be displayed here -->
-        </div>
-      </div>
-    </div>
-    
-    <!-- <script>
-      function showJournal(journalName, coverImage, articles) {
-        var journalContent = document.getElementById('journalContent');
-        journalContent.innerHTML = ''; // Clear previous content
-    
-        // Create a div for the journal content
-        var content = document.createElement('div');
-        content.classList.add('sidebar', 'bg-light', 'rounded', 'shadow');
-        
-        // Add the journal name
-        var title = document.createElement('h3');
-        title.textContent = journalName;
-        content.appendChild(title);
-        
-        // Add the cover image
-        var img = document.createElement('img');
-        img.src = coverImage;
-        img.alt = journalName + ' Cover';
-        img.width = '200';
-        content.appendChild(img);
-        
-        // Add the list of articles
-        var ul = document.createElement('ul');
-        articles.forEach(function(article) {
-          var li = document.createElement('li');
-          li.textContent = article;
-          ul.appendChild(li);
-        });
-        content.appendChild(ul);
-    
-        // Append the content to the journalContent div
-        journalContent.appendChild(content);
-      }
-    </script> -->
-    
-      
-    <!-- end of proceedings -->
     </section>
-  
-  </main><!-- End #main -->
+  </main>
 
   <!-- ======= Footer ======= -->
   <footer id="footer">
@@ -220,8 +163,6 @@ The University of Calicut is proud to launch the CU Journal Hub, a comprehensive
   <script src="{% static 'vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
   <script src="{% static 'vendor/swiper/swiper-bundle.min.js' %}"></script>
   <script src="{% static 'vendor/php-email-form/validate.js' %}"></script>
-
-  <!-- Template Main JS File -->
   <script src="{% static 'js/main.js' %}"></script>
 
 </body>

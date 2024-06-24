@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.urls import path,include
 from admin_module import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
 
@@ -12,12 +14,13 @@ urlpatterns = [
 
     ################################   FORGOT PASSWORD  ############################################
     path("forgotpassword/", views.forgotpassword),
-    path("updatePassword/", views.updatePassword),
-    path("PasswordUpdate/", views.PasswordUpdate),
+    path('reset_password/<str:token>/', views.reset_password),
+
     ################################   ADD EDITOR  #########################################
     path("add_editor/", views.add_editor),
     path('addeditor/', views.addeditor, name='addeditor'),
-    path("setpassword/", views.setpassword),
+    path("set_password/", views.set_password),
+    path('setpassword/', views.setpassword),
     path('get_editors_by_department/<int:dept_id>/', views.get_editors_by_department),
     path('remove_editor/', views.remove_editor),
 
@@ -48,5 +51,50 @@ urlpatterns = [
     path("adminresetpassword/", views.adminresetpassword),
     path("reset_password/", views.reset_password),
 
-]    
+    ########################  MANAGE JOURNALS ##################
+    path('edit_journals/<int:journal_id>/', views.edit_journals),
+
+    #MANAGE VOLUME
+    path('manage_volume/<int:journal_id>/', views.manage_volume),
+    path('update_volume_name/', views.update_volume_name),
+    path('remove_volume/', views.remove_volume),
+
+    #MANAGE ISSUES
+    path('manage_issue/<int:journal_id>/', views.manage_issue),
+    path('remove_issue/<int:journal_id>/', views.remove_issue),
+    #path('get_issues/<int:volume_id>/', views.get_issues),
+
+    #MANAGE  NOTIFIFCATIONS
+    path('manage_notification/<int:journal_id>/', views.manage_notification),
+    path('edit_notification/', views.edit_notification),
+    path('remove_notification/', views.remove_notification),
+
+    #MANAGE AIM
+    path('manage_aim/<int:journal_id>/', views.manage_aim),
+
+    #MANAGE GUIDELINES
+    path('manage_gl/<int:journal_id>/', views.manage_gl),
+    path('update_row/',views.update_row),
+    path('remove_row/', views.remove_row),
+
+    #MANAGE ETHICS
+    path('manage_ethics/<int:journal_id>/', views.manage_ethics),
+
+    #MANAGE EDITORIAL BOARD
+    path('manage_eb/<int:journal_id>/', views.manage_eb),
+    path('update_eb_member/', views.update_eb_member),
+    path('remove_eb_member/', views.remove_eb_member),
+
+    #MANAGE  CONTACT
+    path('manage_contact/<int:journal_id>/', views.manage_contact),
+    path('update_contact/', views.update_contact),
+    path('remove_contact/', views.remove_contact),
+
+    #MANAGE ARTICLES
+    path('manage_article/<int:journal_id>/', views.manage_article),
+    path('edit_article/<int:article_id>/', views.edit_article),
+    path('remove_article/<int:article_id>/', views.remove_article),
+
+
+]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  
 

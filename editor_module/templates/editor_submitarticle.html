@@ -22,12 +22,60 @@
     <link href="{% static 'css/sb-editor.css' %}" rel="stylesheet">
     <link href="{% static 'css/article.css' %}" rel="stylesheet">
 
+    <style>
+        .form-container {
+            margin: 20px;
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#department').change(function() {
+                var departmentId = $(this).val();
+                $.ajax({
+                    url: '{% url "ajax_load_journals" %}',
+                    data: {
+                        'department_id': departmentId
+                    },
+                    success: function(data) {
+                        $('#journalName').html('<option value="" disabled selected>Select a journal</option>');
+                        $.each(data, function(key, value) {
+                            $('#journalName').append('<option value="' + value.journal_id + '">' + value.journal_name + '</option>');
+                        });
+                    }
+                });
+            });
+
+            $('#authorCount').change(function() {
+                var authorCount = $(this).val();
+                $('#authorInputs').html('');
+                for (var i = 1; i <= authorCount; i++) {
+                    $('#authorInputs').append('<div class="form-group"><label for="author' + i + '">Author ' + i + ':</label><input type="text" id="author' + i + '" name="author' + i + '" class="form-control"></div>');
+                }
+            }).trigger('change'); // Trigger change to initialize author fields on page load
+        });
+    </script>
+
 </head>
 
 <body id="page-top">
-
     {% include 'editor_sidebar.html' %}
-
     <div class="container-fluid">
         <div class="container form-container">
             <div class="card">
@@ -46,10 +94,9 @@
                                 </button>
                             </div>
                         {% endfor %}
-                    {% endif %}
+                        {% endif %}
                         <div class="row">
                             <div class="col-md-6">
-                               
                                 <div class="form-group">
                                     <label for="department">Department:</label>
                                     <select id="department" name="department" class="form-control">
@@ -59,24 +106,12 @@
                                         {% endfor %}
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label for="volume">Volume:</label>
-                                    <select id="volume" name="volume" class="form-control">
-                                        <option disabled selected>Select a volume</option>
-                                    </select>
-                                </div>                                                         
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="journalName">Journal Name:</label>
                                     <select id="journalName" name="journalName" class="form-control">
                                         <option disabled selected>Select a journal</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="issueNumber">Issue Number:</label>
-                                    <select id="issueNumber" name="issueNumber" class="form-control">
-                                        <option disabled selected>Select an issue</option>
                                     </select>
                                 </div>
                             </div>
@@ -94,12 +129,9 @@
                                         <option value="1" selected>1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
-                                        <!-- Add more options as needed -->
                                     </select>
                                 </div>
-                                <div id="authorInputs">
-                                    <!-- JavaScript will add input fields here -->
-                                </div><br>
+                                <div id="authorInputs"></div><br>
                                 <div class="form-group">
                                     <label for="articleTitle">Article Title:</label>
                                     <input type="text" id="articleTitle" name="articleTitle" class="form-control" placeholder="Enter Article Title">
@@ -114,70 +146,7 @@
             </div>
         </div>
     </div>
-    
-        <!-- End of Page Wrapper -->
-
-        <script src="{% static 'js/jquery.min.js' %}"></script>
-        <script>
-            $(document).ready(function() {
-                $('#department').change(function() {
-                    var departmentId = $(this).val();
-                    $.ajax({
-                        url: '{% url "ajax_load_journals" %}',
-                        data: {
-                            'department_id': departmentId
-                        },
-                        success: function(data) {
-                            $('#journalName').html('<option value="" disabled selected>Select a journal</option>');
-                            $.each(data, function(key, value) {
-                                $('#journalName').append('<option value="' + value.journal_id + '">' + value.journal_name + '</option>');
-                            });
-                        }
-                    });
-                });
-                
-                $('#journalName').change(function() {
-                    var journalId = $(this).val();
-                    $.ajax({
-                        url: '{% url "ajax_load_volumes" %}',
-                        data: {
-                            'journal_id': journalId
-                        },
-                        success: function(data) {
-                            $('#volume').html('<option value="" selected="selected">Select a volume</option>');
-                            $.each(data, function(key, value) {
-                                $('#volume').append('<option value="' + value.volume_id + '">' + value.volume + '</option>');
-                            });
-                        }
-                    });
-                });
-    
-                $('#volume').change(function() {
-                    var volumeId = $(this).val();
-                    $.ajax({
-                        url: '{% url "ajax_load_issues" %}',
-                        data: {
-                            'volume_id': volumeId
-                        },
-                        success: function(data) {
-                            $('#issueNumber').html('<option value="" selected="selected">Select an issue</option>');
-                            $.each(data, function(key, value) {
-                                $('#issueNumber').append('<option value="' + value.issue_id + '">' + value.issue_no + '</option>');
-                            });
-                        }
-                    });
-                });
-    
-                $('#authorCount').change(function() {
-                    var authorCount = $(this).val();
-                    $('#authorInputs').html('');
-                    for (var i = 1; i <= authorCount; i++) {
-                        $('#authorInputs').append('<div class="form-group"><label for="author' + i + '">Author ' + i + ':</label><input type="text" id="author' + i + '" name="author' + i + '" class="form-control"></div>');
-                    }
-                }).trigger('change'); // Trigger change to initialize author fields on page load
-            });
-        </script>    
-
+</body>
 
     <!-- Bootstrap core JavaScript-->
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>

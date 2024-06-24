@@ -35,6 +35,10 @@
                                 <th>SI NO</th>
                                 <th>JOURNAL NAME</th>
                                 <th>DEPARTMENT NAME</th>
+                                <th>TOTAL VOLUMES</th>
+                                <th>TOTAL ISSUES</th>
+                                <th>TOTAL ARTICLES</th>
+                                <th>VISIT COUNT</th>
                                 <th>ADD</th>
                             </tr>
                         </thead>
@@ -44,13 +48,15 @@
                                     <td>{{ journal.si_no }}</td>
                                     <td>{{ journal.journal_name }}</td>
                                     <td>{{ journal.dept_name }}</td>
+                                    <td>{{ journal.total_volumes }}</td>
+                                    <td>{{ journal.total_issues }}</td>
+                                    <td>{{ journal.total_articles }}</td>
+                                    <td>{{ journal.visit_count }}</td>
                                     <td><a href="/add_vic/{{ journal.journal_id }}/" class="btn btn-success">Add</a></td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
-                    
-                    
                 </div>
             </div>
         </div>

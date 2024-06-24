@@ -77,14 +77,14 @@
                     {% endif %}
                     <div class="form-group">
                         <label for="department">Department</label>
-                        <input type="text" class="form-control" id="journalDepartment" name="department" placeholder="Select Department" list="departments" required>
-                        <datalist id="departments">
-                            <option value="Department of Computer Science">
-                            <option value="Department of History">
-                            <option value="Department of Physics">
-                            <option value="Department of Malayalam">
-                        </datalist>
+                        <select class="form-control" id="journalDepartment" name="department" placeholder="Select Department" list="departments" required>
+                            <option value="" disabled selected>Select Department</option>
+                            {% for deptdata in departments %}
+                                <option value="{{ deptdata.dept_name }}">{{ deptdata.dept_name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
+                    
                     <div class="form-group">
                         <label for="employeeId">Employee Id</label>
                         <input type="text" class="form-control" id="employeeId" name="employeeId" placeholder="Enter Employee Id" required>
@@ -92,7 +92,12 @@
                     </div>
                     <div class="form-group">
                         <label for="roleName">Role</label>
-                        <input type="text" class="form-control" id="roleName" name="roleName" placeholder="Enter Role" required>
+                        <select class="form-control" id="roleName" name="roleName" placeholder="Enter Role" required>
+                            <option value="" disabled selected>Select Role</option>
+                            {% for rdata in roles %}
+                                <option value="{{ rdata.role_name }}">{{ rdata.role_name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="designation">Designation</label>

@@ -9,8 +9,8 @@ urlpatterns = [
 
     path("p_home/<int:id>/", views.p_home),
 
-    path("p_ethics/<int:id>", views.p_ethics),
-    path("p_guidelines/<int:id>", views.p_guidelines),
+    path("p_ethics/<int:id>/", views.p_ethics),
+    path("p_guidelines/<int:id>/", views.p_guidelines),
     path("p_authorreg/", views.p_authorreg),
     path("p_userreg/", views.p_userreg),
     path("p_userprofile/", views.p_userprofile),
@@ -28,5 +28,8 @@ urlpatterns = [
     path('download_article/<int:article_id>/',views.download_article),
     path('read_article/<int:article_id>/', views.read_article),
     path('get_client_ip/', views.get_client_ip),
+    path('search_results/<int:journal_id>/', views.search_results),
+    path('d_flipbook/<int:article_id>/', views.d_flipbook),
+    path('message/', views.message),
 
 ]
